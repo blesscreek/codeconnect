@@ -2,6 +2,8 @@ package com.co.codeconnectjudge.model.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
@@ -13,6 +15,7 @@ import java.io.Serializable;
  * @author co
  * @since 2024-03-23
  */
+@TableName(value = "user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

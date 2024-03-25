@@ -167,6 +167,7 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
             </dependency>
+            <!-- springboot集成swagger -->
             <dependency>
                 <groupId>com.spring4all</groupId>
                 <artifactId>swagger-spring-boot-starter</artifactId>
@@ -192,6 +193,9 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+
+
         </dependencies>
 
     </dependencyManagement>
