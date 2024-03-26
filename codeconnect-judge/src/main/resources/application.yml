@@ -4,8 +4,13 @@ spring:
   application:
     name: codeconnectjudge
   datasource:
-    url: jdbc:mysql://localhost:3306/codeconnect?characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://123.60.15.140:3306/codeconnect?characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
-    password: 1234
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  redis:
+    database: 0
+    host: 123.60.15.140      # Redis服务器地址
+    port: 6379              # Redis服务器连接端口
+    password: 123456

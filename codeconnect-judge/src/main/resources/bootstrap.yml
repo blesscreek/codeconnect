@@ -1,11 +1,6 @@
 spring:
   profiles:
     active: dev
-  redis:
-    database: 0
-    host: 192.168.101.134        # Redis服务器地址
-    port: 6379              # Redis服务器连接端口
-    password: 1234
 swagger:
   title: "代码评判交流系统"
   description: "代码评判交流系统"

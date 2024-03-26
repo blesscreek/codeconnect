@@ -1,4 +1,4 @@
-package com.co.codeconnectjudge.tools;
+package com.co.codeconnectjudge.utils;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.IdType;
