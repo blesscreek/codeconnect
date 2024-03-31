@@ -1,9 +1,12 @@
 package com.co.codeconnectjudge;
 
+import com.co.codeconnectjudge.mapper.MenuMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 /**
  * @Author bless
@@ -21,5 +24,13 @@ public class MapperTest {
 //        System.out.println(encode);
         System.out.println(passwordEncoder.matches("123","$2a$10$hkH8KN.m/210sorJY/KgFeNr1fvP0KBOSITHTa9VDFT09ytMDDLoe"));
 
+    }
+
+    @Autowired
+    private MenuMapper menuMapper;
+    @Test
+    public void TestselectPermsByUserId() {
+        List<String> list = menuMapper.selectPermsByUserId(3L);
+        System.out.println(list);
     }
 }

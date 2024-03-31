@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
     @RequestMapping("/hello")
-    @PreAuthorize("hasAuthority('sys:question:delete')")
+    @PreAuthorize("hasAuthority('sys:question:add')")
     public String hello(){
         return "hello";
     }

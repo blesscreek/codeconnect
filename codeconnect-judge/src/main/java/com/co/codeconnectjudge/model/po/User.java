@@ -19,6 +19,7 @@ import java.io.Serializable;
  * @author co
  * @since 2024-03-23
  */
+
 @TableName(value = "user")
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,14 +1,20 @@
 package com.co.codeconnectjudge.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.co.codeconnectjudge.mapper.MenuMapper;
 import com.co.codeconnectjudge.mapper.UserMapper;
 import com.co.codeconnectjudge.model.dto.LoginUser;
 import com.co.codeconnectjudge.model.po.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,6 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private MenuMapper menuMapper;
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         //查询用户信息
@@ -34,8 +42,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new RuntimeException("用户名或密码错误");
         }
         //TODO 查询对应的权限信息
-
+        List<String> list =
+                menuMapper.selectPermsByUserId(user.getId());
+//        List<String> list = new ArrayList<>(Arrays.asList("test"));
         //封装成userDetails对象返回
-        return new LoginUser(user);
+        return new LoginUser(user, list);
     }
 }

@@ -14,3 +14,5 @@ spring:
     host: 123.60.15.140      # Redis服务器地址
     port: 6379              # Redis服务器连接端口
     password: 123456
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
