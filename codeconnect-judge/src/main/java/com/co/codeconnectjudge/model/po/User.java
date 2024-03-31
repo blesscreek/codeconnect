@@ -3,6 +3,10 @@ package com.co.codeconnectjudge.model.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
@@ -16,6 +20,9 @@ import java.io.Serializable;
  * @since 2024-03-23
  */
 @TableName(value = "user")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,12 +41,16 @@ public class User implements Serializable {
     /**
      * 用户昵称
      */
-    private String nickname;
+    private String nickName;
 
     /**
      * 用户密码
      */
     private String password;
+    /**
+     * 账号状态（0正常，1停用）
+     */
+    private String status;
 
     /**
      * 用户性别
@@ -49,17 +60,12 @@ public class User implements Serializable {
     /**
      * 用户头像
      */
-    private String headPhoto;
-
-    /**
-     * 用户简介
-     */
-    private String profile;
+    private String avatar;
 
     /**
      * 用户电话
      */
-    private String telephone;
+    private String phoneNumber;
 
     /**
      * 用户邮箱
@@ -81,118 +87,4 @@ public class User implements Serializable {
      */
     private Integer isDelete;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getHeadPhoto() {
-        return headPhoto;
-    }
-
-    public void setHeadPhoto(String headPhoto) {
-        this.headPhoto = headPhoto;
-    }
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(Integer isDelete) {
-        this.isDelete = isDelete;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-        "id=" + id +
-        ", account=" + account +
-        ", nickname=" + nickname +
-        ", password=" + password +
-        ", sex=" + sex +
-        ", headPhoto=" + headPhoto +
-        ", profile=" + profile +
-        ", telephone=" + telephone +
-        ", email=" + email +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        ", isDelete=" + isDelete +
-        "}";
-    }
 }
