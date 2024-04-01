@@ -3,6 +3,7 @@ package com.co.codeconnectjudge.config;
 import com.co.codeconnectjudge.filter.JwtAuthenticationTokenFilter;
 import com.co.codeconnectjudge.handler.AccessDeniedHandlerImpl;
 import com.co.codeconnectjudge.handler.AuthenticationEntryPointImpl;
+import com.co.codeconnectjudge.config.CorsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
 
 /**
  * @Author co
@@ -31,6 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AccessDeniedHandlerImpl accessDeniedHandler;
+
+    @Autowired
+    private CorsFilter corsFilter;
 
     //密码加密
     //创建 BCryptPasswordEncoder注入容器
@@ -52,15 +59,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();
         //添加过滤器
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationTokenFilter,
+                UsernamePasswordAuthenticationFilter.class);
         //配置异常处理器
         http.exceptionHandling()
                 //配置认证失败处理器
                 .authenticationEntryPoint(authenticationEntryPoint)
-                //配置授权失败处理器
                 .accessDeniedHandler(accessDeniedHandler);
         //允许跨域
-        http.cors();
+        http.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
     }
 
     //调用该方法的authenticate方法进行用户认证
@@ -69,4 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception{
         return super.authenticationManagerBean();
     }
+
+
 }
