@@ -1,8 +1,9 @@
 package com.co.codeconnectjudge.service;
 
-import com.co.codeconnectjudge.common.ResponseResult;
+import com.co.codeconnectjudge.common.result.ResponseResult;
 import com.co.codeconnectjudge.model.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.co.codeconnectjudge.model.vo.RegisterUser;
 
 /**
  * <p>
@@ -12,9 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author co
  * @since 2024-03-23
  */
-public interface LoginService extends IService<User> {
+public interface LoginService {
 
     ResponseResult login(User user);
 
     ResponseResult logout();
+
+    ResponseResult register(RegisterUser user);
 }

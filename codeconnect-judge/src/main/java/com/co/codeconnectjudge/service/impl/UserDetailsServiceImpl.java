@@ -41,7 +41,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             //TODO 换成自定义异常
             throw new RuntimeException("用户名或密码错误");
         }
-        //TODO 查询对应的权限信息
         List<String> list =
                 menuMapper.selectPermsByUserId(user.getId());
 //        List<String> list = new ArrayList<>(Arrays.asList("test"));

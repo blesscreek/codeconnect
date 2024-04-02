@@ -1,4 +1,4 @@
-package com.co.codeconnectjudge.common;
+package com.co.codeconnectjudge.common.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

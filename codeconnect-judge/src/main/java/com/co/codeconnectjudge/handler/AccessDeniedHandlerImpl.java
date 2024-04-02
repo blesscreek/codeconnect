@@ -1,7 +1,7 @@
 package com.co.codeconnectjudge.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.co.codeconnectjudge.common.ResponseResult;
+import com.co.codeconnectjudge.common.result.ResponseResult;
 import com.co.codeconnectjudge.utils.WebUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

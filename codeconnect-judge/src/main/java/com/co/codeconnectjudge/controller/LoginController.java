@@ -1,8 +1,8 @@
 package com.co.codeconnectjudge.controller;
 
-import com.co.codeconnectjudge.common.ResponseResult;
-import com.co.codeconnectjudge.mapper.UserMapper;
+import com.co.codeconnectjudge.common.result.ResponseResult;
 import com.co.codeconnectjudge.model.po.User;
+import com.co.codeconnectjudge.model.vo.RegisterUser;
 import com.co.codeconnectjudge.service.LoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -20,21 +20,27 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @Api(tags = "用户登录接口")
+@RequestMapping("/user")
 public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public ResponseResult login(@RequestBody User user) {
         return loginService.login(user);
     }
 
-    @RequestMapping("/user/logout")
+    @RequestMapping("/logout")
     public ResponseResult logout() {
         return loginService.logout();
     }
 
-    @RequestMapping("/user/{id}")
+    @RequestMapping("/register")
+    public ResponseResult register(@RequestBody RegisterUser registerUser) {
+        return loginService.register(registerUser);
+    }
+
+    @RequestMapping("/{id}")
     @ApiImplicitParam(name = "id", value = "ID", required = true)
     @ApiOperation("获取用户接口")
     public String getUser(@PathVariable("id") String id) {
