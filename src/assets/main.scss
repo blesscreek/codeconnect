@@ -19,3 +19,24 @@ body {
   transform: translateX(30px);
   opacity: 0;
 }
+// 题目的表格内容高度
+.topicTable{
+  tr{
+    height: 60px;
+  }
+}
+// 筛选题目的表单
+.searchContent{
+  .el-form-item__label {
+    font-size: 18px;
+  }
+  .el-select__wrapper{
+    font-size: 18px;
+  }
+  .el-input__inner{
+    font-size: 18px;
+  }
+  .el-button{
+    font-size: 18px;
+  }
+}

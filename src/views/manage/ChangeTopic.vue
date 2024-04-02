@@ -61,9 +61,7 @@ const tableData = [
     address: 'No. 189, Grove St, Los Angeles'
   }
 ]
-
 import { ref } from 'vue'
-
 //分页相关
 const data = ref(tableData)
 const pageSize2 = ref(10)
@@ -73,53 +71,72 @@ const handleSizeChange = (val) => {
 const handleCurrentChange = (val) => {
   console.log(`current page: ${val}`)
 }
+
+// 表格的编辑
+const handleEdit = (index, row) => {
+  console.log(index, row)
+}
+const handleDelete = (index, row) => {
+  console.log(index, row)
+}
 </script>
 
 <template>
-  <div class="content">
-    <!-- 筛选 -->
-    <el-header><search-question></search-question></el-header>
-
-    <!-- 题目列表 -->
-    <el-main>
+  <div class="box">
+    <div class="header">
+      <search-question></search-question>
+    </div>
+    <div class="content">
+      <!-- 题目列表 -->
       <el-table class="topicTable" :data="tableData" stripe>
         <el-table-column prop="date" label="题目" width="190" />
         <el-table-column prop="name" label="题号" width="190" />
         <el-table-column prop="address" label="算法" />
-      </el-table>
-    </el-main>
+        <el-table-column prop="address" label="操作">
+          <template #default="scope">
+            <el-button @click="handleEdit(scope.$index, scope.row)">
+              编辑
+            </el-button>
 
-    <!-- 分页器 -->
-    <div class="demo-pagination-block">
-      <el-pagination
-        v-model:page-size="pageSize2"
-        :page-sizes="[10, 20, 30]"
-        :small="false"
-        :background="true"
-        layout="sizes, prev, pager, next"
-        :total="data.length"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+            <el-button
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+            >
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 分页器 -->
+      <div class="demo-pagination-block">
+        <el-pagination
+          v-model:page-size="pageSize2"
+          :page-sizes="[10, 20, 30]"
+          :small="false"
+          :background="true"
+          layout="sizes, prev, pager, next"
+          :total="data.length"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.content {
-  width: 80%;
-  margin: 0 auto;
-}
-.el-header {
+.header {
+  width: 100%;
+  height: 22vh;
   background-color: #fff;
-  margin: 0 20px;
-  height: 200px;
+  border-bottom: 1px solid #e3e3e3;
+  box-sizing: border-box;
+}
+.content {
+  width: 100%;
 }
 /*表格*/
-.el-main {
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
 .el-table {
   width: 100%;
 }
@@ -135,9 +152,7 @@ const handleCurrentChange = (val) => {
   display: flex;
   justify-content: flex-end;
   background-color: #fff;
-  margin: 0 20px;
   height: 60px;
-  margin-bottom: 30px;
   padding-right: 30px;
 }
 </style>

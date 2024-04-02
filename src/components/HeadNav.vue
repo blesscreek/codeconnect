@@ -15,25 +15,26 @@ import {
         <el-icon><House /></el-icon>
         <span>首页</span>
       </div>
-      <div class="li">
+      <div class="li" @click="$router.push('/topic')">
         <el-icon><Grid /></el-icon>
         <span>题目</span>
       </div>
-      <div class="li">
+      <div class="li" @click="$router.push('/chat')">
         <el-icon><ChatLineSquare /></el-icon>
         <span>讨论</span>
       </div>
-      <div class="li">
+      <div class="li" @click="$router.push('/manage')">
         <el-icon><Management /></el-icon>
         <span>管理中心</span>
       </div>
     </div>
-    <div class="login" v-if="true">
-      <el-button type="primary">登录</el-button>
-      <el-button type="primary">注册</el-button>
-    </div>
-    <div class="head_sculpture" v-else>
-      <img src="@/assets/head-sculpture.jpg" alt="" />
+    <div class="right">
+      <div class="head_sculpture">
+        <img src="@/assets/head-sculpture.jpg" alt="" />
+      </div>
+      <div @click="$router.push('/login')" class="login" v-if="true">
+        登录 | 注册
+      </div>
     </div>
   </div>
 </template>
@@ -45,7 +46,7 @@ import {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  border-top: 1px solid #e1e1e1;
+  // border-top: 1px solid #e1e1e1;
 }
 .head_class div {
   height: 100%;
@@ -58,10 +59,10 @@ import {
   width: 100px;
   margin-left: 30px;
   margin-right: 20px;
-}
-.logo img {
-  width: 100%;
-  height: 100%;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 .left .li {
   width: 110px;
@@ -86,25 +87,28 @@ import {
   background-image: linear-gradient(to right, #ffffff, #e9f4fe);
   border-bottom: 2px solid #094792;
 }
-.login {
-  margin-right: 30px;
+.right {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  .el-button {
-    width: 70px;
-    height: 35px;
+  .login {
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 18px;
   }
-}
-.head_sculpture {
-  margin-right: 30px;
-  display: flex;
-  align-items: center;
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+  .login:hover {
+    color: #2a7fee;
+    cursor: pointer;
+  }
+  .head_sculpture {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+    }
   }
 }
 </style>

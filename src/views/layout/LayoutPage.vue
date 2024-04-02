@@ -12,8 +12,15 @@
   </div>
 </template>
 <style scoped>
+.el-container {
+  height: 100vh;
+}
 .el-header {
   padding: 0;
   background-color: #fff;
+}
+.el-main {
+  height: 100%;
+  /* padding: 0; */
 }
 </style>

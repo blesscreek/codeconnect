@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 // 用户模块 token相关
 export const useUserStore = defineStore(
-  'big-user',
+  'oj-user',
   () => {
     const token = ref('')
     const setToken = (newToken) => {
