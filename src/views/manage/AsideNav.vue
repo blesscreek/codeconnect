@@ -1,6 +1,13 @@
 <script setup>
-// import { ref } from 'vue'
-// const active = ref(1)
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const active = ref(route.path.split('/')[2])
+// 根据路由提示高亮
+watch(route, () => {
+  active.value = route.path.split('/')[2]
+  console.log(active.value)
+})
 </script>
 
 <template>
@@ -8,7 +15,7 @@
     <img src="@/assets/logo.png" alt="" />
     <el-col>
       <el-menu
-        default-active="changetopic"
+        :default-active="active"
         :router="true"
         class="el-menu-vertical-demo"
       >

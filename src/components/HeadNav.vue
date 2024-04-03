@@ -3,7 +3,8 @@ import {
   House,
   Grid,
   ChatLineSquare,
-  Management
+  Management,
+  UserFilled
 } from '@element-plus/icons-vue'
 </script>
 
@@ -17,11 +18,15 @@ import {
       </div>
       <div class="li" @click="$router.push('/topic')">
         <el-icon><Grid /></el-icon>
-        <span>题目</span>
+        <span>题库</span>
       </div>
       <div class="li" @click="$router.push('/chat')">
         <el-icon><ChatLineSquare /></el-icon>
         <span>讨论</span>
+      </div>
+      <div class="li" @click="$router.push('/chat')">
+        <el-icon><UserFilled /></el-icon>
+        <span>个人中心</span>
       </div>
       <div class="li" @click="$router.push('/manage')">
         <el-icon><Management /></el-icon>

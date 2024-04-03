@@ -40,3 +40,29 @@ body {
     font-size: 18px;
   }
 }
+.addTopicContent{
+  .el-form-item__label {
+    font-size: 17px;
+  }
+  .el-select__wrapper{
+    font-size: 16px;
+  }
+  .el-input__inner{
+    font-size: 17px;
+  }
+  .el-button{
+    font-size: 18px;
+  }
+  .el-input {
+    width: 270px;
+  }
+  .el-textarea{
+    width: 270px;
+  }
+  .el-select{
+    width: 220px;
+  }
+  .el-form-item{
+    min-height: 32px;
+  }
+}

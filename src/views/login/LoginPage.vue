@@ -1,18 +1,26 @@
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
-import { ref } from 'vue'
-import { userLoginService } from '@/api/user.js'
+import { ref, watch } from 'vue'
+import { userLoginService, userRegisterService } from '@/api/user.js'
+import { useUserStore } from '@/stores'
+import { useRouter } from 'vue-router'
+// 在eslintrc中全局配置了还要引入吗？？？
+import { ElMessage } from 'element-plus'
+const userStore = useUserStore()
 const isRegister = ref(false)
 const form = ref()
+const rememberCheck = ref(false)
+const router = useRouter()
+// 登录注册的表单内容
 const formModel = ref({
-  username: '',
+  account: '',
   password: '',
-  repassword: ''
+  checkPassword: ''
 })
 
 // 表单的验证规则
 const rules = {
-  username: [
+  account: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 5, max: 10, message: '用户名是5-10位的字符', trigger: 'blur' }
   ],
@@ -24,7 +32,7 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  repassword: [
+  checkPassword: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     {
       pattern: /^\S{6,15}$/,
@@ -51,16 +59,42 @@ const rules = {
   ]
 }
 
+// 记住我相关
+if (isRegister.value === false) {
+  if (userStore.remember) {
+    rememberCheck.value = userStore.getRemember()
+    formModel.value = userStore.getAccount()
+  }
+}
+// 登录注册切换
+watch(isRegister, () => {
+  formModel.value = { account: '', password: '', checkPassword: '' }
+})
+
+// 注册
+const register = async () => {
+  await form.value.validate()
+  await userRegisterService(formModel.value)
+  Element.success('注册成功')
+  isRegister.value = false
+}
 // 登录
 const login = async () => {
   // 组件自带的表单验证
   await form.value.validate()
   console.log(formModel.value)
-  const res = await userLoginService(
-    formModel.value.username,
-    formModel.value.password
-  )
-  console.log(res)
+  const res = await userLoginService(formModel.value)
+  userStore.setToken(res.data.token)
+  ElMessage.success('登录成功')
+  // 是否记得账号密码
+  if (rememberCheck.value) {
+    userStore.setRemember(true)
+    userStore.setAccount(formModel.value)
+  } else {
+    userStore.setRemember(false)
+    userStore.setAccount({})
+  }
+  router.push('/')
 }
 </script>
 
@@ -79,10 +113,10 @@ const login = async () => {
         <el-form-item>
           <h1>注册</h1>
         </el-form-item>
-        <el-form-item prop="username">
+        <el-form-item prop="account">
           <el-input
             :prefix-icon="User"
-            v-model="formModel.username"
+            v-model="formModel.account"
             placeholder="请输入用户名"
           ></el-input>
         </el-form-item>
@@ -94,16 +128,21 @@ const login = async () => {
             placeholder="请输入密码"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="repassword">
+        <el-form-item prop="checkPassword">
           <el-input
             :prefix-icon="Lock"
             type="password"
-            v-model="formModel.repassword"
+            v-model="formModel.checkPassword"
             placeholder="请输入再次密码"
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="button" type="primary" auto-insert-space>
+          <el-button
+            @click="register"
+            class="button"
+            type="primary"
+            auto-insert-space
+          >
             注册
           </el-button>
         </el-form-item>
@@ -125,10 +164,10 @@ const login = async () => {
         <el-form-item>
           <h1>登录</h1>
         </el-form-item>
-        <el-form-item prop="username">
+        <el-form-item prop="account">
           <el-input
             :prefix-icon="User"
-            v-model="formModel.username"
+            v-model="formModel.account"
             placeholder="请输入用户名"
           >
             <img src="" alt="" />
@@ -145,8 +184,8 @@ const login = async () => {
         </el-form-item>
         <el-form-item class="flex">
           <div class="flex">
-            <el-checkbox>记住我</el-checkbox>
-            <el-link type="primary" :underline="false">忘记密码？</el-link>
+            <el-checkbox v-model="rememberCheck">记住我</el-checkbox>
+            <el-checkbox v-model="freeCheck">七天免密登录</el-checkbox>
           </div>
         </el-form-item>
         <el-form-item>

@@ -1,3 +1,4 @@
+import { useUserStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -56,5 +57,12 @@ const router = createRouter({
     }
   ]
 })
+// 路由前置守卫
+// router.beforeEach((to) => {
+//   // 访问管理中心，个人中心，答题页面时拦截
+//   // console.log(to.matched[0].path)
+//   const userStore = useUserStore()
+//   if (!userStore.token && to.matched[0].path === '/manage') return '/login'
+// })
 
 export default router
