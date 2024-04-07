@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
 
-const baseURL = 'http://192.168.0.190:8080'
+const baseURL = 'http://192.168.0.191:8080'
 // const baseURL = 'http://big-event-vue-api-t.itheima.net'
 
 const request = axios.create({

@@ -58,10 +58,10 @@ const onSubmit = () => {
       </el-form-item>
 
       <el-form-item
-        ><el-form-item label="输入格式">
+        ><el-form-item label="输入描述">
           <el-input v-model="form.desc" type="textarea" />
         </el-form-item>
-        <el-form-item label="输出格式">
+        <el-form-item label="输出描述">
           <el-input v-model="form.desc" type="textarea" />
         </el-form-item>
       </el-form-item>
@@ -104,9 +104,9 @@ const onSubmit = () => {
         <el-input v-model="form.desc" type="textarea" />
       </el-form-item>
       <!-- 按钮 -->
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button>Cancel</el-button>
+      <el-form-item class="button">
+        <el-button type="primary" @click="onSubmit">确认</el-button>
+        <el-button>取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -118,13 +118,18 @@ const onSubmit = () => {
   height: 100%;
   .span {
     width: 100%;
-    height: 60px;
+    height: 70px;
     text-align: center;
-    font-size: 25px;
+    font-size: 26px;
     color: #355bcc;
   }
 }
 .el-form {
   margin: 0 auto;
+  padding-bottom: 30px;
+  .button {
+    width: 200px;
+    margin: 0 auto;
+  }
 }
 </style>

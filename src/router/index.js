@@ -1,4 +1,4 @@
-import { useUserStore } from '@/stores'
+// import { useUserStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -13,21 +13,21 @@ const router = createRouter({
         {
           path: '/topic',
           component: () => import('@/views/topic/TopicPage.vue')
+        }
+      ]
+    },
+    {
+      path: '/chat',
+      component: () => import('@/views/chat/ChatPage.vue'),
+      redirect: '/chat/chatroom',
+      children: [
+        {
+          path: '/chat/chatroom',
+          component: () => import('@/views/chat/ListBox.vue')
         },
         {
-          path: '/chat',
-          component: () => import('@/views/chat/ChatPage.vue'),
-          redirect: '/chat/chatroom',
-          children: [
-            {
-              path: '/chat/chatroom',
-              component: () => import('@/views/chat/ListBox.vue')
-            },
-            {
-              path: '/chat/friend',
-              component: () => import('@/views/chat/ListBox.vue')
-            }
-          ]
+          path: '/chat/friend',
+          component: () => import('@/views/chat/ListBox.vue')
         }
       ]
     },
@@ -37,7 +37,7 @@ const router = createRouter({
       redirect: '/manage/changetopic',
       children: [
         {
-          path: '/manage/addtopic',
+          path: '/manage/changetopic/add',
           component: () => import('@/views/manage/AddTopic.vue')
         },
         {

@@ -61,6 +61,7 @@ const tableData = [
     address: 'No. 189, Grove St, Los Angeles'
   }
 ]
+// import router from '@/router'
 import { ref } from 'vue'
 //分页相关
 const data = ref(tableData)
@@ -85,6 +86,15 @@ const handleDelete = (index, row) => {
   <div class="box">
     <div class="header">
       <search-question></search-question>
+    </div>
+    <!-- 添加题目 -->
+    <div class="addTopic">
+      <el-button
+        type="primary"
+        style="height: 37px; width: 95px"
+        @click="$router.push('/manage/changetopic/add')"
+        >添加题目</el-button
+      >
     </div>
     <div class="content">
       <!-- 题目列表 -->
@@ -132,6 +142,16 @@ const handleDelete = (index, row) => {
   background-color: #fff;
   border-bottom: 1px solid #e3e3e3;
   box-sizing: border-box;
+}
+.addTopic {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  .el-button {
+    margin: 55px;
+  }
 }
 .content {
   width: 100%;

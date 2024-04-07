@@ -1,64 +1,193 @@
 <script setup>
 const tableData = [
   {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   },
   {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
+  },
+  {
+    name: '肯德基',
+    label: '疯狂星期四',
+    id: 'vivo50',
+    state: '我吃吃吃吃',
+    situation: [50, 50]
   }
 ]
 
@@ -73,6 +202,11 @@ const handleSizeChange = (val) => {
 const handleCurrentChange = (val) => {
   console.log(`current page: ${val}`)
 }
+
+// 点击题目跳到做题的页面
+const goTopic = function (e) {
+  console.log(e)
+}
 </script>
 
 <template>
@@ -82,10 +216,23 @@ const handleCurrentChange = (val) => {
 
     <!-- 题目列表 -->
     <el-main>
-      <el-table class="topicTable" :data="tableData" stripe>
-        <el-table-column prop="date" label="题目" width="190" />
-        <el-table-column prop="name" label="题号" width="190" />
-        <el-table-column prop="address" label="算法" />
+      <el-table
+        class="topicTable"
+        :data="tableData"
+        stripe
+        @row-click="goTopic"
+      >
+        <el-table-column prop="state" label="状态" width="120" />
+        <el-table-column prop="id" label="题号" width="150" />
+        <el-table-column prop="name" label="题目名称" width="390">
+          <template #default="{ row }">
+            <router-link class="router-link-exact-active" to="">
+              {{ row.name }}
+            </router-link>
+          </template>
+        </el-table-column>
+        <el-table-column prop="label" label="算法" width="280" />
+        <el-table-column prop="situation" label="通过率" width="240" />
       </el-table>
     </el-main>
 
@@ -122,6 +269,19 @@ const handleCurrentChange = (val) => {
 }
 .el-table {
   width: 100%;
+  font-size: 17px;
+  .router-link-exact-active {
+    color: rgb(96, 98, 102);
+    text-decoration: none;
+  }
+  .router-link-exact-active:hover {
+    // color: #3498db;
+    color: #007aff;
+  }
+  .router-link-exact-active:active {
+    // color: #3498db;
+    color: #005bbd;
+  }
 }
 
 /* 分页器 */

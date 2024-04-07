@@ -32,6 +32,7 @@ watch(route, () => {
     <el-container>
       <el-aside>
         <div class="aside_nav">
+          <!-- 左侧导航栏 -->
           <div class="first_nav">
             <div
               class="li"
@@ -47,12 +48,21 @@ watch(route, () => {
             >
               好友
             </div>
+            <div
+              class="li"
+              :class="{ active: back }"
+              @click="$router.push('/')"
+            >
+              首页
+            </div>
           </div>
+          <!-- 显示好友等的地方 -->
           <div class="second_nav">
             <router-view></router-view>
           </div>
         </div>
       </el-aside>
+      <!-- 内容区 -->
       <el-main>
         <div class="content">
           <message-box></message-box>
@@ -64,13 +74,15 @@ watch(route, () => {
 </template>
 <style lang="scss" scoped>
 .common-layout {
-  height: 100%;
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
 }
 .el-container {
+  max-width: 75vw;
+  height: 90vh;
   margin: 0 auto;
-  width: 75vw;
-  height: 100%;
   background-color: #fff;
   box-shadow: 5px 5px 5px #e6e6e6;
 }

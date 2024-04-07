@@ -26,7 +26,7 @@ body {
   }
 }
 // 筛选题目的表单
-.searchContent{
+.searchContent , .searchLabel, .addTopic{
   .el-form-item__label {
     font-size: 18px;
   }

@@ -19,10 +19,10 @@ import AsideNav from './AsideNav.vue'
 }
 .el-container {
   width: 80vw;
-  height: 95vh;
+  height: 100vh;
   padding: 0;
   margin: 0 auto;
-  margin-top: 2vh;
+  // margin-top: 2vh;
 }
 .el-aside {
   background-color: #fff;
