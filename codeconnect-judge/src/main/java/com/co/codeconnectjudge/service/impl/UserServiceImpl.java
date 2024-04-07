@@ -19,11 +19,29 @@ public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements U
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * 根据账户名找用户数量
+     * @param account
+     * @return
+     */
     @Override
     public Long countUserByAccount(String account) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", account);
         long count = userMapper.selectCount(queryWrapper);
         return count;
+    }
+
+    /**
+     * 根据账户名查用户id
+     * @param account
+     * @return
+     */
+    @Override
+    public Long selectUserIdByAccount(String account) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("account",account);
+        User user = userMapper.selectOne(queryWrapper);
+        return user.getId();
     }
 }

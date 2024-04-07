@@ -11,4 +11,5 @@ import com.co.codeconnectjudge.model.po.User;
  */
 public interface UserService extends IService<User> {
     public Long countUserByAccount(String account);
+    public Long selectUserIdByAccount(String account);
 }

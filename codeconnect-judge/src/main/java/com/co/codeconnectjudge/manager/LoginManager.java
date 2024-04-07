@@ -1,9 +1,12 @@
 package com.co.codeconnectjudge.manager;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.co.codeconnectjudge.common.result.ResponseResult;
 import com.co.codeconnectjudge.common.exception.StatusFailException;
+import com.co.codeconnectjudge.mapper.UserRoleMapper;
 import com.co.codeconnectjudge.model.dto.LoginUser;
 import com.co.codeconnectjudge.model.po.User;
+import com.co.codeconnectjudge.model.po.UserRole;
 import com.co.codeconnectjudge.model.vo.RegisterUser;
 import com.co.codeconnectjudge.service.UserService;
 import com.co.codeconnectjudge.utils.JwtUtil;
@@ -41,6 +44,9 @@ public class LoginManager {
     private UserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
+    private Long roleId = 3L;
 
     public HashMap<String, String> login(User user) throws StatusFailException {
         if (user.getAccount().length() < 5 || user.getAccount().length() > 10) {
@@ -112,6 +118,14 @@ public class LoginManager {
             if (!saveResult) {
                 throw new StatusFailException("注册失败，请重试");
             }
+            Long userId = userService.selectUserIdByAccount(user.getAccount());
+            if (userId == null) {
+                throw new StatusFailException("注册失败，请重试");
+            }
+            UserRole userRole = new UserRole();
+            userRole.setUserId(userId);
+            userRole.setRoleId(roleId);
+            userRoleMapper.insert(userRole);
         }
     }
 }
