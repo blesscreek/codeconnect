@@ -226,7 +226,7 @@ const goTopic = function (e) {
         <el-table-column prop="id" label="题号" width="150" />
         <el-table-column prop="name" label="题目名称" width="390">
           <template #default="{ row }">
-            <router-link class="router-link-exact-active" to="">
+            <router-link class="router-link-exact-active" to="/topic/detail">
               {{ row.name }}
             </router-link>
           </template>

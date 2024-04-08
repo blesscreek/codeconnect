@@ -40,6 +40,7 @@ body {
     font-size: 18px;
   }
 }
+// 添加题目?
 .addTopicContent{
   .el-form-item__label {
     font-size: 17px;
@@ -66,3 +67,13 @@ body {
     min-height: 32px;
   }
 }
+
+// 题目详情中，可拖拽部位的初始大小
+.topic-detail{
+  .left{
+    width: 50%;
+  }
+  .right{
+    width: 50%;
+  }
+} 

@@ -28,7 +28,7 @@ watch(route, () => {
         <el-menu-item index="/manage/changelabel">
           <span>编辑标签</span>
         </el-menu-item>
-        <el-menu-item index="/manage/back">
+        <el-menu-item index="/">
           <span>回到首页</span>
         </el-menu-item>
       </el-menu>

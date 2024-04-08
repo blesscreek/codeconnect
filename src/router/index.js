@@ -51,9 +51,8 @@ const router = createRouter({
       ]
     },
     {
-      path: '/manage/back',
-      component: () => import('@/views/layout/LayoutPage.vue'),
-      redirect: '/topic'
+      path: '/topic/detail',
+      component: () => import('@/views/topic/TopicDetail.vue')
     }
   ]
 })
