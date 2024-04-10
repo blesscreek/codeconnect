@@ -1,9 +1,9 @@
-package com.co.codeconnectjudge.controller;
+package com.co.codeconnectjudge.controller.admin;
 
 import com.co.codeconnectjudge.common.result.ResponseResult;
 import com.co.codeconnectjudge.model.po.User;
-import com.co.codeconnectjudge.model.vo.RegisterUser;
-import com.co.codeconnectjudge.service.LoginService;
+import com.co.codeconnectjudge.model.dto.RegisterUser;
+import com.co.codeconnectjudge.service.admin.AdminLoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -21,23 +21,23 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Api(tags = "用户登录接口")
 @RequestMapping("/user")
-public class LoginController {
+public class AdminLoginController {
     @Autowired
-    private LoginService loginService;
+    private AdminLoginService adminLoginService;
 
     @PostMapping("/login")
     public ResponseResult login(@RequestBody User user) {
-        return loginService.login(user);
+        return adminLoginService.login(user);
     }
 
     @RequestMapping("/logout")
     public ResponseResult logout() {
-        return loginService.logout();
+        return adminLoginService.logout();
     }
 
     @RequestMapping("/register")
     public ResponseResult register(@RequestBody RegisterUser registerUser) {
-        return loginService.register(registerUser);
+        return adminLoginService.register(registerUser);
     }
 
     @RequestMapping("/{id}")

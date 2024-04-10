@@ -1,10 +1,10 @@
-package com.co.codeconnectjudge.service.impl;
+package com.co.codeconnectjudge.dao.user.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.co.codeconnectjudge.mapper.UserMapper;
 import com.co.codeconnectjudge.model.po.User;
-import com.co.codeconnectjudge.service.UserService;
+import com.co.codeconnectjudge.dao.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

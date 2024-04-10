@@ -1,14 +1,12 @@
-package com.co.codeconnectjudge.manager;
+package com.co.codeconnectjudge.manager.admin;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.co.codeconnectjudge.common.result.ResponseResult;
 import com.co.codeconnectjudge.common.exception.StatusFailException;
 import com.co.codeconnectjudge.mapper.UserRoleMapper;
 import com.co.codeconnectjudge.model.dto.LoginUser;
 import com.co.codeconnectjudge.model.po.User;
 import com.co.codeconnectjudge.model.po.UserRole;
-import com.co.codeconnectjudge.model.vo.RegisterUser;
-import com.co.codeconnectjudge.service.UserService;
+import com.co.codeconnectjudge.model.dto.RegisterUser;
+import com.co.codeconnectjudge.dao.user.UserService;
 import com.co.codeconnectjudge.utils.JwtUtil;
 import com.co.codeconnectjudge.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,7 @@ import static com.co.codeconnectjudge.constant.UserConstant.USER_TOKEN;
  * @Date 2024-04-02 20:29
  */
 @Component
-public class LoginManager {
+public class AdminLoginManager {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired

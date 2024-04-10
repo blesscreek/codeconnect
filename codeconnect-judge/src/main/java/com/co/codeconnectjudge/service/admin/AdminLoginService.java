@@ -1,9 +1,8 @@
-package com.co.codeconnectjudge.service;
+package com.co.codeconnectjudge.service.admin;
 
 import com.co.codeconnectjudge.common.result.ResponseResult;
 import com.co.codeconnectjudge.model.po.User;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.co.codeconnectjudge.model.vo.RegisterUser;
+import com.co.codeconnectjudge.model.dto.RegisterUser;
 
 /**
  * <p>
@@ -13,7 +12,7 @@ import com.co.codeconnectjudge.model.vo.RegisterUser;
  * @author co
  * @since 2024-03-23
  */
-public interface LoginService {
+public interface AdminLoginService {
 
     ResponseResult login(User user);
 

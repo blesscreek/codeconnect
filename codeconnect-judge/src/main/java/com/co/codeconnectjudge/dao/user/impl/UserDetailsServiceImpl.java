@@ -1,4 +1,4 @@
-package com.co.codeconnectjudge.service.impl;
+package com.co.codeconnectjudge.dao.user.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.co.codeconnectjudge.mapper.MenuMapper;

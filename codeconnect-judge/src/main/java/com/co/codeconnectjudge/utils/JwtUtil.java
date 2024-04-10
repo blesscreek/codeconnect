@@ -18,7 +18,7 @@ public class JwtUtil {
     //设置秘钥明文
     public static final String JWT_KEY = "sangeng";
     public static String getUUID(){
-        String token = UUID.randomUUID().toString().replaceAll("-", "");
+        String token =UUID.randomUUID().toString().replaceAll("-", "");
         return token;
     }
     /**

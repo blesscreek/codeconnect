@@ -1,4 +1,4 @@
-package com.co.codeconnectjudge.service;
+package com.co.codeconnectjudge.dao.user;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.co.codeconnectjudge.model.po.User;

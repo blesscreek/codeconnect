@@ -1,4 +1,4 @@
-package com.co.codeconnectjudge.model.vo;
+package com.co.codeconnectjudge.model.dto;
 
 import lombok.Data;
 

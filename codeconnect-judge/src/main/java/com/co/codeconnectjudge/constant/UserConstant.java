@@ -7,5 +7,5 @@ package com.co.codeconnectjudge.constant;
  * @Date 2024-03-25 22:10
  */
 public interface UserConstant {
-    String USER_TOKEN = "token";
+    String USER_TOKEN = "Authorization";
 }
