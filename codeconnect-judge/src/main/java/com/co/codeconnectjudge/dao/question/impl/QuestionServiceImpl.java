@@ -38,13 +38,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Autowired
     private QuestionValidator questionValidator;
     @Autowired
-    private UserService userService;
-    @Autowired
     private TagService tagService;
     @Autowired
-    private QuestionService questionService;
-    @Autowired
     private QuestionTagService questionTagService;
+    @Autowired
+    private QuestionMapper questionMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -54,15 +52,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         //获取用户
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Long userId = loginUser.getUser().getId();
-        User user = userService.getById(userId);
-        String account = user.getAccount();
+        Long uid = loginUser.getUser().getId();
         //插入question表
-        question.setAuthor(account);
+        question.setUid(uid);
         LocalDateTime currentTime = LocalDateTime.now();
         question.setCreateTime(currentTime);
         question.setUpdateTime(currentTime);
-        boolean saveQuestion = questionService.save(question);
+        boolean saveQuestion = this.save(question);
         if (saveQuestion == false) {
             return false;
         }
@@ -85,5 +81,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             }
         }
         return true;
+    }
+
+    @Override
+    public List<Question> selectQuestions(String[] tagNames, String titleKeyword, Integer difficulty, Long pageSize, Long offset) {
+        List<Question> questions = questionMapper.selectQuestions(tagNames, titleKeyword, difficulty, pageSize, offset);
+        return questions;
     }
 }

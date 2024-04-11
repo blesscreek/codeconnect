@@ -16,4 +16,11 @@
         id, qid, tid, create_time, update_time
     </sql>
 
+    <select id="getTagNamesByQuestionId" parameterType="long" resultType="java.lang.String">
+        SELECT name
+        FROM tag
+        WHERE id IN (SELECT tid FROM question_tag WHERE qid = #{questionId})
+    </select>
+
+
 </mapper>

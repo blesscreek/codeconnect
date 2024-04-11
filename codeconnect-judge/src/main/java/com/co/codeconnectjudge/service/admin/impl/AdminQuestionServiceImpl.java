@@ -4,10 +4,15 @@ import com.co.codeconnectjudge.common.exception.StatusFailException;
 import com.co.codeconnectjudge.common.result.ResponseResult;
 import com.co.codeconnectjudge.common.result.ResultStatus;
 import com.co.codeconnectjudge.manager.admin.AdminQuestionManager;
+import com.co.codeconnectjudge.model.dto.GetQuestionListDTO;
 import com.co.codeconnectjudge.model.dto.QuestionDTO;
+import com.co.codeconnectjudge.model.dto.QuestionListReturnDTO;
+import com.co.codeconnectjudge.model.po.PageParams;
 import com.co.codeconnectjudge.service.admin.AdminQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -31,5 +36,15 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
         }
 
+    }
+
+    @Override
+    public ResponseResult getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) {
+        try {
+            List<QuestionListReturnDTO> questionList = adminQuestionManager.getQuestionList(pageParams, getQuestionListDTO);
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目查找成功",questionList);
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }
     }
 }

@@ -3,6 +3,8 @@ package com.co.codeconnectjudge.dao.question;
 import com.co.codeconnectjudge.model.po.QuestionTag;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -12,5 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2024-04-10
  */
 public interface QuestionTagService extends IService<QuestionTag> {
-
+    public List<String> getTagNamesByQuestionId(Long questionId);
 }

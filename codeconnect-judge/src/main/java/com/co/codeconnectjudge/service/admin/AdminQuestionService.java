@@ -1,7 +1,9 @@
 package com.co.codeconnectjudge.service.admin;
 
 import com.co.codeconnectjudge.common.result.ResponseResult;
+import com.co.codeconnectjudge.model.dto.GetQuestionListDTO;
 import com.co.codeconnectjudge.model.dto.QuestionDTO;
+import com.co.codeconnectjudge.model.po.PageParams;
 import com.co.codeconnectjudge.model.po.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,4 +18,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface AdminQuestionService  {
 
     ResponseResult addQuestion(QuestionDTO questionDTO);
+
+    ResponseResult getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO);
+
 }

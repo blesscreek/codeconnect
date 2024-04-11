@@ -57,7 +57,7 @@ public class QuestionValidator {
     private void defaultValidate(Question question) throws StatusFailException {
         QuestionConstants.QuestionDifficulty questionDifficulty = QuestionConstants.QuestionDifficulty.getQuestionDifficulty(question.getDifficulty());
         if (questionDifficulty == null) {
-            throw new StatusFailException("题目难度必须为EASY(0)或MEDIUM(1)或HARD(2)");
+            throw new StatusFailException("题目难度必须为简单(0)或中等(1)或困难(2)");
         }
         QuestionConstants.QuestionType questionType = QuestionConstants.QuestionType.getQuestionType(question.getType());
         if (questionType == null) {

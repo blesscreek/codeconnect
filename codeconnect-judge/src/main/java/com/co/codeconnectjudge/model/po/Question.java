@@ -36,7 +36,7 @@ public class Question implements Serializable {
     private String title;
 
     @ApiModelProperty(value = "作者")
-    private String author;
+    private Long uid;
 
     @ApiModelProperty(value = "题目背景")
     private String background;

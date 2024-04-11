@@ -11,9 +11,9 @@ import io.swagger.models.auth.In;
 
 public class QuestionConstants {
     public enum QuestionDifficulty {
-        EASY(0),
-        MEDIUM(1),
-        HARD(2);
+        简单(0),
+        中等(1),
+        困难(2);
         private final Integer difficulty;
 
         QuestionDifficulty(Integer difficulty) {
@@ -26,6 +26,14 @@ public class QuestionConstants {
             for (QuestionDifficulty questionDifficulty : QuestionDifficulty.values()) {
                 if (questionDifficulty.getDifficulty().equals(difficulty)) {
                     return questionDifficulty;
+                }
+            }
+            return null;
+        }
+        public static Integer getQuestionDifficultyByString(String str) {
+            for (QuestionDifficulty questionDifficulty : QuestionDifficulty.values()) {
+                if (questionDifficulty.name().equals(str)) {
+                    return questionDifficulty.getDifficulty();
                 }
             }
             return null;
