@@ -45,6 +45,10 @@ public class AdminQuestionController {
     public ResponseResult getQuestionList(PageParams pageParams, @RequestBody GetQuestionListDTO getQuestionListDTO){
         return adminQuestionService.getQuestionList(pageParams, getQuestionListDTO);
     }
+    @ApiOperation("题目查询")
+    public ResponseResult getQuestion(){
+        return null;
+    }
 
 
 }

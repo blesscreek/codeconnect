@@ -59,15 +59,16 @@ public class AdminQuestionManager {
         String[] tags;
         if(getQuestionListDTO.getTags() == null || getQuestionListDTO.getTags().size() == 0)
             tags = null;
-        else
-            tags = (String[]) getQuestionListDTO.getTags().toArray();
+        else {
+            tags = new String[getQuestionListDTO.getTags().size()];
+            // 将对象数组中的每个元素转换为字符串，并放入新创建的字符串数组中
+            for (int i = 0; i < getQuestionListDTO.getTags().size(); i++) {
+                tags[i] = String.valueOf(getQuestionListDTO.getTags().get(i));
+            }
+        }
         Integer difficulty = QuestionConstants.QuestionDifficulty.getQuestionDifficultyByString(getQuestionListDTO.getDifficulty());
-        System.out.println(tags);
-        System.out.println( getQuestionListDTO.getKeyword());
-        System.out.println(difficulty);
         List<Question> questions = questionService.selectQuestions(tags, getQuestionListDTO.getKeyword(),
                 difficulty, pageParams.getPageSize(), offset);
-        System.out.println(questions);
         if (questions == null) {
             throw new StatusFailException("查询题目列表失败");
         }
