@@ -1,6 +1,7 @@
 package com.co.codeconnectjudge.dao.question;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.co.codeconnectjudge.common.exception.StatusFailException;
 import com.co.codeconnectjudge.model.dto.QuestionDTO;
 import com.co.codeconnectjudge.model.po.Question;
 
@@ -12,5 +13,5 @@ import com.co.codeconnectjudge.model.po.Question;
  */
 
 public interface QuestionService extends IService<Question> {
-    boolean addQuestion(QuestionDTO questionDTO);
+    boolean addQuestion(QuestionDTO questionDTO) throws StatusFailException;
 }

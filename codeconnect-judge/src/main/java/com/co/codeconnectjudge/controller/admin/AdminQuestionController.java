@@ -30,9 +30,10 @@ public class AdminQuestionController {
      * @param questionDTO
      * @return
      */
-    @PostMapping("")
+    @PostMapping("/addQuestion")
     @PreAuthorize("hasAuthority('sys:question:add')")
     public ResponseResult addQuestion(@RequestBody QuestionDTO questionDTO) {
         return adminQuestionService.addQuestion(questionDTO);
     }
+
 }

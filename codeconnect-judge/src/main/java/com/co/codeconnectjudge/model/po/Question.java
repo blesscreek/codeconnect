@@ -59,6 +59,9 @@ public class Question implements Serializable {
     @ApiModelProperty(value = "备注、提醒")
     private String hint;
 
+    @ApiModelProperty(value = "题目模式(0是OI，1是ACM)")
+    private Integer type;
+
     @ApiModelProperty(value = "权限（0公开、1私有）")
     private Integer auth;
 

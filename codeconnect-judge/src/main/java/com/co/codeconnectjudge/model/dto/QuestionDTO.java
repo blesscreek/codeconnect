@@ -23,13 +23,5 @@ public class QuestionDTO {
 
     private Question question;
 
-    private List<QuestionCase> samples;
-
-    private Boolean isUploadTestCase;
-
-    private String uploadTestcaseDir;
-
-    private String judgeMode;
-
     private List<Tag> tags;
 }

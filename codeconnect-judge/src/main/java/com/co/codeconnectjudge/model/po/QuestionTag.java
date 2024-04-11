@@ -22,17 +22,18 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("tag")
-@ApiModel(value="Tag对象", description="")
-public class Tag implements Serializable {
+@TableName("question_tag")
+@ApiModel(value="QuestionTag对象", description="")
+public class QuestionTag implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "标签名字")
-    private String name;
+    private Long qid;
+
+    private Long tid;
 
     private LocalDateTime createTime;
 

@@ -1,6 +1,6 @@
 package com.co.codeconnectjudge.mapper;
 
-import com.co.codeconnectjudge.model.po.Tag;
+import com.co.codeconnectjudge.model.po.QuestionTag;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author co
  * @since 2024-04-10
  */
-public interface TagMapper extends BaseMapper<Tag> {
+public interface QuestionTagMapper extends BaseMapper<QuestionTag> {
 
 }

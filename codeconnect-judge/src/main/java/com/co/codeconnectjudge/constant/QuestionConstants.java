@@ -10,6 +10,27 @@ import io.swagger.models.auth.In;
  */
 
 public class QuestionConstants {
+    public enum QuestionDifficulty {
+        EASY(0),
+        MEDIUM(1),
+        HARD(2);
+        private final Integer difficulty;
+
+        QuestionDifficulty(Integer difficulty) {
+            this.difficulty = difficulty;
+        }
+        public Integer getDifficulty() {
+            return difficulty;
+        }
+        public static QuestionDifficulty getQuestionDifficulty(Integer difficulty) {
+            for (QuestionDifficulty questionDifficulty : QuestionDifficulty.values()) {
+                if (questionDifficulty.getDifficulty().equals(difficulty)) {
+                    return questionDifficulty;
+                }
+            }
+            return null;
+        }
+    }
     public enum QuestionType {
         OI(0),
         ACM(1);
@@ -76,4 +97,5 @@ public class QuestionConstants {
             return null;
         }
     }
+
 }
