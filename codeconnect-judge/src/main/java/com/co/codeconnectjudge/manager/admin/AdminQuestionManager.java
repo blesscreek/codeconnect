@@ -7,11 +7,8 @@ import com.co.codeconnectjudge.constant.QuestionConstants;
 import com.co.codeconnectjudge.dao.question.JudgeService;
 import com.co.codeconnectjudge.dao.question.QuestionTagService;
 import com.co.codeconnectjudge.mapper.QuestionMapper;
-import com.co.codeconnectjudge.model.dto.GetQuestionListDTO;
-import com.co.codeconnectjudge.model.dto.LoginUser;
-import com.co.codeconnectjudge.model.dto.QuestionDTO;
+import com.co.codeconnectjudge.model.dto.*;
 import com.co.codeconnectjudge.dao.question.QuestionService;
-import com.co.codeconnectjudge.model.dto.QuestionListReturnDTO;
 import com.co.codeconnectjudge.model.po.Judge;
 import com.co.codeconnectjudge.model.po.PageParams;
 import com.co.codeconnectjudge.model.po.Question;
@@ -54,7 +51,7 @@ public class AdminQuestionManager {
         }
     }
 
-    public List<QuestionListReturnDTO> getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) throws StatusFailException {
+    public GetQuestionListReturnDTO getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) throws StatusFailException {
         Long offset = (pageParams.getPageNo() - 1) * pageParams.getPageSize();
         String[] tags;
         if(getQuestionListDTO.getTags() == null || getQuestionListDTO.getTags().size() == 0)
@@ -117,7 +114,10 @@ public class AdminQuestionManager {
             listReturn.setDifficulty(difficultyName);
             questionListReturnDTOS.add(listReturn);
         }
-        return questionListReturnDTOS;
+        GetQuestionListReturnDTO getQuestionListReturnDTO = new GetQuestionListReturnDTO();
+        getQuestionListReturnDTO.setQuestionCnt(questions.size());
+        getQuestionListReturnDTO.setQuestionResturn(questionListReturnDTOS);
+        return getQuestionListReturnDTO;
 
     }
 }

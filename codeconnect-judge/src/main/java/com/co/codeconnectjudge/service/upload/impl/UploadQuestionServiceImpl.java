@@ -41,8 +41,7 @@ public class UploadQuestionServiceImpl implements UploadQuestionService {
             image.transferTo(tempFile);
             String localFilePath = tempFile.getAbsolutePath();
             //调用UploadQuestionManager上传图片
-            String url = uploadQuestionManager.uploadFile(uploadFileParamsDto, localFilePath, bucket_questionimages);
-            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "图片上传成功", url);
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "图片上传成功", uploadQuestionManager.uploadFile(uploadFileParamsDto, localFilePath, bucket_questionimages));
         } catch (Exception e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(), e.getMessage());
         }
