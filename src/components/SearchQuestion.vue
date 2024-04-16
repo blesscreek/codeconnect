@@ -5,10 +5,11 @@ const formInline = reactive({
   algorithm: '',
   date: ''
 })
+const emit = defineEmits(['onSearch'])
 const num = ref(100)
 
 const onSubmit = () => {
-  console.log('submit!')
+  emit('onSearch', formInline)
 }
 </script>
 
@@ -25,14 +26,15 @@ const onSubmit = () => {
 
       <el-form-item label="">
         <el-select placeholder="请选择算法标签" v-model="formInline.algorithm">
-          <el-option label="深搜" value="深搜" />
-          <el-option label="广搜" value="广搜" />
+          <el-option label="循环结构" value="循环结构" />
+          <el-option label="分支结构" value="分支结构" />
+          <el-option label="顺序结构" value="顺序结构" />
           <el-option label="疯狂星期四" value="疯狂星期四" />
         </el-select>
       </el-form-item>
       <el-form-item label="关键字：">
         <el-input
-          v-model="formInline.user"
+          v-model="formInline.date"
           placeholder="关键字、题号搜索"
           clearable
         />
@@ -94,6 +96,9 @@ const onSubmit = () => {
         cursor: pointer;
         text-align: end;
         padding-right: 5%;
+      }
+      .clear:hover {
+        color: rgb(54, 125, 195);
       }
     }
   }

@@ -107,7 +107,12 @@ const handleDelete = (index, row) => {
             <el-button @click="handleEdit(scope.$index, scope.row)">
               编辑
             </el-button>
-
+            <el-button
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
+              增加测试点
+            </el-button>
             <el-button
               type="danger"
               @click="handleDelete(scope.$index, scope.row)"

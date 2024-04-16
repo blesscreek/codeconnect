@@ -22,6 +22,9 @@ watch(route, () => {
 </script>
 <template>
   <div class="box">
+    <div class="head">
+      <span>{{ listVal ? '全部人员(o゜▽゜)o☆' : '最近消息(o゜▽゜)o☆' }}</span>
+    </div>
     <div v-if="listVal">
       <div class="li" style="height: 60px" v-for="(x, i) in data" :key="i">
         <members-list></members-list>
@@ -34,16 +37,31 @@ watch(route, () => {
     </div>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
 .box {
   width: 100%;
   height: 100%;
+  .head {
+    width: 100%;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    color: #004ed5;
+    font-size: 18px;
+    span {
+      display: block;
+      margin-left: 10px;
+    }
+  }
+  div .li:first-child {
+    background-color: #eee;
+  }
 }
 .li {
   width: 100%;
 }
 .li:hover {
   cursor: pointer;
-  background-color: #e9e9e9;
+  background-color: #eee;
 }
 </style>

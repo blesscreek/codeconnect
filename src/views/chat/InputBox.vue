@@ -16,7 +16,7 @@
 .box {
   width: 100%;
   // height: 200px;
-  height: 30%;
+  height: 27%;
   background-color: #f3f3f3;
   border-top: 1px solid #c7c7c7;
   box-sizing: border-box;

@@ -80,6 +80,52 @@ onBeforeUnmount(() => {
 import TopicDescription from './TopicDescription.vue'
 // 代码编辑器相关
 import CodeSubmission from './CodeSubmission.vue'
+// 测试样例
+import TestCase from './TestCase.vue'
+import { useRoute } from 'vue-router'
+import { getQuestionService } from '@/api/topic.js'
+
+// 拿到题目id
+const route = useRoute()
+const qid = route.fullPath.split('qid=')[1]
+const topicData = ref({})
+const examplesData = ref([])
+// 解构相关数据
+const getTopic = async () => {
+  const res = await getQuestionService(qid)
+  // console.log(res.data)
+  // 数据分成两份，一份给左边的题目详情，一份给右下的测试样例
+  let {
+    background,
+    description,
+    difficulty,
+    examples,
+    hint,
+    id,
+    input,
+    output,
+    title
+  } = res.data
+  if (difficulty == 0) difficulty = '简单'
+  if (difficulty == 1) difficulty = '中等'
+  if (difficulty == 2) difficulty = '困难'
+  examples = examples.split('"')
+  examples = [[examples[1], examples[3]]]
+  console.log(examples)
+  topicData.value = {
+    background: background,
+    description: description,
+    difficulty: difficulty,
+    examples: examples,
+    hint: hint,
+    id: id,
+    input: input,
+    output: output,
+    title: title
+  }
+  examplesData.value = examples
+}
+getTopic()
 </script>
 
 <template>
@@ -89,28 +135,22 @@ import CodeSubmission from './CodeSubmission.vue'
       <!-- 左边 -->
       <div class="head-left">
         <img src="@/assets/logo.png" alt="" />
-        <div class="li">题库</div>
+      </div>
+      <div class="head-middle">
         <div class="li">上一道</div>
+        <div class="li">返回首页</div>
         <div class="li">下一道</div>
       </div>
-      <!-- 中间 -->
-      <div class="head-center">
-        <el-button class="run" type="info" text bg>
-          <img src="@/assets/play.svg" alt="" />
-          <div style="padding-left: 5px">运行</div>
-        </el-button>
-        <el-button class="submit" type="info" text bg>
-          <img src="@/assets/submit.svg" alt="" />
-          <div style="padding-left: 5px">提交</div>
-        </el-button>
-      </div>
       <div class="head-right">
-        <div class="box">个人中心</div>
+        <div class="head_sculpture">
+          <head-sculpture></head-sculpture>
+        </div>
+        <div class="login">登录 | 注册</div>
       </div>
     </el-header>
     <div class="container">
       <div class="left" :style="{ width: leftWidth + 'px' }">
-        <topic-description></topic-description>
+        <topic-description :topicData="topicData"></topic-description>
       </div>
       <div class="divider-h" @mousedown="startDragH">
         <span></span>
@@ -123,7 +163,7 @@ import CodeSubmission from './CodeSubmission.vue'
           <span></span>
         </div>
         <div class="bottom" :style="{ height: bottomHeight + 'px' }">
-          <p>测试用例</p>
+          <test-case :examplesData="examplesData"></test-case>
         </div>
       </div>
     </div>
@@ -142,60 +182,46 @@ import CodeSubmission from './CodeSubmission.vue'
   margin: 0;
   padding: 0;
   display: flex;
+  background-color: #fff;
   .head-left {
-    width: 20%;
+    width: 11%;
     display: flex;
     align-items: center;
     img {
       height: 100%;
-      margin-left: 20px;
-    }
-    .li {
-      width: 50px;
-      margin-left: 1px;
-      text-align: center;
-      height: 30px;
-      background-color: #b66767;
+      margin-left: 30px;
     }
   }
-  .head-center {
-    height: 100%;
-    width: 60%;
-    justify-self: center;
-
+  .head-middle {
+    width: 78%;
     display: flex;
     justify-content: center;
     align-items: center;
-    .el-button {
-      border: none;
-      background-color: #e7e7e7;
-      width: 120px;
-      height: 85%;
-      margin: 0 1px;
-      font-size: 18px;
+    .li {
+      display: table-cell;
+      vertical-align: middle;
+      padding: 7px 10px;
+      margin-left: 1px;
+      color: #5f5f5f;
     }
-    .el-button:hover {
-      background-color: #e3e3e3;
-    }
-    .run {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-      color: #323232;
-      img {
-        width: 30px;
-      }
-    }
-    .submit {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-      color: rgb(0, 179, 39);
-      img {
-        width: 30px;
-      }
+    .li:hover {
+      cursor: pointer;
+      color: #000000;
+      background-color: #f2f2f2;
     }
   }
   .head-right {
-    width: 20%;
+    width: 11%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    .head_sculpture {
+      width: 40px;
+      height: 40px;
+    }
+    .login {
+      margin-left: 20px;
+    }
   }
 }
 .container {
@@ -227,7 +253,7 @@ import CodeSubmission from './CodeSubmission.vue'
   background-color: #fff;
   border-radius: 20px;
   box-sizing: border-box;
-  border: 1px solid #dbdbdb;
+  // border: 1px solid #dbdbdb;
 }
 
 .bottom {

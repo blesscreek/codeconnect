@@ -34,6 +34,7 @@ watch(route, () => {
         <div class="aside_nav">
           <!-- 左侧导航栏 -->
           <div class="first_nav">
+            <img src="@/assets/logo.png" alt="" />
             <div
               class="li"
               :class="{ active: chatRoom }"
@@ -46,8 +47,16 @@ watch(route, () => {
               :class="{ active: friend }"
               @click="$router.push('/chat/friend')"
             >
-              好友
+              <!-- 好友 -->
+              消息
             </div>
+            <!-- <div
+              class="li"
+              :class="{ active: friend }"
+              @click="$router.push('/chat/friend')"
+            >
+              团队
+            </div> -->
             <div
               class="li"
               :class="{ active: back }"
@@ -78,28 +87,33 @@ watch(route, () => {
   height: 100vh;
   display: flex;
   align-items: center;
+  // background-image: url('@/assets/bi.png');
 }
 .el-container {
-  max-width: 75vw;
-  height: 90vh;
+  max-width: 77vw;
+  height: 95vh;
   margin: 0 auto;
-  background-color: #fff;
-  box-shadow: 5px 5px 5px #e6e6e6;
 }
 .el-aside {
-  width: 320px;
+  width: 340px;
   .aside_nav {
     width: 100%;
     height: 100%;
     display: flex;
     .first_nav {
-      width: 32%;
+      width: 95px;
       height: 100%;
+      border-radius: 10px;
+      background-color: #fff;
+      img {
+        width: 100%;
+        margin: 10px 0;
+      }
       .li {
         width: 100%;
         height: 50px;
         margin-top: 5px;
-        font-size: 18px;
+        font-size: 17px;
         text-align: center;
         line-height: 45px;
         color: #353535;
@@ -118,13 +132,22 @@ watch(route, () => {
       }
     }
     .second_nav {
-      width: 68%;
+      width: 215px;
       height: 100%;
+      // 聊天室的两个样式
+      margin: 0 15px;
+      box-sizing: border-box;
+      border-radius: 10px;
+      background-color: #fff;
     }
   }
 }
 .el-main {
   padding: 0;
+  box-sizing: border-box;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px #e6e6e6;
   .content {
     width: 100%;
     height: 100%;

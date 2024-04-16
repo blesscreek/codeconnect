@@ -6,10 +6,12 @@ import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
 // 在eslintrc中全局配置了还要引入吗？？？
 import { ElMessage } from 'element-plus'
+
 const userStore = useUserStore()
 const isRegister = ref(false)
 const form = ref()
 const rememberCheck = ref(false)
+const freeCheck = ref(false)
 const router = useRouter()
 // 登录注册的表单内容
 const formModel = ref({
@@ -75,17 +77,22 @@ watch(isRegister, () => {
 const register = async () => {
   await form.value.validate()
   await userRegisterService(formModel.value)
-  Element.success('注册成功')
+  ElMessage.success('注册成功')
   isRegister.value = false
 }
+
 // 登录
 const login = async () => {
   // 组件自带的表单验证
   await form.value.validate()
   console.log(formModel.value)
   const res = await userLoginService(formModel.value)
-  userStore.setToken(res.data.token)
-  ElMessage.success('登录成功')
+  console.log(res.data.Authorization)
+  userStore.setToken(res.data.Authorization)
+  ElMessage({
+    message: '登录成功',
+    type: 'success'
+  })
   // 是否记得账号密码
   if (rememberCheck.value) {
     userStore.setRemember(true)

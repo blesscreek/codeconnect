@@ -7,7 +7,9 @@
         <!-- 组件 -->
         <head-nav></head-nav>
       </el-header>
-      <el-main><router-view></router-view></el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </div>
 </template>
@@ -21,6 +23,5 @@
 }
 .el-main {
   height: 100%;
-  /* padding: 0; */
 }
 </style>
