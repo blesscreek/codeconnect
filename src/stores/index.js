@@ -5,4 +5,6 @@ const pinia = createPinia()
 pinia.use(persist)
 
 export default pinia
-export * from './modules/user' //接收user模块的所有按需导出
+//接收user模块的所有按需导出
+export * from './modules/user'
+export * from './modules/chat'

@@ -145,7 +145,10 @@ getTopic()
         <div class="head_sculpture">
           <head-sculpture></head-sculpture>
         </div>
-        <div class="login">登录 | 注册</div>
+        <div class="login">
+          <!-- 登录 | 注册 -->
+          ( •̀ ω •́ )y
+        </div>
       </div>
     </el-header>
     <div class="container">

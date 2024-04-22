@@ -1,22 +1,27 @@
 <script setup>
-import InputBox from './InputBox.vue'
 import MessageBox from './MessageBox.vue'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 const chatRoom = ref(false)
 const friend = ref(false)
 const route = useRoute()
+import { useChatStore } from '@/stores'
 
+const chatStore = useChatStore()
+
+const chatInfo = ref({}) //控制消息窗口头部的内容
 // 侧边栏高亮
 const highlightChange = () => {
   let path = route.path.split('/')[2]
   if (path === 'chatroom') {
     chatRoom.value = true
     friend.value = false
+    chatInfo.value = {}
   }
   if (path === 'friend') {
     friend.value = true
     chatRoom.value = false
+    chatInfo.value = chatStore.chats[chatStore.activeIndex]
   }
 }
 highlightChange()
@@ -24,6 +29,11 @@ highlightChange()
 watch(route, () => {
   highlightChange()
 })
+
+// 能不能拿到发消息对象的信息  可以路由那个也是父组件
+const getChatInfo = (val) => {
+  chatInfo.value = val
+}
 </script>
 
 <template>
@@ -38,14 +48,14 @@ watch(route, () => {
             <div
               class="li"
               :class="{ active: chatRoom }"
-              @click="$router.push('/chat/chatroom')"
+              @click="$router.replace('/chat/chatroom')"
             >
               聊天室
             </div>
             <div
               class="li"
               :class="{ active: friend }"
-              @click="$router.push('/chat/friend')"
+              @click="$router.replace('/chat/friend')"
             >
               <!-- 好友 -->
               消息
@@ -57,25 +67,18 @@ watch(route, () => {
             >
               团队
             </div> -->
-            <div
-              class="li"
-              :class="{ active: back }"
-              @click="$router.push('/')"
-            >
-              首页
-            </div>
+            <div class="li" @click="$router.replace('/')">首页</div>
           </div>
           <!-- 显示好友等的地方 -->
           <div class="second_nav">
-            <router-view></router-view>
+            <router-view @chatInfo="getChatInfo"></router-view>
           </div>
         </div>
       </el-aside>
       <!-- 内容区 -->
       <el-main>
         <div class="content">
-          <message-box></message-box>
-          <input-box></input-box>
+          <message-box :chatInfo="chatInfo"></message-box>
         </div>
       </el-main>
     </el-container>
@@ -87,7 +90,6 @@ watch(route, () => {
   height: 100vh;
   display: flex;
   align-items: center;
-  // background-image: url('@/assets/bi.png');
 }
 .el-container {
   max-width: 77vw;

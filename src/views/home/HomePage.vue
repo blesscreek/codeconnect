@@ -2,19 +2,19 @@
 const tableData = [
   {
     date: 'No.1',
-    name: '起个昵称',
+    name: 'bless',
     rate: '100',
     pingjia: '太棒啦！'
   },
   {
     date: 'No.2',
-    name: '再起一个',
+    name: '张鱼小丸子',
     rate: '90',
     pingjia: '真不错！'
   },
   {
     date: 'No.3',
-    name: '不想起了',
+    name: 'baiyin',
     rate: '70',
     pingjia: '继续加油哦！'
   },
@@ -31,7 +31,7 @@ const tableData = [
     <div class="box1">
       <el-carousel height="383px" motion-blur>
         <el-carousel-item v-for="item in 4" :key="item">
-          <img src="@/assets/你的段落文字 (2).png" alt="" />
+          <img src="@/assets/轮播图.png" alt="" />
         </el-carousel-item>
       </el-carousel>
       <div class="welcome">

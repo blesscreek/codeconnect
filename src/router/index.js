@@ -4,7 +4,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // 登录注册
     { path: '/login', component: () => import('@/views/login/LoginPage.vue') },
+    // 主框架，有首页、题目列表、个人中心
     {
       path: '/',
       component: () => import('@/views/layout/LayoutPage.vue'),
@@ -14,6 +16,21 @@ const router = createRouter({
         {
           path: '/topic',
           component: () => import('@/views/topic/TopicPage.vue')
+        },
+        {
+          path: '/user',
+          component: () => import('@/views/user/PersonalCenter.vue'),
+          redirect: '/user/setting',
+          children: [
+            {
+              path: '/user/setting',
+              component: () => import('@/views/user/UserSetting.vue')
+            },
+            {
+              path: '/user/follow',
+              component: () => import('@/views/user/FollowList.vue')
+            }
+          ]
         }
       ]
     },

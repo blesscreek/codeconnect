@@ -1,7 +1,11 @@
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
-import { userLoginService, userRegisterService } from '@/api/user.js'
+import {
+  userLoginService,
+  userRegisterService
+  // userInfoService
+} from '@/api/user.js'
 import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
 // 在eslintrc中全局配置了还要引入吗？？？
@@ -24,7 +28,7 @@ const formModel = ref({
 const rules = {
   account: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 5, max: 10, message: '用户名是5-10位的字符', trigger: 'blur' }
+    { min: 1, max: 7, message: '用户名是1-7位的字符', trigger: 'blur' }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
@@ -64,8 +68,8 @@ const rules = {
 // 记住我相关
 if (isRegister.value === false) {
   if (userStore.remember) {
-    rememberCheck.value = userStore.getRemember()
-    formModel.value = userStore.getAccount()
+    rememberCheck.value = userStore.remember
+    formModel.value = userStore.account
   }
 }
 // 登录注册切换
@@ -87,12 +91,18 @@ const login = async () => {
   await form.value.validate()
   console.log(formModel.value)
   const res = await userLoginService(formModel.value)
-  console.log(res.data.Authorization)
-  userStore.setToken(res.data.Authorization)
+  console.log(res)
+  userStore.setToken(res.data.accessToken)
+  userStore.setRefreshToken(res.data.refreshToken)
+  // userStore.setToken(res.data.Authorization)
   ElMessage({
     message: '登录成功',
     type: 'success'
   })
+
+  // 获取用户信息
+  userStore.getUserInfoServer()
+
   // 是否记得账号密码
   if (rememberCheck.value) {
     userStore.setRemember(true)

@@ -9,9 +9,11 @@ import {
   Management,
   UserFilled
 } from '@element-plus/icons-vue'
+import router from '@/router'
 // 导航栏高亮相关
 const route = useRoute()
 const userStore = useUserStore()
+// console.log(userStore.userInfo)
 const nav = ref({
   home: false,
   topic: false,
@@ -39,8 +41,6 @@ watch(route, () => {
 
 // 登录后头像和昵称的渲染
 const token = userStore.token
-// if (token) {
-// }
 </script>
 
 <template>
@@ -74,7 +74,7 @@ const token = userStore.token
       <div
         class="li"
         :class="{ active: nav.user }"
-        @click="$router.push('/chat')"
+        @click="$router.push('/user')"
       >
         <el-icon><UserFilled /></el-icon>
         <span>个人中心</span>
@@ -90,12 +90,15 @@ const token = userStore.token
     </div>
     <div class="right">
       <div class="head_sculpture">
-        <head-sculpture></head-sculpture>
+        <head-sculpture :url="userStore.userInfo.headImageThumb">
+        </head-sculpture>
       </div>
       <div @click="$router.push('/login')" class="login" v-if="!token">
         登录 | 注册
       </div>
-      <div v-else class="login">{{ 'username' }}</div>
+      <div v-else class="login" @click="router.push('/user')">
+        {{ userStore.userInfo.nickname }}
+      </div>
     </div>
   </div>
 </template>
@@ -118,7 +121,7 @@ const token = userStore.token
   height: 100%;
 }
 .logo {
-  width: 100px;
+  height: 100%;
   margin-left: 30px;
   margin-right: 20px;
   img {
@@ -130,7 +133,7 @@ const token = userStore.token
   .li {
     width: 110px;
     margin-left: 10px;
-    font-size: 18px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -165,15 +168,15 @@ const token = userStore.token
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 17px;
   }
   .login:hover {
     color: #2a7fee;
     cursor: pointer;
   }
   .head_sculpture {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     margin-right: 20px;
   }
 }

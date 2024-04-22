@@ -1,8 +1,13 @@
+<script setup>
+// const props = defineProps({
+//   info: Object
+// })
+</script>
 <template>
   <!-- 左侧聊天室成员列表 -->
   <div class="mbox">
     <div class="left">
-      <img src="@/assets/head-sculpture.jpg" alt="" />
+      <head-sculpture></head-sculpture>
     </div>
     <div class="right">
       <span>昵称最多七个字</span>
@@ -11,28 +16,25 @@
 </template>
 <style scoped>
 .mbox {
-  width: 100%;
+  width: 215px;
   height: 60px;
   display: flex;
 }
 .box div {
-  height: 100%;
   display: flex;
   align-items: center;
 }
 .left {
-  width: 25%;
+  width: 40px;
+  height: 40px;
   justify-content: center;
+  margin-left: 5px;
 }
 .right {
-  width: 75%;
-}
-img {
-  width: 42px;
-  border-radius: 50%;
+  width: 160px;
 }
 span {
   font-size: 16px;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 </style>

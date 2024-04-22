@@ -19,6 +19,7 @@
 }
 .el-header {
   padding: 0;
+  height: 6%;
   background-color: #fff;
 }
 .el-main {

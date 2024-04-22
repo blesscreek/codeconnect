@@ -4,7 +4,7 @@ import { getQuestionListService } from '@/api/topic.js'
 import { SemiSelect, Select } from '@element-plus/icons-vue'
 const data = ref([
   {
-    passingRate: 70,
+    passingRate: '70',
     tags: ['循环结构', '分支结构'],
     difficulty: '困难',
     title: '46546546',
@@ -15,7 +15,7 @@ const data = ref([
 const total = ref(0)
 
 // 要发请求的数据
-const pageSizeData = ref({ pageNo: 1, pageSize: 10 })
+const pageSizeData = ref({ pageNo: 1, pageSize: 11 })
 const searchData = ref({ difficulty: '', tags: [], keyword: '' })
 // 是否显示算法标签
 const isShowTags = ref(false)

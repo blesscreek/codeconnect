@@ -1,55 +1,59 @@
+<script setup>
+const props = defineProps({
+  info: Object
+})
+</script>
 <template>
   <!-- 左侧好友列表 -->
   <div class="box">
     <div class="left">
-      <img src="@/assets/23.jpg" alt="" />
+      <head-sculpture :url="props.info.headImage"></head-sculpture>
     </div>
     <div class="right">
       <div class="content">
-        <span class="name">昵称最多七个字</span>
-        <span class="message">你们已经是好友啦...</span>
+        <span class="name">{{ props.info.showName }}</span>
+        <span class="message">
+          {{ props.info.lastContent || '你们已经是好友啦...' }}
+        </span>
       </div>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .box {
-  width: 100%;
+  width: 215px;
   height: 80px;
   display: flex;
-}
-.box div {
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
-.left {
-  width: 28%;
-  justify-content: center;
   align-items: center;
 }
+.left {
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+}
 .right {
-  width: 72%;
+  width: 150px;
+  height: 50px;
+  margin-left: 5px;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   padding-left: 5px;
   box-sizing: border-box;
   .content {
-    height: 57px;
+    height: 54px;
   }
   span {
     display: block;
+    height: 27px;
   }
   .name {
-    font-size: 16px;
+    font-size: 17px;
   }
   .message {
-    font-size: 15px;
+    font-size: 14px;
     color: #616161;
+    overflow: hidden;
   }
-}
-img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
 }
 </style>
