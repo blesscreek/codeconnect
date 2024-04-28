@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.HashMap;
 
 /**
  * @Author co
@@ -26,7 +27,7 @@ public class UploadQuestionManager {
     @Value("${minio.endpoint}")
     private String endpoint;
 
-    public String uploadFile(UploadFileParamsDto uploadFileParamsDto, String localFilePath, String bucket) throws StatusFailException {
+    public HashMap<String, String> uploadFile(UploadFileParamsDto uploadFileParamsDto, String localFilePath, String bucket) throws StatusFailException {
         String filename = uploadFileParamsDto.getFilename();
         //扩展名
         String extension = filename.substring(filename.lastIndexOf("."));
@@ -42,6 +43,8 @@ public class UploadQuestionManager {
             throw new StatusFailException("上传文件失败");
         }
         String url = endpoint + "/" + bucket + "/" + objectName;
-        return url;
+        HashMap<String, String> map = new HashMap<>();
+        map.put("url", url);
+        return map;
     }
 }
