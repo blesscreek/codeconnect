@@ -30,7 +30,13 @@ const handleSendMessage = () => {
       </div>
       <div class="info">
         <div class="nickname">{{ props.friendInfo.nickname }}</div>
-        <!-- <div class="nickname">{{ props.friendInfo.nickname }}</div> -->
+        <div class="signature">
+          {{
+            props.friendInfo.signature
+              ? props.friendInfo.signature
+              : '这个人很神秘~'
+          }}
+        </div>
       </div>
     </div>
     <div class="friendRight">
@@ -59,9 +65,14 @@ const handleSendMessage = () => {
     }
     .info {
       height: 55px;
+      margin-left: 20px;
       .nickname {
         font-size: 18px;
-        margin-left: 20px;
+        height: 35px;
+      }
+      .signature {
+        font-size: 14px;
+        color: #707070;
       }
     }
   }

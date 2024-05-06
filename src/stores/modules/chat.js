@@ -32,10 +32,10 @@ export const useChatStore = defineStore(
           type: chatInfo.type,
           showName: chatInfo.showName,
           headImage: chatInfo.headImage,
-          lastContent: '', //？
-          lastSendTime: new Date().getTime(), //？
-          unreadCount: 0, //？
-          messages: []
+          lastContent: '', //？最后一条消息
+          lastSendTime: new Date().getTime(), //？最后发消息的时间
+          unreadCount: 0, //？未读的数量  点击会话，拉取历史记录的时候未读数为0
+          messages: [] //消息列表  //在当前会话中时拉取，获得历史记录时清空
         }
         // 放到消息列表中
         chats.value.unshift(chat)
@@ -59,7 +59,7 @@ export const useChatStore = defineStore(
     const activeChat = (index) => {
       activeIndex.value = index
       // 不知道是干什么的，但是会报错
-      // chats[index].unreadCount = 0
+      // chats[index].unreadCount = 0 //让未读为0
     }
 
     return {

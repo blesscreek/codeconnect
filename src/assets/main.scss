@@ -140,3 +140,37 @@ body {
     width: 100% !important;
   }
 }
+
+// 发消息的富文本框
+.InputBox{
+  .ql-container,
+  .ql-snow,
+  .ql-editor {
+    font-size: 17px;
+    border: none !important;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// 消息的文字样式
+.chat-msg-text{
+  p {
+    margin: 0;
+  }
+}
+
+// 聊天室加载聊天记录
+.loading,.el-loading-spinner {
+  width: 100%;
+  height: 33px;
+  line-height: 33px;
+  .el-loading-mask {
+    background-color: #f3f3f3;
+  }
+  .circular {
+    margin-top: 3px;
+    width: 30px !important;
+    height: 30px !important;
+  }
+}

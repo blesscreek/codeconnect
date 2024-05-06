@@ -9,13 +9,6 @@ const emit = defineEmits(['updateValue'])
 const content = ref('')
 const myQuillEditor = ref()
 // 通过watch监听回显，笔者这边使用v-model:content 不能正常回显
-// watch(
-//   () => props.value,
-//   (val) => {
-//     toRaw(myQuillEditor.value).setHTML(val)
-//   },
-//   { deep: true }
-// )
 const fileBtn = ref()
 const data = reactive({
   content: '',
@@ -35,13 +28,6 @@ const data = reactive({
     placeholder: '请输入内容...'
   }
 })
-// watch(
-//   () => data.content,
-//   () => {
-//     emit('updateValue', data.content)
-//   },
-//   { deep: true }
-// )
 const imgHandler = (state) => {
   if (state) {
     fileBtn.value.click()

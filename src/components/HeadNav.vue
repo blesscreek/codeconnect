@@ -9,11 +9,9 @@ import {
   Management,
   UserFilled
 } from '@element-plus/icons-vue'
-import router from '@/router'
 // 导航栏高亮相关
 const route = useRoute()
 const userStore = useUserStore()
-// console.log(userStore.userInfo)
 const nav = ref({
   home: false,
   topic: false,
@@ -39,8 +37,11 @@ watch(route, () => {
   getlh()
 })
 
-// 登录后头像和昵称的渲染
-const token = userStore.token
+// 个人中心和登出的菜单
+const menu = ref(false)
+const logout = () => {
+  userStore.removeUser()
+}
 </script>
 
 <template>
@@ -93,11 +94,19 @@ const token = userStore.token
         <head-sculpture :url="userStore.userInfo.headImageThumb">
         </head-sculpture>
       </div>
-      <div @click="$router.push('/login')" class="login" v-if="!token">
+      <div
+        @click="$router.push('/login')"
+        class="login"
+        v-if="!userStore.token"
+      >
         登录 | 注册
       </div>
-      <div v-else class="login" @click="router.push('/user')">
+      <div v-else class="login" @click="menu = menu ? false : true">
         {{ userStore.userInfo.nickname }}
+      </div>
+      <div class="menu" v-show="menu" @click="menu = menu ? false : true">
+        <div class="span" @click="$router.push('/user')">个人中心</div>
+        <div class="span" @click="logout">登出</div>
       </div>
     </div>
   </div>
@@ -161,6 +170,7 @@ const token = userStore.token
   background-image: linear-gradient(to right, #ffffff, #eef7ff);
 }
 .right {
+  position: relative;
   display: flex;
   align-items: center;
   .login {
@@ -178,6 +188,23 @@ const token = userStore.token
     width: 40px;
     height: 40px;
     margin-right: 20px;
+  }
+  .menu {
+    position: absolute;
+    top: 100%;
+    width: 150px;
+    height: 100px;
+    background-color: #fff;
+    .span {
+      height: 40px;
+      line-height: 40px;
+      font-size: 17px;
+      padding: 5px 15px;
+      cursor: pointer;
+    }
+    .span:hover {
+      background-color: #d6d6d6;
+    }
   }
 }
 </style>

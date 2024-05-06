@@ -1,9 +1,238 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
+import {
+  getPrivateHistoryServe,
+  sendPrivateMessageServe,
+  getGroupHistoryServe,
+  sendGroupMessageServe
+} from '@/api/chat.js'
+import { uploadImageService, uploadFileService } from '@/api/updata.js'
+import { useUserStore } from '@/stores'
+import { ElMessage } from 'element-plus'
+
+// 从父组件拿到发消息对象的名字
 const props = defineProps({
-  chatInfo: Object
+  chatInfo: Object,
+  groupMembers: Object
 })
+
+const userStore = useUserStore()
+const MessageList = ref([]) //消息列表
+const page = ref(1) //消息的页数
+// 滚动条事件
+const nowHight = ref(0) //当前内容高度
+const scroll = ref(null)
+const message = ref() //消息容器
+// 到顶加载历史记录
+const getScroll = async ({ scrollTop }) => {
+  if (scrollTop == 0) {
+    loading.value = true
+    page.value = page.value + 1
+    const list = await getMessageInfo(page.value)
+    // 将聊天记录加到列表
+    list.forEach((x) => {
+      MessageList.value.unshift(x)
+    })
+    loading.value = false
+    // 滚动条到底部
+    nextTick(() => {
+      scroll.value.setScrollTop(
+        message.value.clientHeight - nowHight.value - 40
+      )
+      nowHight.value = message.value.clientHeight
+    })
+  }
+}
+const loading = ref(false)
+const mine = computed(() => {
+  return userStore.userInfo
+})
+
+// 判断拿到的是自己的头像还是对方的头像
+const headImage = (msgInfo) => {
+  if (props.chatInfo.type == 'GROUP') {
+    let member
+    for (let m of props.groupMembers) {
+      if (m.memberId == msgInfo.sendId) {
+        member = m
+        break
+      }
+    }
+    return member ? member.headImage : ''
+  }
+  return msgInfo.sendId == mine.value.id
+    ? mine.value.headImageThumb
+    : props.chatInfo.headImage
+}
+const showName = (msgInfo) => {
+  if (props.chatInfo.type == 'GROUP') {
+    let member
+    for (let m of props.groupMembers) {
+      if (m.memberId == msgInfo.sendId) {
+        member = m
+        break
+      }
+    }
+    return member ? member.memberNickname : ''
+  }
+  return msgInfo.sendId == mine.value.id
+    ? mine.value.nickname
+    : props.chatInfo.showName
+}
+
+// 拿到当前发消息对象的历史消息  判断一下是不是群聊
+const getMessageInfo = async (page) => {
+  console.log(page)
+  let res = {}
+  if (props.chatInfo.type == 'GROUP') {
+    res = await getGroupHistoryServe({
+      groupId: props.chatInfo.targetId,
+      page: page,
+      size: 10
+    })
+  } else if (props.chatInfo.type == 'PRIVATE') {
+    res = await getPrivateHistoryServe({
+      friendId: props.chatInfo.targetId,
+      page: page,
+      size: 10
+    })
+  } else {
+    return []
+  }
+  if (res.data.length == 0) {
+    ElMessage.error('没有更多聊天记录了哦~')
+  }
+  return res.data
+}
+
+// 点击或刷新重新获得聊天记录
+const getMessage = async () => {
+  MessageList.value = []
+  const list = await getMessageInfo(page.value)
+  // 将聊天记录加到列表
+  list.forEach((x) => {
+    MessageList.value.unshift(x)
+  })
+  // 滚动条到底部
+  nextTick(() => {
+    scroll.value.setScrollTop(message.value.clientHeight)
+    nowHight.value = message.value.clientHeight
+  })
+}
+getMessage()
+//监听对象变化
+const chatInfo = computed(() => {
+  return props.chatInfo
+})
+watch(chatInfo, () => {
+  page.value = 1
+  getMessage()
+})
+
+// 收到新消息，加到消息的后面，滚动条拉到底，点击后清除未读消息，从历史拉取消息记录
+
+// emoji框相关
+const showEmotion = ref(false)
+const emoji = ref()
+const emoBoxPos = ref({ x: 0, y: 0 })
+const switchEmotionBox = () => {
+  showEmotion.value = !showEmotion.value
+  const val = emoji.value.getBoundingClientRect()
+  emoBoxPos.value.y = val.y
+  emoBoxPos.value.x = val.x
+}
+// 点击某个表情以后
+// 拿到富文本处理表情的函数
+const editor = ref()
+// 发消息的输入框用富文本编辑器，父组件调用子组件暴露的方法
+const getEmotion = (val) => {
+  editor.value.handleEmoji(val)
+  showEmotion.value = false
+}
+
+// 输入框的值
+const textValue = ref('')
+// 拿到富文本的值
+const getText = (val) => {
+  textValue.value = val
+}
+// 发送文字消息
+const sendMessage = async () => {
+  if (!textValue.value) return ElMessage.error('消息内容不能为空')
+  let text = textValue.value
+  console.log(text)
+  textValue.value = ''
+  editor.value.afterUpdata() //清空富文本框
+
+  if (props.chatInfo.type == 'GROUP') {
+    await sendGroupMessageServe({
+      groupId: props.chatInfo.targetId,
+      content: text,
+      type: 0
+    })
+  } else {
+    await sendPrivateMessageServe({
+      receiveId: props.chatInfo.targetId,
+      content: text,
+      type: 0
+    })
+  }
+  getMessage()
+}
+
+// 发送图片
+const onSelectFile1 = async (uploadFile) => {
+  const imgFile = ref({})
+  const reader = new FileReader()
+  // 存一下文件
+  imgFile.value = uploadFile.raw
+  reader.readAsDataURL(uploadFile.raw)
+  const file = new FormData()
+  file.append('file', imgFile.value)
+  const img = await uploadImageService(file)
+  // 拿到上传之后的url
+  const obj = {
+    groupId: props.chatInfo.targetId,
+    content: JSON.stringify({ url: img.data.url, thumbUrl: img.data.thumbUrl }),
+    type: 1
+  }
+  if (props.chatInfo.type == 'GROUP') {
+    await sendGroupMessageServe(obj)
+  } else {
+    await sendPrivateMessageServe(obj)
+  }
+  getMessage()
+}
+// 发送文件
+const onSelectFile2 = async (uploadFile) => {
+  const File = ref({})
+  const reader = new FileReader()
+  // 存一下文件
+  File.value = uploadFile.raw
+  reader.readAsDataURL(uploadFile.raw)
+  const file = new FormData()
+  file.append('file', File.value)
+  const fileData = await uploadFileService(file)
+  // data里只有url
+  const obj = {
+    groupId: props.chatInfo.targetId,
+    content: JSON.stringify({
+      name: File.value.name,
+      size: File.value.size,
+      url: fileData.data
+    }),
+    type: 2
+  }
+  console.log(obj)
+  if (props.chatInfo.type == 'GROUP') {
+    await sendGroupMessageServe(obj)
+  } else {
+    await sendPrivateMessageServe(obj)
+  }
+  getMessage()
+}
 </script>
+
 <template>
   <!-- 渲染聊天消息 -->
   <div class="Mbox">
@@ -12,21 +241,70 @@ const props = defineProps({
         {{ props.chatInfo.showName ? props.chatInfo.showName : '聊天室' }}
       </div>
     </div>
+    <div class="content">
+      <el-scrollbar ref="scroll" @scroll="getScroll">
+        <!-- 聊天列表 -->
+        <div class="message" ref="message">
+          <div class="loading" v-show="loading" v-loading="loading"></div>
+          <chat-message-item
+            v-for="(x, i) in MessageList"
+            :key="i"
+            :msgInfo="x"
+            :mine="x.sendId == mine.id"
+            :headImage="headImage(x)"
+            :showName="showName(x)"
+          ></chat-message-item>
+        </div>
+      </el-scrollbar>
+    </div>
   </div>
 
   <!-- 发消息的输入框 -->
   <div class="Ibox">
     <div class="fun">
-      <el-icon><img src="@/assets/picture.svg" alt="" /></el-icon>
-      <el-icon><img src="@/assets/smile.svg" alt="" /></el-icon>
+      <!-- emoji表情 -->
+      <el-icon @click="switchEmotionBox">
+        <img ref="emoji" src="@/assets/smile.svg" alt="" />
+      </el-icon>
+      <!-- 上传图片 -->
+      <el-upload
+        class="avatar-uploader"
+        :show-file-list="false"
+        :auto-upload="false"
+        :on-change="onSelectFile1"
+      >
+        <el-icon>
+          <img src="@/assets/picture.svg" alt="" />
+        </el-icon>
+      </el-upload>
+      <!-- 上传文件 -->
+      <el-upload
+        class="avatar-uploader"
+        :show-file-list="false"
+        :auto-upload="false"
+        :on-change="onSelectFile2"
+      >
+        <el-icon>
+          <img ref="emoji" src="@/assets/document.svg" alt="" />
+        </el-icon>
+      </el-upload>
     </div>
-    <textarea cols="30" rows="10"></textarea>
+    <!-- 富文本输入框 -->
+    <div class="textarea">
+      <input-editor ref="editor" @updateValue="getText"></input-editor>
+    </div>
+
     <div class="footer">
-      <div>15/300</div>
-      <el-button type="primary">发送</el-button>
+      <el-button type="primary" @click="sendMessage">发送</el-button>
     </div>
+    <emoji-content
+      v-show="showEmotion"
+      :pos="emoBoxPos"
+      @getEmoji="getEmotion"
+    ></emoji-content>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .Mbox {
   width: 100%;
@@ -46,7 +324,29 @@ const props = defineProps({
     justify-content: center;
     align-items: center;
   }
+  // 滚动条
+  .scrollbar-demo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 4px;
+    background: var(--el-color-primary-light-9);
+    color: var(--el-color-primary);
+  }
+  .content {
+    padding: 5px;
+    height: calc(100% - 70px); //支持计算
+    overflow-y: auto;
+    .message {
+      width: calc(100% - 15px);
+    }
+    // loading相关样式在全局
+  }
 }
+// 输入框
 .Ibox {
   width: 100%;
   height: 27%;
@@ -64,6 +364,10 @@ const props = defineProps({
   height: 18%;
   display: flex;
   align-items: center;
+  .avatar-uploader {
+    width: 45px;
+    height: 30px;
+  }
   .el-icon {
     width: 45px;
     height: 28px;
@@ -78,7 +382,7 @@ const props = defineProps({
     width: 28px;
   }
 }
-textarea {
+.textarea {
   width: 100%;
   height: 59%;
   border: none;

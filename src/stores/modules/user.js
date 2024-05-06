@@ -11,9 +11,6 @@ export const useUserStore = defineStore(
     const setToken = (newToken) => {
       token.value = newToken
     }
-    const removeToken = () => {
-      token.value = ''
-    }
     const setRefreshToken = (newRefreshToken) => {
       refreshToken.value = newRefreshToken
     }
@@ -37,8 +34,14 @@ export const useUserStore = defineStore(
     // 获取用户信息，感觉是多次使用的，不如直接封装
     const getUserInfoServer = async () => {
       const userInfo = await userInfoService()
-      // console.log(userInfo)
       setUserInfo(userInfo.data)
+    }
+
+    // 用户登出
+    const removeUser = () => {
+      userInfo.value = {}
+      token.value = ''
+      refreshToken.value = ''
     }
 
     return {
@@ -50,10 +53,10 @@ export const useUserStore = defineStore(
       setUserInfo,
       setRefreshToken,
       setToken,
-      removeToken,
       setRemember,
       setAccount,
-      getUserInfoServer
+      getUserInfoServer,
+      removeUser
     }
   },
   {

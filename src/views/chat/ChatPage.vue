@@ -2,21 +2,42 @@
 import MessageBox from './MessageBox.vue'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useChatStore } from '@/stores'
+import { findGroupServe, getGroupMemberServe } from '@/api/chat.js'
+
 const chatRoom = ref(false)
 const friend = ref(false)
 const route = useRoute()
-import { useChatStore } from '@/stores'
-
 const chatStore = useChatStore()
-
 const chatInfo = ref({}) //控制消息窗口头部的内容
+// 聊天室信息
+const chatRoomMembers = ref([]) //聊天室成员
+
+// 获取聊天室的信息
+const getChatRoomInfo = async () => {
+  const res = await findGroupServe(16)
+  chatInfo.value = {
+    type: 'GROUP',
+    targetId: 16,
+    showName: res.data.name,
+    headImage: res.data.imageThumb
+  }
+}
+
+// 获取聊天室成员
+const getChatRoomMember = async () => {
+  const res = await getGroupMemberServe(16)
+  chatRoomMembers.value = res.data
+}
+
 // 侧边栏高亮
 const highlightChange = () => {
   let path = route.path.split('/')[2]
   if (path === 'chatroom') {
     chatRoom.value = true
     friend.value = false
-    chatInfo.value = {}
+    getChatRoomInfo()
+    getChatRoomMember()
   }
   if (path === 'friend') {
     friend.value = true
@@ -32,6 +53,7 @@ watch(route, () => {
 
 // 能不能拿到发消息对象的信息  可以路由那个也是父组件
 const getChatInfo = (val) => {
+  chatInfo.value = {}
   chatInfo.value = val
 }
 </script>
@@ -71,14 +93,20 @@ const getChatInfo = (val) => {
           </div>
           <!-- 显示好友等的地方 -->
           <div class="second_nav">
-            <router-view @chatInfo="getChatInfo"></router-view>
+            <router-view
+              @chatInfo="getChatInfo"
+              :chatRoomMembers="chatRoomMembers"
+            ></router-view>
           </div>
         </div>
       </el-aside>
       <!-- 内容区 -->
       <el-main>
         <div class="content">
-          <message-box :chatInfo="chatInfo"></message-box>
+          <message-box
+            :chatInfo="chatInfo"
+            :groupMembers="chatRoomMembers"
+          ></message-box>
         </div>
       </el-main>
     </el-container>
@@ -92,7 +120,7 @@ const getChatInfo = (val) => {
   align-items: center;
 }
 .el-container {
-  max-width: 77vw;
+  max-width: 1250px;
   height: 95vh;
   margin: 0 auto;
 }
@@ -145,6 +173,7 @@ const getChatInfo = (val) => {
   }
 }
 .el-main {
+  min-width: 910px;
   padding: 0;
   box-sizing: border-box;
   border: 1px solid #e6e6e6;

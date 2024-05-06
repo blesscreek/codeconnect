@@ -19,10 +19,8 @@ request.interceptors.request.use(
     // config.headers = undefined
     const userStore = useUserStore()
     if (userStore.token) {
-      // oj的
-      // config.headers.Authorization = userStore.token
-      // 聊天室
-      config.headers.accessToken = userStore.token
+      // token
+      config.headers.Authorization = userStore.token
       config.headers.refreshToken = userStore.refreshToken //长token
     }
     if (config.data instanceof FormData) {
@@ -56,7 +54,7 @@ request.interceptors.response.use(
       const newToken = await refreshTokenService()
       console.log(newToken.data)
       // 保存token
-      userStore.setToken(newToken.data.accessToken)
+      userStore.setToken(newToken.data.authorization)
       userStore.setRefreshToken(newToken.data.refreshToken)
       // 重新发送刚才的请求
       return request(res.config)

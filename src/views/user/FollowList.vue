@@ -1,13 +1,13 @@
 <script setup>
 import { ref } from 'vue'
-import { getFriendListService } from '@/api/user'
+import { getConcernsListService } from '@/api/user'
 import FriendBox from './FriendBox.vue'
 // 获取好友信息相关
-const friendList = ref([])
+const concersList = ref([])
 const getList = async () => {
-  const res = await getFriendListService()
-  friendList.value = res.data
-  console.log(friendList.value)
+  const res = await getConcernsListService()
+  concersList.value = res.data
+  console.log(concersList.value)
 }
 getList()
 
@@ -43,7 +43,7 @@ const getIndex = (key) => {
     <div class="list">
       <div class="span">全部关注</div>
       <friend-box
-        v-for="(x, i) in friendList"
+        v-for="(x, i) in concersList"
         :key="i"
         :friendInfo="x"
       ></friend-box>

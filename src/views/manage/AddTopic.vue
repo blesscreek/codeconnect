@@ -69,8 +69,6 @@ const onSubmit = async () => {
   const data = getData()
   const res = await addTopicService(data)
   if (res.code == 200) ElMessage.success('添加成功')
-  // form.value = formData
-  // router.go(-1)
 }
 
 const onCancel = async () => {

@@ -10,6 +10,9 @@ const chatStore = useChatStore()
 
 const listVal = ref(false)
 let chats = chatStore.chats // 获取消息列表
+const props = defineProps({
+  chatRoomMembers: Object
+})
 
 // 好友还是用户列表
 const listChange = () => {
@@ -40,12 +43,17 @@ const handleSendMessage = (user, index) => {
     <div class="head">
       <span>{{ listVal ? '全部人员(o゜▽゜)o☆' : '最近消息(o゜▽゜)o☆' }}</span>
     </div>
-    <div v-if="listVal">
-      <div class="li" style="height: 60px" v-for="(x, i) in chats" :key="i">
+    <div class="list" v-if="listVal">
+      <div
+        class="li"
+        style="height: 60px"
+        v-for="(x, i) in props.chatRoomMembers"
+        :key="i"
+      >
         <members-list :info="x"></members-list>
       </div>
     </div>
-    <div v-else>
+    <div class="list" v-else>
       <div
         class="li"
         style="height: 80px"
@@ -74,6 +82,9 @@ const handleSendMessage = (user, index) => {
       display: block;
       margin-left: 10px;
     }
+  }
+  .list {
+    overflow-y: auto;
   }
   .active {
     background-color: #eee;

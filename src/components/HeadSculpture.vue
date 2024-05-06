@@ -12,7 +12,6 @@ if (props.url) {
 <template>
   <div class="head-sculpture">
     <el-avatar v-if="isUrl" :src="props.url" />
-    <!-- <img v-else src="@/assets/微信图片_20240416221313.jpg" /> -->
     <img v-else src="@/assets/head-sculpture.jpg" />
   </div>
 </template>

@@ -3,25 +3,25 @@ const tableData = [
   {
     date: 'No.1',
     name: 'bless',
-    rate: '100',
+    rate: 100,
     pingjia: '太棒啦！'
   },
   {
     date: 'No.2',
     name: '张鱼小丸子',
-    rate: '90',
+    rate: 90,
     pingjia: '真不错！'
   },
   {
     date: 'No.3',
     name: 'baiyin',
-    rate: '70',
+    rate: 70,
     pingjia: '继续加油哦！'
   },
   {
     date: 'No.4',
     name: '显示不出来',
-    rate: '70',
+    rate: 70,
     pingjia: '差不多得了'
   }
 ]

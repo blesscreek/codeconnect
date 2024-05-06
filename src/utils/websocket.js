@@ -67,11 +67,14 @@ let initWebSocket = () => {
     hasLogin = false
     websocket = new WebSocket(wsurl)
     websocket.onmessage = function (e) {
+      // console.log(hasLogin)
       let sendInfo = JSON.parse(e.data)
+      console.log(sendInfo)
       if (sendInfo.cmd == 0) {
         hasLogin = true
         heartCheck.start()
         console.log('WebSocket登录成功')
+        openCallBack && openCallBack()
       } else if (sendInfo.cmd == 1) {
         // 重新开启心跳定时
         heartCheck.reset()
@@ -109,7 +112,7 @@ let createWebSocket = (url, id) => {
   initWebSocket()
 }
 
-// 发送消息函数
+// 发送消息函数 //没用上
 function sendMessage(agentData) {
   if (websocket.readyState === websocket.OPEN) {
     // ws开启

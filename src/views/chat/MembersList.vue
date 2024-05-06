@@ -1,16 +1,16 @@
 <script setup>
-// const props = defineProps({
-//   info: Object
-// })
+const props = defineProps({
+  info: Object
+})
 </script>
 <template>
   <!-- 左侧聊天室成员列表 -->
   <div class="mbox">
     <div class="left">
-      <head-sculpture></head-sculpture>
+      <head-sculpture :url="props.info.headImage"></head-sculpture>
     </div>
     <div class="right">
-      <span>昵称最多七个字</span>
+      <span>{{ props.info.memberNickname }}</span>
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@
   width: 40px;
   height: 40px;
   justify-content: center;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 .right {
   width: 160px;

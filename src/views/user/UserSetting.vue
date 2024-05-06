@@ -1,7 +1,8 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useUserStore } from '@/stores'
-import { uploadImageService, userUpdateService } from '@/api/user.js'
+import { userUpdateService } from '@/api/user.js'
+import { uploadImageService } from '@/api/updata.js'
 // 拿到用户数据
 import { Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
@@ -38,11 +39,7 @@ const ruleForm = reactive(obj)
 ruleForm.sex = '' + ruleForm.sex
 
 const rules = reactive({
-  username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 1, max: 7, message: '用户名不得多于七个字符', trigger: 'blur' }
-  ],
-  checkPass: [
+  nickname: [
     { required: true, message: '请输入昵称', trigger: 'blur' },
     { min: 1, max: 7, message: '昵称不得多于七个字符', trigger: 'blur' }
   ],
@@ -72,7 +69,7 @@ const uploadRef = ref()
 
 const imgFile = ref({})
 
-const onSelectFile = async (uploadFile) => {
+const onSelectFile = (uploadFile) => {
   // 基于 FileReader 读取图片做预览，转为base64
   const reader = new FileReader()
   // 存一下文件
@@ -129,10 +126,10 @@ const submit = async () => {
         </el-upload>
       </el-form-item>
 
-      <el-form-item label="用户名" prop="username">
+      <el-form-item label="用户名">
         <el-input v-model="ruleForm.username" disabled />
       </el-form-item>
-      <el-form-item label="昵称" prop="checkPass">
+      <el-form-item label="昵称" prop="nickname">
         <el-input v-model="ruleForm.nickname" />
       </el-form-item>
       <el-form-item label="年龄" prop="age">

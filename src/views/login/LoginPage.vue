@@ -1,15 +1,12 @@
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref, watch } from 'vue'
-import {
-  userLoginService,
-  userRegisterService
-  // userInfoService
-} from '@/api/user.js'
+import { userLoginService, userRegisterService } from '@/api/user.js'
 import { useUserStore } from '@/stores'
 import { useRouter } from 'vue-router'
 // 在eslintrc中全局配置了还要引入吗？？？
 import { ElMessage } from 'element-plus'
+// websocket
 
 const userStore = useUserStore()
 const isRegister = ref(false)
@@ -91,17 +88,16 @@ const login = async () => {
   await form.value.validate()
   console.log(formModel.value)
   const res = await userLoginService(formModel.value)
-  console.log(res)
-  userStore.setToken(res.data.accessToken)
+  // console.log(res)
+  userStore.setToken(res.data.authorization)
   userStore.setRefreshToken(res.data.refreshToken)
-  // userStore.setToken(res.data.Authorization)
   ElMessage({
     message: '登录成功',
     type: 'success'
   })
 
   // 获取用户信息
-  userStore.getUserInfoServer()
+  await userStore.getUserInfoServer()
 
   // 是否记得账号密码
   if (rememberCheck.value) {

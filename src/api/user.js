@@ -18,11 +18,6 @@ export const userInfoService = () => {
   return request.get('/user/self')
 }
 
-// 上传或更新头像
-export const uploadImageService = (file) => {
-  return request.post('/upload/image', file)
-}
-
 // 修改个人信息
 export const userUpdateService = (data) => {
   // const
@@ -34,7 +29,15 @@ export const refreshTokenService = () => {
   return request.put('/refreshToken')
 }
 
-// 获取关注列表
+// 获取互关列表
 export const getFriendListService = () => {
   return request.get('/friend/list')
+}
+// 获取关注列表
+export const getConcernsListService = () => {
+  return request.get('/friend/concerns')
+}
+// 获取粉丝列表
+export const getFansListService = () => {
+  return request.get('/friend/fans')
 }
