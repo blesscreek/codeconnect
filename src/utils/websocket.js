@@ -107,6 +107,7 @@ let initWebSocket = () => {
 
 // 创建WebSocket
 let createWebSocket = (url, id) => {
+  if (websocket) closeWebSocket()
   wsurl = url
   userId = id
   initWebSocket()

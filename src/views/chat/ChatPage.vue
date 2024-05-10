@@ -42,7 +42,11 @@ const highlightChange = () => {
   if (path === 'friend') {
     friend.value = true
     chatRoom.value = false
-    chatInfo.value = chatStore.chats[chatStore.activeIndex]
+    if (chatStore.chats[chatStore.activeIndex]) {
+      chatInfo.value = chatStore.chats[chatStore.activeIndex]
+    } else {
+      chatInfo.value = []
+    }
   }
 }
 highlightChange()
@@ -56,6 +60,9 @@ const getChatInfo = (val) => {
   chatInfo.value = {}
   chatInfo.value = val
 }
+
+// 未读消息
+console.log(chatStore.groupUnread, chatStore.msgUnread)
 </script>
 
 <template>
@@ -72,15 +79,29 @@ const getChatInfo = (val) => {
               :class="{ active: chatRoom }"
               @click="$router.replace('/chat/chatroom')"
             >
-              聊天室
+              <el-badge
+                class="item"
+                :value="chatStore.groupUnread"
+                :hidden="chatStore.groupUnread == 0"
+                :offset="[-10, 0]"
+              >
+                聊天室
+              </el-badge>
             </div>
+
             <div
               class="li"
               :class="{ active: friend }"
               @click="$router.replace('/chat/friend')"
             >
-              <!-- 好友 -->
-              消息
+              <el-badge
+                class="item"
+                :value="chatStore.msgUnread"
+                :hidden="chatStore.msgUnread == 0"
+                :offset="[-10, 0]"
+              >
+                消息
+              </el-badge>
             </div>
             <!-- <div
               class="li"
@@ -135,6 +156,10 @@ const getChatInfo = (val) => {
       height: 100%;
       border-radius: 10px;
       background-color: #fff;
+      .item {
+        width: 80%;
+        height: 100%;
+      }
       img {
         width: 100%;
         margin: 10px 0;

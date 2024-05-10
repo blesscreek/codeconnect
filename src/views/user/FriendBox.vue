@@ -9,6 +9,7 @@ const props = defineProps({
   friendInfo: Object
 })
 
+// 发消息
 const handleSendMessage = () => {
   const user = props.friendInfo
   const chat = {
@@ -20,6 +21,12 @@ const handleSendMessage = () => {
   chatStore.openChat(chat)
   chatStore.activeChat(0)
   router.replace('/chat/friend')
+}
+// 改变关注状态
+const changeState = () => {
+  const user = props.friendInfo
+  // 关注->取关  没关注->关注
+  console.log(user)
 }
 </script>
 <template>
@@ -41,7 +48,7 @@ const handleSendMessage = () => {
     </div>
     <div class="friendRight">
       <el-button @click="handleSendMessage">发消息</el-button>
-      <el-button>已关注</el-button>
+      <el-button @click="changeState">已关注</el-button>
     </div>
   </div>
 </template>

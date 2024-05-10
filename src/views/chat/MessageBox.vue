@@ -7,8 +7,9 @@ import {
   sendGroupMessageServe
 } from '@/api/chat.js'
 import { uploadImageService, uploadFileService } from '@/api/updata.js'
-import { useUserStore } from '@/stores'
+import { useUserStore, useChatStore } from '@/stores'
 import { ElMessage } from 'element-plus'
+import { useRoute } from 'vue-router'
 
 // 从父组件拿到发消息对象的名字
 const props = defineProps({
@@ -17,15 +18,31 @@ const props = defineProps({
 })
 
 const userStore = useUserStore()
+const chatStore = useChatStore()
+const route = useRoute()
+const path = computed(() => {
+  return route.path.split('/')[2]
+})
+const length = computed(() => {
+  return chatStore.chats.length
+})
+const show = computed(() => {
+  return path.value == 'chatroom' || length.value != 0
+})
+watch(show, () => {
+  console.log(show)
+})
 const MessageList = ref([]) //消息列表
 const page = ref(1) //消息的页数
 // 滚动条事件
 const nowHight = ref(0) //当前内容高度
 const scroll = ref(null)
 const message = ref() //消息容器
+const isScroll = ref(false)
 // 到顶加载历史记录
 const getScroll = async ({ scrollTop }) => {
   if (scrollTop == 0) {
+    if (!isScroll.value) return
     loading.value = true
     page.value = page.value + 1
     const list = await getMessageInfo(page.value)
@@ -42,6 +59,7 @@ const getScroll = async ({ scrollTop }) => {
       nowHight.value = message.value.clientHeight
     })
   }
+  isScroll.value = true
 }
 const loading = ref(false)
 const mine = computed(() => {
@@ -82,9 +100,10 @@ const showName = (msgInfo) => {
 
 // 拿到当前发消息对象的历史消息  判断一下是不是群聊
 const getMessageInfo = async (page) => {
-  console.log(page)
   let res = {}
+  if (!props.chatInfo) return []
   if (props.chatInfo.type == 'GROUP') {
+    chatStore.groupMsg.unreadCount = 0
     res = await getGroupHistoryServe({
       groupId: props.chatInfo.targetId,
       page: page,
@@ -107,6 +126,12 @@ const getMessageInfo = async (page) => {
 
 // 点击或刷新重新获得聊天记录
 const getMessage = async () => {
+  page.value = 1
+  if (path.value == 'friend') {
+    if (length.value) chatStore.chats[chatStore.activeIndex].unreadCount = 0 //将未读清零
+  }
+  // 将消息列表清零
+  isScroll.value = false //重新获取页面时滚动条触顶不加载 不能放在nextTick后写，否则没有效果
   MessageList.value = []
   const list = await getMessageInfo(page.value)
   // 将聊天记录加到列表
@@ -115,6 +140,7 @@ const getMessage = async () => {
   })
   // 滚动条到底部
   nextTick(() => {
+    if (!scroll.value) return
     scroll.value.setScrollTop(message.value.clientHeight)
     nowHight.value = message.value.clientHeight
   })
@@ -125,11 +151,53 @@ const chatInfo = computed(() => {
   return props.chatInfo
 })
 watch(chatInfo, () => {
-  page.value = 1
   getMessage()
 })
 
 // 收到新消息，加到消息的后面，滚动条拉到底，点击后清除未读消息，从历史拉取消息记录
+const newMsg = computed(() => {
+  if (!length.value) return []
+  return chatStore.chats[chatStore.activeIndex].messages
+})
+// 监听消息列表有没有变化
+watch(
+  newMsg,
+  () => {
+    if (length.value == 0) return
+    while (chatStore.chats[chatStore.activeIndex].messages.length) {
+      let x = chatStore.chats[chatStore.activeIndex].messages.shift()
+      MessageList.value.push(x)
+    }
+    nextTick(() => {
+      scroll.value.setScrollTop(message.value.clientHeight)
+      nowHight.value = message.value.clientHeight
+    })
+  },
+  { deep: true }
+)
+
+// 收到群聊消息
+const newGroupMsg = computed(() => {
+  return chatStore.groupMsg.messages
+})
+watch(
+  newGroupMsg,
+  () => {
+    // 加载群聊信息
+    if (path.value != 'chatroom') return
+    chatStore.groupMsg.unreadCount = 0
+    while (chatStore.groupMsg.messages.length) {
+      MessageList.value.push(chatStore.groupMsg.messages.shift())
+    }
+    nextTick(() => {
+      scroll.value.setScrollTop(message.value.clientHeight)
+      nowHight.value = message.value.clientHeight
+    })
+  },
+  {
+    deep: true
+  }
+)
 
 // emoji框相关
 const showEmotion = ref(false)
@@ -160,7 +228,6 @@ const getText = (val) => {
 const sendMessage = async () => {
   if (!textValue.value) return ElMessage.error('消息内容不能为空')
   let text = textValue.value
-  console.log(text)
   textValue.value = ''
   editor.value.afterUpdata() //清空富文本框
 
@@ -176,6 +243,9 @@ const sendMessage = async () => {
       content: text,
       type: 0
     })
+  }
+  if (path.value == 'friend') {
+    chatStore.chats[chatStore.activeIndex].lastContent = text
   }
   getMessage()
 }
@@ -223,7 +293,6 @@ const onSelectFile2 = async (uploadFile) => {
     }),
     type: 2
   }
-  console.log(obj)
   if (props.chatInfo.type == 'GROUP') {
     await sendGroupMessageServe(obj)
   } else {
@@ -235,7 +304,8 @@ const onSelectFile2 = async (uploadFile) => {
 
 <template>
   <!-- 渲染聊天消息 -->
-  <div class="Mbox">
+  <el-empty description="description" class="null" v-show="!show" />
+  <div class="Mbox" v-show="show">
     <div class="head">
       <div>
         {{ props.chatInfo.showName ? props.chatInfo.showName : '聊天室' }}
@@ -260,7 +330,7 @@ const onSelectFile2 = async (uploadFile) => {
   </div>
 
   <!-- 发消息的输入框 -->
-  <div class="Ibox">
+  <div class="Ibox" v-show="show">
     <div class="fun">
       <!-- emoji表情 -->
       <el-icon @click="switchEmotionBox">
@@ -306,6 +376,10 @@ const onSelectFile2 = async (uploadFile) => {
 </template>
 
 <style lang="scss" scoped>
+.null {
+  width: 100%;
+  height: 100%;
+}
 .Mbox {
   width: 100%;
   height: 73%;

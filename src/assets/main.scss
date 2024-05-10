@@ -174,3 +174,11 @@ body {
     height: 30px !important;
   }
 }
+
+// 最近消息（好友）的最近聊天消息
+.FriendMessage{
+  p {
+    margin-block-end: 0px !important;
+    margin-block-start: 0px !important;
+  }
+}

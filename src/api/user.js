@@ -41,3 +41,11 @@ export const getConcernsListService = () => {
 export const getFansListService = () => {
   return request.get('/friend/fans')
 }
+// 查找用户信息
+export const getUserInfoService = (id) => {
+  return request.get(`/user/find/${id}`)
+}
+// 查找群聊信息
+export const getGroupInfoService = (id) => {
+  return request.get(`/group/find/${id}`)
+}

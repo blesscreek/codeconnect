@@ -8,3 +8,4 @@ export default pinia
 //接收user模块的所有按需导出
 export * from './modules/user'
 export * from './modules/chat'
+export * from './modules/friend'

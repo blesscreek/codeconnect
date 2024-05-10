@@ -1,7 +1,7 @@
 <script setup>
 import MembersList from './MembersList.vue'
 import FriendsList from './FriendsList.vue'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChatStore } from '@/stores'
 
@@ -9,7 +9,9 @@ const route = useRoute()
 const chatStore = useChatStore()
 
 const listVal = ref(false)
-let chats = chatStore.chats // 获取消息列表
+let chats = computed(() => {
+  return chatStore.chats // 获取消息列表
+})
 const props = defineProps({
   chatRoomMembers: Object
 })
@@ -62,7 +64,7 @@ const handleSendMessage = (user, index) => {
         @click="handleSendMessage(x, i)"
         :class="{ active: i == chatStore.activeIndex }"
       >
-        <friends-list :info="x"></friends-list>
+        <friends-list :info="x" :index="i"></friends-list>
       </div>
     </div>
   </div>

@@ -1,19 +1,29 @@
 <script setup>
 import { ref } from 'vue'
-import { getConcernsListService } from '@/api/user'
+import { getConcernsListService, getFansListService } from '@/api/user'
 import FriendBox from './FriendBox.vue'
 // 获取好友信息相关
 const concersList = ref([])
-const getList = async () => {
-  const res = await getConcernsListService()
+const getList = async (key) => {
+  concersList.value = []
+  let res
+  console.log(key)
+  if (key == '2') {
+    // 粉丝列表
+    res = await getFansListService()
+    console.log(res.data)
+  } else {
+    res = await getConcernsListService()
+  }
   concersList.value = res.data
-  console.log(concersList.value)
 }
 getList()
 
 // 侧边导航
+const Key = ref('1-1')
 const getIndex = (key) => {
-  console.log(key)
+  getList(key)
+  Key.value = key
 }
 </script>
 <template>
@@ -41,7 +51,7 @@ const getIndex = (key) => {
       </el-row>
     </div>
     <div class="list">
-      <div class="span">全部关注</div>
+      <div class="span">{{ Key == 2 ? '我的粉丝' : '全部关注' }}</div>
       <friend-box
         v-for="(x, i) in concersList"
         :key="i"

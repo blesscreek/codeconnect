@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { transform } from '@/utils/emoji.js'
 import { Document } from '@element-plus/icons-vue'
 const props = defineProps({
   msgInfo: Object,
@@ -80,7 +79,7 @@ const fileSize = computed(() => {
           <span
             class="chat-msg-text"
             v-if="props.msgInfo.type == 0"
-            v-html="transform(props.msgInfo.content)"
+            v-html="props.msgInfo.content"
           ></span>
           <!-- 如果是图片 -->
           <div class="chat-msg-image" v-if="props.msgInfo.type == 1">

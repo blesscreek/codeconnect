@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useUserStore } from '@/stores'
+import { useUserStore, useChatStore } from '@/stores'
 import {
   House,
   Grid,
@@ -12,6 +12,7 @@ import {
 // 导航栏高亮相关
 const route = useRoute()
 const userStore = useUserStore()
+const chatStore = useChatStore()
 const nav = ref({
   home: false,
   topic: false,
@@ -42,6 +43,8 @@ const menu = ref(false)
 const logout = () => {
   userStore.removeUser()
 }
+
+// 聊天室未读消息
 </script>
 
 <template>
@@ -69,9 +72,16 @@ const logout = () => {
         :class="{ active: nav.chat }"
         @click="$router.push('/chat')"
       >
-        <el-icon><ChatLineSquare /></el-icon>
-        <span>交流</span>
+        <el-badge
+          class="item"
+          is-dot
+          :hidden="chatStore.groupUnread + chatStore.msgUnread == 0"
+        >
+          <el-icon><ChatLineSquare /></el-icon>
+          <span>交流</span>
+        </el-badge>
       </div>
+
       <div
         class="li"
         :class="{ active: nav.user }"
@@ -149,6 +159,13 @@ const logout = () => {
     color: #363636;
     border-bottom: 2px solid #fff;
     box-sizing: border-box;
+    .item {
+      height: 70%;
+      width: 80%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     /*样式的过度*/
     /*transition: background-color 0.3s;*/
     span {
