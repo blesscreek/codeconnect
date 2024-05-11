@@ -1,4 +1,4 @@
-package com.co.codeconnectjudge.dao.user.impl;
+package com.co.codeconnectjudge.service.overwrite;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.co.codeconnectjudge.mapper.MenuMapper;
@@ -38,7 +38,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userMapper.selectOne(queryWrapper);
         //如果没有查询到用户就抛出异常
         if(Objects.isNull(user)) {
-            //TODO 换成自定义异常
             throw new RuntimeException("用户名或密码错误");
         }
         List<String> list =

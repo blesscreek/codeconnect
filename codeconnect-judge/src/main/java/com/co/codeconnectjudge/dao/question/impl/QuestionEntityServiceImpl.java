@@ -3,19 +3,14 @@ package com.co.codeconnectjudge.dao.question.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.co.codeconnectjudge.common.exception.StatusFailException;
-import com.co.codeconnectjudge.dao.question.QuestionTagService;
-import com.co.codeconnectjudge.dao.question.TagService;
-import com.co.codeconnectjudge.dao.user.UserService;
+import com.co.codeconnectjudge.dao.question.QuestionTagEntityService;
+import com.co.codeconnectjudge.dao.question.TagEntityService;
 import com.co.codeconnectjudge.mapper.QuestionMapper;
-import com.co.codeconnectjudge.mapper.QuestionTagMapper;
-import com.co.codeconnectjudge.mapper.TagMapper;
-import com.co.codeconnectjudge.mapper.UserMapper;
 import com.co.codeconnectjudge.model.dto.LoginUser;
 import com.co.codeconnectjudge.model.dto.QuestionDTO;
 import com.co.codeconnectjudge.model.po.*;
-import com.co.codeconnectjudge.dao.question.QuestionService;
+import com.co.codeconnectjudge.dao.question.QuestionEntityService;
 import com.co.codeconnectjudge.validator.QuestionValidator;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,14 +28,14 @@ import java.util.List;
  */
 
 @Service
-public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements QuestionService {
+public class QuestionEntityServiceImpl extends ServiceImpl<QuestionMapper, Question> implements QuestionEntityService {
 
     @Autowired
     private QuestionValidator questionValidator;
     @Autowired
-    private TagService tagService;
+    private TagEntityService tagEntityService;
     @Autowired
-    private QuestionTagService questionTagService;
+    private QuestionTagEntityService questionTagEntityService;
     @Autowired
     private QuestionMapper questionMapper;
 
@@ -58,6 +53,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         LocalDateTime currentTime = LocalDateTime.now();
         question.setCreateTime(currentTime);
         question.setUpdateTime(currentTime);
+        question.setIsDelete(false);
+        question.setGroup(false);
         boolean saveQuestion = this.save(question);
         if (saveQuestion == false) {
             return false;
@@ -68,14 +65,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         for (Tag tag : tags) {
             QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("name",tag.getName());
-            Tag tag1 = tagService.getOne(queryWrapper);
+            Tag tag1 = tagEntityService.getOne(queryWrapper);
             Long tag1Id = tag1.getId();
             QuestionTag questionTag = new QuestionTag();
             questionTag.setQid(question.getId());
             questionTag.setTid(tag1Id);
             questionTag.setCreateTime(currentTime);
             questionTag.setUpdateTime(currentTime);
-            boolean saveQuestionTag = questionTagService.save(questionTag);
+            boolean saveQuestionTag = questionTagEntityService.save(questionTag);
             if (saveQuestionTag == false) {
                 return false;
             }

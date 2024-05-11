@@ -8,4 +8,5 @@ package com.co.codeconnectjudge.constant;
  */
 public interface RedisConstants {
     public static final String LOGIN_CODE_KEY = "login:";
+    public static final String SUBMIT_NON_CONTEST_LOCK = "submit_non_contest_lock:";
 }

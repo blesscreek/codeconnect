@@ -6,7 +6,7 @@ import com.co.codeconnectjudge.model.dto.LoginUser;
 import com.co.codeconnectjudge.model.po.User;
 import com.co.codeconnectjudge.model.po.UserRole;
 import com.co.codeconnectjudge.model.dto.RegisterUser;
-import com.co.codeconnectjudge.dao.user.UserService;
+import com.co.codeconnectjudge.dao.user.UserEntityService;
 import com.co.codeconnectjudge.utils.JwtUtil;
 import com.co.codeconnectjudge.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class AdminLoginManager {
     @Autowired
     private RedisCache redisCache;
     @Autowired
-    private UserService userService;
+    private UserEntityService userEntityService;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -99,7 +99,7 @@ public class AdminLoginManager {
         }
         synchronized (registerUser.getAccount().intern()) {
             //账号不能重复
-            long count = userService.countUserByAccount(registerUser.getAccount());
+            long count = userEntityService.countUserByAccount(registerUser.getAccount());
             if (count > 0) {
                 throw new StatusFailException("账号重复");
             }
@@ -112,11 +112,11 @@ public class AdminLoginManager {
             LocalDateTime currentDateTime = LocalDateTime.now();
             user.setCreateTime(currentDateTime);
             user.setUpdateTime(currentDateTime);
-            boolean saveResult = userService.save(user);
+            boolean saveResult = userEntityService.save(user);
             if (!saveResult) {
                 throw new StatusFailException("注册失败，请重试");
             }
-            Long userId = userService.selectUserIdByAccount(user.getAccount());
+            Long userId = userEntityService.selectUserIdByAccount(user.getAccount());
             if (userId == null) {
                 throw new StatusFailException("注册失败，请重试");
             }

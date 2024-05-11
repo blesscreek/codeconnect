@@ -222,4 +222,35 @@ public class RedisCache
     {
         return redisTemplate.keys(pattern);
     }
+
+    /**
+     * 键是否在限制时间内
+     * @param key  键
+     * @param limitPeriod  限制时长
+     * @return
+     */
+
+    public boolean isWithinRateLimit(String key, long limitPeriod) {
+        ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+        long currentTimeMillis = System.currentTimeMillis();
+
+        // Try to set a new value if the key does not exist
+        Boolean isSet = ops.setIfAbsent(key, String.valueOf(currentTimeMillis + limitPeriod * 1000), limitPeriod, TimeUnit.SECONDS);
+
+        if (Boolean.TRUE.equals(isSet)) {
+            // Lock acquired, it means that previous request was out of the limit period.
+            return true;
+        } else {
+            // If the key exists, check the stored time.
+            long expiresAt = Long.parseLong((String) ops.get(key));
+            if (currentTimeMillis < expiresAt) {
+                // current time is less than stored time, limit period has not been reached.
+                return false;
+            } else {
+                // limit period has passed, update the time to current time plus limit period.
+                ops.set(key, String.valueOf(currentTimeMillis + limitPeriod * 1000));
+                return true;
+            }
+        }
+    }
 }

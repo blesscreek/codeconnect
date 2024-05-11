@@ -4,20 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.co.codeconnectjudge.common.exception.StatusFailException;
 import com.co.codeconnectjudge.constant.QuestionConstants;
-import com.co.codeconnectjudge.dao.question.JudgeService;
-import com.co.codeconnectjudge.dao.question.QuestionTagService;
-import com.co.codeconnectjudge.mapper.QuestionMapper;
+import com.co.codeconnectjudge.dao.judge.JudgeEntityService;
+import com.co.codeconnectjudge.dao.question.QuestionTagEntityService;
 import com.co.codeconnectjudge.model.dto.*;
-import com.co.codeconnectjudge.dao.question.QuestionService;
+import com.co.codeconnectjudge.dao.question.QuestionEntityService;
 import com.co.codeconnectjudge.model.po.Judge;
 import com.co.codeconnectjudge.model.po.PageParams;
 import com.co.codeconnectjudge.model.po.Question;
-import com.co.codeconnectjudge.model.po.QuestionTag;
+import com.co.codeconnectjudge.service.oj.JudgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -33,19 +31,19 @@ import java.util.List;
 @Component
 public class AdminQuestionManager {
     @Autowired
-    private QuestionService questionService;
+    private QuestionEntityService questionEntityService;
     @Autowired
-    private JudgeService judgeService;
+    private JudgeEntityService judgeEntityService;
     @Autowired
-    private QuestionTagService questionTagService;
+    private QuestionTagEntityService questionTagEntityService;
     public void addQuestion(QuestionDTO questionDTO) throws StatusFailException {
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("title",questionDTO.getQuestion().getTitle());
-        Question question = questionService.getOne(queryWrapper);
+        Question question = questionEntityService.getOne(queryWrapper);
         if (question != null) {
             throw new StatusFailException("题目标题重复，请更换");
         }
-        boolean addRes = questionService.addQuestion(questionDTO);
+        boolean addRes = questionEntityService.addQuestion(questionDTO);
         if (addRes == false) {
             throw new StatusFailException("题目添加失败");
         }
@@ -64,7 +62,7 @@ public class AdminQuestionManager {
             }
         }
         Integer difficulty = QuestionConstants.QuestionDifficulty.getQuestionDifficultyByString(getQuestionListDTO.getDifficulty());
-        List<Question> questions = questionService.selectQuestions(tags, getQuestionListDTO.getKeyword(),
+        List<Question> questions = questionEntityService.selectQuestions(tags, getQuestionListDTO.getKeyword(),
                 difficulty, pageParams.getPageSize(), offset);
         if (questions == null) {
             throw new StatusFailException("查询题目列表失败");
@@ -90,7 +88,7 @@ public class AdminQuestionManager {
                 LambdaQueryWrapper<Judge> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper.eq(Judge::getQid, question.getId())
                         .eq(Judge::getUid, uid);
-                Judge judge = judgeService.getOne(queryWrapper);
+                Judge judge = judgeEntityService.getOne(queryWrapper);
                 if (judge == null)
                     //未作答
                     listReturn.setStatus(-1);
@@ -99,7 +97,7 @@ public class AdminQuestionManager {
             }
             listReturn.setQuestionNum("Q" + question.getId());
             listReturn.setTitle(question.getTitle());
-            listReturn.setTags(questionTagService.getTagNamesByQuestionId(question.getId()));
+            listReturn.setTags(questionTagEntityService.getTagNamesByQuestionId(question.getId()));
             listReturn.setSubmitNum(question.getSubmitNum());
             listReturn.setAcceptNum(question.getAcceptNum());
             if (question.getSubmitNum() == 0)

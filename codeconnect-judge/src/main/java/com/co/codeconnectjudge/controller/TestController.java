@@ -1,14 +1,10 @@
 package com.co.codeconnectjudge.controller;
 
-import com.co.codeconnectjudge.dao.user.UserService;
-import com.co.codeconnectjudge.model.dto.LoginUser;
-import com.co.codeconnectjudge.model.po.User;
+import com.co.codeconnectjudge.dao.user.UserEntityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
     @Autowired
-    private UserService userService;
+    private UserEntityService userEntityService;
     @RequestMapping("/hello")
 //    @PreAuthorize("@ex.hasAuthority('sys:question:add')")
     public String hello(){

@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author co
  * @since 2024-04-10
  */
-public interface TagService extends IService<Tag> {
+public interface TagEntityService extends IService<Tag> {
 
 }

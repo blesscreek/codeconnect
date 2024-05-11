@@ -13,6 +13,6 @@ import java.util.List;
  * @author co
  * @since 2024-04-10
  */
-public interface QuestionTagService extends IService<QuestionTag> {
+public interface QuestionTagEntityService extends IService<QuestionTag> {
     public List<String> getTagNamesByQuestionId(Long questionId);
 }

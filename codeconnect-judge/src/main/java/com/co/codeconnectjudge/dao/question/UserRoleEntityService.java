@@ -1,6 +1,6 @@
 package com.co.codeconnectjudge.dao.question;
 
-import com.co.codeconnectjudge.model.po.Judge;
+import com.co.codeconnectjudge.model.po.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author co
- * @since 2024-04-11
+ * @since 2024-04-14
  */
-public interface JudgeService extends IService<Judge> {
+public interface UserRoleEntityService extends IService<UserRole> {
 
 }

@@ -19,6 +19,17 @@ spring:
       enabled: true #开启文件上传
       max-file-size: 500MB
       max-request-size: 500MB
+  rabbitmq:
+    host: 123.60.15.140
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: my_vhost
+    # 消息确认配置项
+    # 确认消息已发送到交换机(Exchange)
+    publisher-confirm-type: correlated
+    # 确认消息已发送到队列(Queue)
+    publisher-returns: true
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
 minio:
@@ -31,3 +42,4 @@ minio:
 sa-token:
   # token前缀
   token-prefix: Bearer
+

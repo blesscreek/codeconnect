@@ -8,4 +8,5 @@ package com.co.codeconnectjudge.constant;
  */
 public interface UserConstant {
     String USER_TOKEN = "Authorization";
+
 }

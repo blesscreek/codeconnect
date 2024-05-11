@@ -34,9 +34,6 @@ public class Judge implements Serializable {
     @ApiModelProperty(value = "题目id")
     private Long qid;
 
-    @ApiModelProperty(value = "题目展示id")
-    private String displayPid;
-
     @ApiModelProperty(value = "用户id")
     private Long uid;
 

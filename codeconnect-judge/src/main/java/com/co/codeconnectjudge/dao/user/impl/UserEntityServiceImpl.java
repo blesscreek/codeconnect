@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.co.codeconnectjudge.mapper.UserMapper;
 import com.co.codeconnectjudge.model.po.User;
-import com.co.codeconnectjudge.dao.user.UserService;
+import com.co.codeconnectjudge.dao.user.UserEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @Date 2024-04-02 21:46
  */
 @Service
-public class UserServiceImpl  extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserEntityServiceImpl extends ServiceImpl<UserMapper, User> implements UserEntityService {
     @Autowired
     private UserMapper userMapper;
 

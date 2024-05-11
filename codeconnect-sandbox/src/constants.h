@@ -29,6 +29,10 @@
 #define COMPILE_ERROR 4
 // 判题系统发生错误
 #define SYSTEM_ERROR 5
+// 待判
+#define PENDING 6
+//判题中
+#define JUDGING 7
 
 // 资源相关
 #define RESOURCE_UNLIMITED 0
