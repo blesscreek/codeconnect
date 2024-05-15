@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.co.backend.mapper.LanguageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.co.backend.model.po.Language">
+        <id column="id" property="id" />
+        <result column="content_type" property="contentType" />
+        <result column="description" property="description" />
+        <result column="name" property="name" />
+        <result column="compile_command" property="compileCommand" />
+        <result column="template" property="template" />
+        <result column="code_template" property="codeTemplate" />
+        <result column="is_spj" property="isSpj" />
+        <result column="seq" property="seq" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, content_type, description, name, compile_command, template, code_template, is_spj, seq, create_time, update_time
+    </sql>
+
+</mapper>

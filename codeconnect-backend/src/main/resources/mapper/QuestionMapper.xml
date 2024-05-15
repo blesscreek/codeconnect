@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.co.backend.mapper.QuestionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.co.backend.model.po.Question">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="uid" property="uid" />
+        <result column="background" property="background" />
+        <result column="description" property="description" />
+        <result column="input" property="input" />
+        <result column="output" property="output" />
+        <result column="examples" property="examples" />
+        <result column="difficulty" property="difficulty" />
+        <result column="hint" property="hint" />
+        <result column="auth" property="auth" />
+        <result column="submit_num" property="submitNum" />
+        <result column="accept_num" property="acceptNum" />
+        <result column="time_limit" property="timeLimit" />
+        <result column="memory_limit" property="memoryLimit" />
+        <result column="stack_limit" property="stackLimit" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, uid, background, description, input, output, examples, difficulty, hint, auth, submit_num, accept_num, time_limit, memory_limit, stack_limit, create_time, update_time, is_delete
+    </sql>
+
+    <!-- 在mapper XML 文件中定义查询 -->
+    <select id="selectQuestions" resultType="com.co.backend.model.po.Question">
+        SELECT * FROM question
+        WHERE 1=1
+        <if test="tagNames != null and tagNames.length > 0">
+            and id IN (
+            SELECT qid
+            FROM question_tag
+            WHERE tid IN (
+            SELECT id FROM tag WHERE tag.`name` IN
+            <foreach item="tag" collection="tagNames" separator="," open="(" close=")">
+                #{tag}
+            </foreach>
+            )
+            GROUP BY qid
+            HAVING COUNT(DISTINCT tid) >= (SELECT COUNT(id) FROM tag WHERE tag.`name` IN
+            <foreach item="tag" collection="tagNames" separator="," open="(" close=")">
+                #{tag}
+            </foreach>
+            )
+            )
+        </if>
+        <if test="titleKeyword != null and titleKeyword != ''">
+            AND (title LIKE CONCAT('%', #{titleKeyword}, '%') OR id like CONCAT('%', #{titleKeyword}, '%'))
+        </if>
+        <if test="difficulty != null">
+            AND difficulty = #{difficulty}
+        </if>
+        ORDER BY id
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+
+</mapper>

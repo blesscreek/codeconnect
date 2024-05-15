@@ -9,6 +9,12 @@
     <description>codeconnect</description>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>codeconnect-backend</module>
+        <module>codeconnect-judger</module>
+    </modules>
+
+
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -185,14 +191,6 @@
                 <version>${elasticsearch.version}</version>
             </dependency>
 
-            <!--微服务依赖-->
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud-alibaba.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
 
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -257,6 +255,22 @@
                     <!--使用默认分隔符，resource中可以使用分割符定义过虑的路径-->
                     <useDefaultDelimiters>true</useDefaultDelimiters>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>backend.com.co.juder.CodeconnectBackendApplication</mainClass>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
