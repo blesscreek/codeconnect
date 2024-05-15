@@ -9,4 +9,5 @@ package com.co.backend.constant;
 
 public interface FileConstans {
     public static final String FILE_TYPE_IMAGE = "image";
+    public static final String FILE_TYPE_INOUT = "inout";
 }

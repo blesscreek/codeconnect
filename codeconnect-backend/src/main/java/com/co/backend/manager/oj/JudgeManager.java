@@ -12,9 +12,7 @@ import com.co.backend.model.dto.LoginUser;
 import com.co.backend.model.dto.SubmitJudgeDTO;
 import com.co.backend.model.po.User;
 import com.co.backend.utils.IpUtils;
-import com.co.backend.utils.RabbitMQUtil;
 import com.co.backend.utils.RedisCache;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,10 +37,6 @@ public class JudgeManager {
     private RedisCache redisCache;
     @Autowired
     private BeforeDispatchInitManager beforeDispatchInitManager;
-    @Autowired
-    private RabbitMQUtil rabbitMQUtil;
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
     @Autowired
     private JudgeDispatcher judgeDispatcher;
     public Judge submitJudgeQuestion(SubmitJudgeDTO judgeDTO) throws StatusForbiddenException, StatusFailException {

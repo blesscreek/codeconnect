@@ -12,6 +12,7 @@
     <modules>
         <module>codeconnect-backend</module>
         <module>codeconnect-judger</module>
+        <module>codeconnect-common</module>
     </modules>
 
 
@@ -192,12 +193,6 @@
             </dependency>
 
 
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-            </dependency>
-
-
 
 
 
@@ -261,7 +256,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>backend.com.co.juder.CodeconnectBackendApplication</mainClass>
+                    <mainClass>backend.com.co.judger.CodeconnectBackendApplication</mainClass>
                 </configuration>
 
                 <executions>

@@ -1,18 +1,18 @@
-package com.co.backend;
+package com.co.judger;
 
 import com.spring4all.swagger.EnableSwagger2Doc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
-@SpringBootApplication(scanBasePackages = {"com.co.backend","com.co.common"})
+@SpringBootApplication
 @EnableSwagger2Doc
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 
-public class CodeconnectBackendApplication {
+public class CodeconnectJudgerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CodeconnectBackendApplication.class, args);
+        SpringApplication.run(CodeconnectJudgerApplication.class, args);
     }
 
 }

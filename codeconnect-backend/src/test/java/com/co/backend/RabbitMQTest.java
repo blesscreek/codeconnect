@@ -1,7 +1,7 @@
 package com.co.backend;
 
 import com.co.backend.model.po.Question;
-import com.co.backend.config.RabbitmqConfig;
+import com.co.common.config.RabbitmqConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

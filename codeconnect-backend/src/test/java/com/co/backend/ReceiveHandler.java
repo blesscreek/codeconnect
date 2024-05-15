@@ -1,6 +1,6 @@
 package com.co.backend;
 
-import com.co.backend.config.RabbitmqConfig;
+import com.co.common.config.RabbitmqConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.boot.test.context.SpringBootTest;

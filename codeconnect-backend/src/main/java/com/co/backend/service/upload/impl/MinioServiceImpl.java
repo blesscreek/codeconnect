@@ -46,7 +46,6 @@ public class MinioServiceImpl implements MinioService {
                     .build();
             minioClient.uploadObject(testbucket);
             log.debug("上传文件到minio成功，bucket:{},objectName:{}",bucket,objectName);
-            System.out.println("上传成功");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
