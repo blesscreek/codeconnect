@@ -10,7 +10,12 @@ export const userLoginService = ({ account: username, password }) => {
   return request.post('/login', { username, password })
 }
 export const userRegisterService = (obj) => {
-  return request.post('/user/register', obj)
+  let data = {
+    username: obj.account,
+    password: obj.password
+  }
+  console.log(data)
+  return request.post('/register', data)
 }
 
 // 查询自己的信息
@@ -48,4 +53,17 @@ export const getUserInfoService = (id) => {
 // 查找群聊信息
 export const getGroupInfoService = (id) => {
   return request.get(`/group/find/${id}`)
+}
+// 关注
+export const addFriendService = (id) => {
+  // return request.put(`/friend/add`, {
+  //   params: {
+  //     friendId: '' + id
+  //   }
+  // })
+  return request.put(`/friend/add?friendId=${id}`)
+}
+// 取消关注
+export const deleteFriendService = (id) => {
+  return request.delete(`/friend/delete/${id}`)
 }

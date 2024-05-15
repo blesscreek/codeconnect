@@ -138,6 +138,18 @@ const getMessage = async () => {
   list.forEach((x) => {
     MessageList.value.unshift(x)
   })
+  // 加载最近一条消息
+  if (path.value == 'friend') {
+    let msgInfo = MessageList.value[MessageList.value.length - 1]
+    let chat = chatStore.chats[chatStore.activeIndex]
+    if (msgInfo.type == 1) {
+      chat.lastContent = '[图片]'
+    } else if (msgInfo.type == 2) {
+      chat.lastContent = '[文件]'
+    } else {
+      chat.lastContent = msgInfo.content
+    }
+  }
   // 滚动条到底部
   nextTick(() => {
     if (!scroll.value) return
@@ -244,9 +256,6 @@ const sendMessage = async () => {
       type: 0
     })
   }
-  if (path.value == 'friend') {
-    chatStore.chats[chatStore.activeIndex].lastContent = text
-  }
   getMessage()
 }
 
@@ -260,16 +269,25 @@ const onSelectFile1 = async (uploadFile) => {
   const file = new FormData()
   file.append('file', imgFile.value)
   const img = await uploadImageService(file)
-  // 拿到上传之后的url
-  const obj = {
-    groupId: props.chatInfo.targetId,
-    content: JSON.stringify({ url: img.data.url, thumbUrl: img.data.thumbUrl }),
-    type: 1
-  }
+  // 拿到上传之后的url receiveId
   if (props.chatInfo.type == 'GROUP') {
-    await sendGroupMessageServe(obj)
+    await sendGroupMessageServe({
+      groupId: props.chatInfo.targetId,
+      content: JSON.stringify({
+        url: img.data.url,
+        thumbUrl: img.data.thumbUrl
+      }),
+      type: 1
+    })
   } else {
-    await sendPrivateMessageServe(obj)
+    await sendPrivateMessageServe({
+      receiveId: props.chatInfo.targetId,
+      content: JSON.stringify({
+        url: img.data.url,
+        thumbUrl: img.data.thumbUrl
+      }),
+      type: 1
+    })
   }
   getMessage()
 }
@@ -284,21 +302,37 @@ const onSelectFile2 = async (uploadFile) => {
   file.append('file', File.value)
   const fileData = await uploadFileService(file)
   // data里只有url
-  const obj = {
-    groupId: props.chatInfo.targetId,
-    content: JSON.stringify({
-      name: File.value.name,
-      size: File.value.size,
-      url: fileData.data
-    }),
-    type: 2
-  }
   if (props.chatInfo.type == 'GROUP') {
-    await sendGroupMessageServe(obj)
+    await sendGroupMessageServe({
+      groupId: props.chatInfo.targetId,
+      content: JSON.stringify({
+        name: File.value.name,
+        size: File.value.size,
+        url: fileData.data
+      }),
+      type: 2
+    })
   } else {
-    await sendPrivateMessageServe(obj)
+    await sendPrivateMessageServe({
+      receiveId: props.chatInfo.targetId,
+      content: JSON.stringify({
+        name: File.value.name,
+        size: File.value.size,
+        url: fileData.data
+      }),
+      type: 2
+    })
   }
   getMessage()
+}
+
+// 鼠标右键菜单,通知父组件
+const emit = defineEmits(['setContextmenu', 'openVisitingCard'])
+const getContextmenu = (obj) => {
+  emit('setContextmenu', obj)
+}
+const openVisitingCard = (obj) => {
+  emit('openVisitingCard', obj)
 }
 </script>
 
@@ -323,6 +357,8 @@ const onSelectFile2 = async (uploadFile) => {
             :mine="x.sendId == mine.id"
             :headImage="headImage(x)"
             :showName="showName(x)"
+            @setContextmenu="getContextmenu"
+            @openVisitingCard="openVisitingCard"
           ></chat-message-item>
         </div>
       </el-scrollbar>

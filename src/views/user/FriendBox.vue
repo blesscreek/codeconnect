@@ -1,6 +1,12 @@
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChatStore } from '@/stores'
+import {
+  getUserInfoService,
+  deleteFriendService,
+  addFriendService
+} from '@/api/user.js'
 
 const router = useRouter()
 const chatStore = useChatStore()
@@ -22,11 +28,35 @@ const handleSendMessage = () => {
   chatStore.activeChat(0)
   router.replace('/chat/friend')
 }
+// 关注状态
+const state = ref('')
+const setState = (user) => {
+  if (!user.isConcern) {
+    state.value = '关注'
+  } else {
+    if (!user.isFans) {
+      state.value = '已关注'
+    } else {
+      state.value = '已互关'
+    }
+  }
+}
+setState(props.friendInfo)
 // 改变关注状态
-const changeState = () => {
-  const user = props.friendInfo
+const changeState = async () => {
   // 关注->取关  没关注->关注
-  console.log(user)
+  if (state.value == '关注') {
+    // 关注
+    await addFriendService(props.friendInfo.friendId)
+    ElMessage.success('关注成功！')
+  } else {
+    // 删除
+    await deleteFriendService(props.friendInfo.friendId)
+    ElMessage.success('取关成功！')
+  }
+  // 改变按钮状态
+  const res = await getUserInfoService(props.friendInfo.friendId)
+  setState(res.data)
 }
 </script>
 <template>
@@ -48,7 +78,7 @@ const changeState = () => {
     </div>
     <div class="friendRight">
       <el-button @click="handleSendMessage">发消息</el-button>
-      <el-button @click="changeState">已关注</el-button>
+      <el-button @click="changeState">{{ state }}</el-button>
     </div>
   </div>
 </template>
@@ -90,6 +120,9 @@ const changeState = () => {
     display: flex;
     justify-content: right;
     align-items: center;
+    .el-button {
+      width: 73px;
+    }
   }
 }
 </style>

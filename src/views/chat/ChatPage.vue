@@ -1,6 +1,6 @@
 <script setup>
 import MessageBox from './MessageBox.vue'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChatStore } from '@/stores'
 import { findGroupServe, getGroupMemberServe } from '@/api/chat.js'
@@ -61,13 +61,44 @@ const getChatInfo = (val) => {
   chatInfo.value = val
 }
 
-// 未读消息
-console.log(chatStore.groupUnread, chatStore.msgUnread)
+// 打开菜单
+const menu = ref(false)
+const data1 = ref({}) // 菜单相关属性,位置,是否为自己发送的消息
+const getContextmenu = (obj) => {
+  data1.value = obj
+  menu.value = menu.value ? false : true
+  chatStore.close = true
+}
+
+// 点击头像打开名片
+const data2 = ref({})
+const card = ref(false)
+const openVisitingCard = (obj) => {
+  data2.value = obj
+  card.value = card.value ? false : true
+  chatStore.close = true
+}
+
+// 关闭打开的东西--名片，菜单
+const isClose = computed(() => {
+  return chatStore.close
+})
+watch(isClose, () => {
+  if (menu.value) {
+    menu.value = false
+    chatStore.close = true
+  } else if (card.value) {
+    card.value = false
+    chatStore.close = true
+  } else return
+  // 感觉有问题！！！ chatStore.close 是监视整个页面的点击事件
+  // 逻辑是，右键后显示菜单，点击后，改变仓库中相关属性，然后在这边监听，监听到改变后，让菜单消失，再复原仓库中的那个属性
+})
 </script>
 
 <template>
   <!-- 聊天区总页面 -->
-  <div class="common-layout">
+  <div class="common-layout" @click="chatStore.close = false">
     <el-container>
       <el-aside>
         <div class="aside_nav">
@@ -127,7 +158,11 @@ console.log(chatStore.groupUnread, chatStore.msgUnread)
           <message-box
             :chatInfo="chatInfo"
             :groupMembers="chatRoomMembers"
+            @setContextmenu="getContextmenu"
+            @openVisitingCard="openVisitingCard"
           ></message-box>
+          <right-menu v-show="menu" :data="data1"></right-menu>
+          <visiting-card v-show="card" :data="data2"></visiting-card>
         </div>
       </el-main>
     </el-container>

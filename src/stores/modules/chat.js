@@ -7,6 +7,7 @@ const route = useRoute()
 export const useChatStore = defineStore(
   'oj-chat',
   () => {
+    const close = ref(true)
     const activeIndex = ref(-1) // 当前激活的窗口
     const chats = ref([]) //消息的列表
     // 群消息数据
@@ -188,6 +189,7 @@ export const useChatStore = defineStore(
       })
     }
     return {
+      close,
       activeIndex,
       chats,
       groupMsg,

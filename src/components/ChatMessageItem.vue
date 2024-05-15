@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Document } from '@element-plus/icons-vue'
+import { getUserInfoService } from '@/api/user'
+// import { useChatStore } from '@/stores'
 const props = defineProps({
   msgInfo: Object,
   mine: Boolean,
@@ -42,6 +44,31 @@ const fileSize = computed(() => {
   }
   return size + 'B'
 })
+
+const emit = defineEmits(['setContextmenu', 'openVisitingCard'])
+// 右键唤醒菜单
+// 通知可以打开菜单了 还要传回是不是自己发的消息
+const getContextmenu = (e) => {
+  let obj = {
+    clientX: e.clientX,
+    clientY: e.clientY,
+    mine: props.mine
+  }
+  emit('setContextmenu', obj)
+}
+
+// 点击头像打开名片 只在群聊中
+const openVisitingCard = async (e) => {
+  if (props.mine) return
+  if (!props.msgInfo.groupId) return
+  const res = await getUserInfoService(props.msgInfo.sendId)
+  let obj = {
+    clientX: e.clientX + 1,
+    clientY: e.clientY + 1,
+    data: res.data
+  }
+  emit('openVisitingCard', obj)
+}
 </script>
 
 <template>
@@ -57,7 +84,7 @@ const fileSize = computed(() => {
       :class="{ 'chat-msg-mine': props.mine }"
     >
       <!-- 头像 -->
-      <div class="head-image">
+      <div class="head-image" @click.stop="openVisitingCard">
         <head-sculpture
           :url="props.headImage"
           :id="msgInfo.sendId"
@@ -78,11 +105,16 @@ const fileSize = computed(() => {
           <!-- 如果是文字 -->
           <span
             class="chat-msg-text"
+            @contextmenu.prevent="getContextmenu"
             v-if="props.msgInfo.type == 0"
             v-html="props.msgInfo.content"
           ></span>
           <!-- 如果是图片 -->
-          <div class="chat-msg-image" v-if="props.msgInfo.type == 1">
+          <div
+            class="chat-msg-image"
+            @contextmenu.prevent="getContextmenu"
+            v-if="props.msgInfo.type == 1"
+          >
             <div
               element-loading-text="上传中.."
               element-loading-background="rgba(0, 0, 0, 0.4)"
@@ -107,7 +139,11 @@ const fileSize = computed(() => {
             ></span>
           </div>
           <!-- 如果是文件 -->
-          <div class="chat-msg-file" v-if="msgInfo.type == 2">
+          <div
+            class="chat-msg-file"
+            @contextmenu.prevent="getContextmenu"
+            v-if="msgInfo.type == 2"
+          >
             <div class="chat-file-box" v-loading="loading">
               <div class="chat-file-info">
                 <el-link
@@ -136,6 +172,7 @@ const fileSize = computed(() => {
       </div>
     </div>
     <!-- 右键后弹出来的菜单，是个组件 -->
+    <!-- <right-menu v-show="menu"></right-menu> -->
     <!-- <right-menu
       v-show="menu && rightMenu.show"
       :pos="rightMenu.pos"
@@ -164,6 +201,7 @@ const fileSize = computed(() => {
       height: 40px;
       top: 0;
       left: 0;
+      cursor: pointer;
     }
 
     .chat-msg-content {
