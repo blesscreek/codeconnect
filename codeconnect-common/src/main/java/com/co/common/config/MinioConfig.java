@@ -1,4 +1,4 @@
-package com.co.backend.config;
+package com.co.common.config;
 
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Value;

@@ -2,7 +2,7 @@ package com.co.backend.validator;
 
 import com.co.backend.constant.QuestionConstants;
 import com.co.backend.model.po.Question;
-import com.co.backend.common.exception.StatusFailException;
+import com.co.common.exception.StatusFailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

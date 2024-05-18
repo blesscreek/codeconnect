@@ -2,7 +2,7 @@ package com.co.backend.dao.question;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.co.backend.model.po.Question;
-import com.co.backend.common.exception.StatusFailException;
+import com.co.common.exception.StatusFailException;
 import com.co.backend.model.dto.QuestionDTO;
 
 import java.util.List;

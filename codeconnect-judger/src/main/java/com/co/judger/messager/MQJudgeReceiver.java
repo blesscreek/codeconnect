@@ -1,7 +1,9 @@
 package com.co.judger.messager;
 
 import com.co.common.config.RabbitmqConfig;
+import com.co.common.model.JudgeInfo;
 import com.co.common.utils.RabbitMQUtil;
+import com.co.judger.service.JudgeService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,11 +18,15 @@ import org.springframework.stereotype.Component;
 public class MQJudgeReceiver {
     @Autowired
     private RabbitMQUtil rabbitMQUtil;
+    @Autowired
+    private JudgeService judgeService;
 
     @RabbitListener(queues = {RabbitmqConfig.QUEUE_JUDGE_COMMON})
     public void receiveCommon(byte[] bytes) throws Exception {
-//        Judge q = (Judge) rabbitMQUtil.getObjectFromBytes(bytes);
-//        System.out.println("Queue_COMMON msg : " + q.toString());
+        JudgeInfo judgeInfo = (JudgeInfo) rabbitMQUtil.getObjectFromBytes(bytes);
+        System.out.println("Queue_COMMON msg : " + judgeInfo.toString());
+
+        judgeService.judgeProcess(judgeInfo);
     }
     @RabbitListener(queues = {RabbitmqConfig.QUEUE_JUDGE_CONTEST})
     public void receiveContest(byte[] bytes) throws Exception {

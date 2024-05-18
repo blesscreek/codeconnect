@@ -1,7 +1,7 @@
 package com.co.backend.service.admin.impl;
 
 import com.co.backend.model.po.PageParams;
-import com.co.backend.common.exception.StatusFailException;
+import com.co.common.exception.StatusFailException;
 import com.co.backend.common.result.ResponseResult;
 import com.co.backend.common.result.ResultStatus;
 import com.co.backend.manager.admin.AdminQuestionManager;

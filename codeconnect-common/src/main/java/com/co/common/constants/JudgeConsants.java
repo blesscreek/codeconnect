@@ -1,4 +1,4 @@
-package com.co.backend.constant;
+package com.co.common.constants;
 
 /**
  * @Author co

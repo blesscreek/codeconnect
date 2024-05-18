@@ -1,8 +1,8 @@
 package com.co.backend.manager.upload;
 
-import com.co.backend.service.upload.MinioService;
-import com.co.backend.common.exception.StatusFailException;
+import com.co.common.exception.StatusFailException;
 import com.co.backend.model.dto.UploadFileParamsDto;
+import com.co.common.utils.MinioUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 @Component
 public class UploadQuestionManager {
     @Autowired
-    private MinioService minioService;
+    private MinioUtil minioUtil;
     @Value("${minio.endpoint}")
     private String endpoint;
 
@@ -28,14 +28,14 @@ public class UploadQuestionManager {
         String filename = uploadFileParamsDto.getFilename();
         //扩展名
         String extension = filename.substring(filename.lastIndexOf("."));
-        String mimeType = minioService.getMimeType(extension);
+        String mimeType = minioUtil.getMimeType(extension);
         //子目录
-        String defaultFolderPath = minioService.getDefaultFolderPath();
-        String fileMd5 = minioService.getFileMd5(new File(localFilePath));
+        String defaultFolderPath = minioUtil.getDefaultFolderPath();
+        String fileMd5 = minioUtil.getFileMd5(new File(localFilePath));
         //文件名称
         String objectName = defaultFolderPath + fileMd5 + extension;
         //上传文件到minio
-        boolean uploadRes = minioService.addFilesToMinio(bucket, objectName, localFilePath, mimeType);
+        boolean uploadRes = minioUtil.addFilesToMinio(bucket, objectName, localFilePath, mimeType);
         if (uploadRes == false) {
             throw new StatusFailException("上传文件失败");
         }

@@ -22,8 +22,8 @@ spring:
   rabbitmq:
     host: 123.60.15.140
     port: 5672
-    username: admin
-    password: admin
+    username: root
+    password: 123456
     virtual-host: my_vhost
     # 消息确认配置项
     # 确认消息已发送到交换机(Exchange)

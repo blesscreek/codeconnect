@@ -2,11 +2,13 @@ package com.co.backend.judge;
 
 import com.co.backend.model.po.Judge;
 import com.co.common.config.RabbitmqConfig;
-import com.co.backend.constant.JudgeConsants;
+import com.co.common.constants.JudgeConsants;
 import com.co.backend.dao.judge.JudgeEntityService;
+import com.co.common.model.JudgeInfo;
 import com.co.common.utils.RabbitMQUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,8 +30,10 @@ public class JudgeDispatcher {
     private JudgeEntityService judgeEntityService;
     public void sendTask(Judge judge) {
         try {
-
-            byte[] bytesFromObject = rabbitMQUtil.getBytesFromObject(judge);
+            JudgeInfo judgeInfo = new JudgeInfo();
+            BeanUtils.copyProperties(judge, judgeInfo);
+            byte[] bytesFromObject = rabbitMQUtil.getBytesFromObject(judgeInfo);
+            System.out.println("judgeInfo: " + judgeInfo.toString());
             if (judge.getCid() == 0) {
                 rabbitTemplate.convertAndSend(RabbitmqConfig.EXCHANGE_TOPIC_JUDGE, RabbitmqConfig.ROUTINGKEY_JUDGE_COMMON, bytesFromObject);
             }

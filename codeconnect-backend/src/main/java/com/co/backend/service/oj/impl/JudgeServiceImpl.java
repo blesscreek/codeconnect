@@ -1,8 +1,8 @@
 package com.co.backend.service.oj.impl;
 
 import com.co.backend.service.oj.JudgeService;
-import com.co.backend.common.exception.StatusFailException;
-import com.co.backend.common.exception.StatusForbiddenException;
+import com.co.common.exception.StatusFailException;
+import com.co.common.exception.StatusForbiddenException;
 import com.co.backend.common.result.ResponseResult;
 import com.co.backend.common.result.ResultStatus;
 import com.co.backend.manager.oj.JudgeManager;

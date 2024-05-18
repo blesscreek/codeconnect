@@ -4,7 +4,7 @@ import com.co.backend.constant.RedisConstants;
 import com.co.backend.constant.UserConstant;
 import com.co.backend.dao.user.UserEntityService;
 import com.co.backend.model.po.UserRole;
-import com.co.backend.common.exception.StatusFailException;
+import com.co.common.exception.StatusFailException;
 import com.co.backend.mapper.UserRoleMapper;
 import com.co.backend.model.dto.LoginUser;
 import com.co.backend.model.po.User;

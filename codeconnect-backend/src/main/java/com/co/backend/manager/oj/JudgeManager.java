@@ -1,13 +1,13 @@
 package com.co.backend.manager.oj;
 
-import com.co.backend.constant.JudgeConsants;
+import com.co.common.constants.JudgeConsants;
 import com.co.backend.constant.LimitConstants;
 import com.co.backend.constant.RedisConstants;
 import com.co.backend.judge.JudgeDispatcher;
 import com.co.backend.model.po.Judge;
 import com.co.backend.validator.JudgeValidator;
-import com.co.backend.common.exception.StatusFailException;
-import com.co.backend.common.exception.StatusForbiddenException;
+import com.co.common.exception.StatusFailException;
+import com.co.common.exception.StatusForbiddenException;
 import com.co.backend.model.dto.LoginUser;
 import com.co.backend.model.dto.SubmitJudgeDTO;
 import com.co.backend.model.po.User;

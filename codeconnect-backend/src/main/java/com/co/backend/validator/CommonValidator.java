@@ -1,6 +1,6 @@
 package com.co.backend.validator;
 
-import com.co.backend.common.exception.StatusFailException;
+import com.co.common.exception.StatusFailException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 

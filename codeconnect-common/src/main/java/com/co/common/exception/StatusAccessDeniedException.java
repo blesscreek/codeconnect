@@ -1,4 +1,4 @@
-package com.co.backend.common.exception;
+package com.co.common.exception;
 
 /**
  * @Author: Himit_ZH

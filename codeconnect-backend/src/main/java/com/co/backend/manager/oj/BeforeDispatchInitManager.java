@@ -7,7 +7,7 @@ import com.co.backend.dao.question.UserRoleEntityService;
 import com.co.backend.model.po.Judge;
 import com.co.backend.model.po.Question;
 import com.co.backend.model.po.UserRole;
-import com.co.backend.common.exception.StatusForbiddenException;
+import com.co.common.exception.StatusForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

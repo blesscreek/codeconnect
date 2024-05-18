@@ -1,15 +1,15 @@
-package com.co.backend.service.upload.impl;
+package com.co.common.utils;
 
-import com.co.backend.service.upload.MinioService;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
+import org.springframework.http.MediaType;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,12 +20,11 @@ import java.util.Date;
  * @Author co
  * @Version 1.0
  * @Description
- * @Date 2024-04-09 16:50
+ * @Date 2024-05-18 15:11
  */
-
 @Slf4j
-@Service
-public class MinioServiceImpl implements MinioService {
+@Component
+public class MinioUtil {
     @Autowired
     MinioClient minioClient;
     /**
@@ -35,7 +34,6 @@ public class MinioServiceImpl implements MinioService {
      * @param localFilePath
      * @param mimeType
      */
-    @Override
     public boolean addFilesToMinio(String bucket, String objectName, String localFilePath, String mimeType) {
         try {
             UploadObjectArgs testbucket = UploadObjectArgs.builder()
@@ -76,7 +74,7 @@ public class MinioServiceImpl implements MinioService {
      * 获取文件默认存储目录路径 年/月/日
      * @return
      */
-    @Override
+
     public String getDefaultFolderPath() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String folder = sdf.format(new Date()).replace("-", "/") + "/";
@@ -88,7 +86,7 @@ public class MinioServiceImpl implements MinioService {
      * @param file
      * @return
      */
-    @Override
+
     public String getFileMd5(File file) {
         try(FileInputStream fileInputStream = new FileInputStream(file)) {
             String fileMd5 = DigestUtils.md5DigestAsHex(fileInputStream);
@@ -98,5 +96,4 @@ public class MinioServiceImpl implements MinioService {
             return null;
         }
     }
-
 }

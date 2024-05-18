@@ -2,7 +2,7 @@ package com.co.backend.dao.question.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.co.backend.common.exception.StatusFailException;
+import com.co.common.exception.StatusFailException;
 import com.co.backend.dao.question.QuestionTagEntityService;
 import com.co.backend.dao.question.TagEntityService;
 import com.co.backend.mapper.QuestionMapper;

@@ -9,7 +9,7 @@ import com.co.backend.dao.question.QuestionTagEntityService;
 import com.co.backend.model.po.Judge;
 import com.co.backend.model.po.PageParams;
 import com.co.backend.model.po.Question;
-import com.co.backend.common.exception.StatusFailException;
+import com.co.common.exception.StatusFailException;
 import com.co.backend.model.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
