@@ -60,14 +60,14 @@ const rules = reactive({
       trigger: 'blur'
     }
   ],
-  signature: [{ max: 30, message: '个性签名不能多余30字', trigger: 'blur' }]
+  signature: [{ max: 30, message: '个性签名不能多于30字', trigger: 'blur' }]
 })
 
 // 上传用户头像相关
 
 const uploadRef = ref()
 
-const imgFile = ref({})
+const imgFile = ref(null)
 
 const onSelectFile = (uploadFile) => {
   // 基于 FileReader 读取图片做预览，转为base64
@@ -82,7 +82,7 @@ const onSelectFile = (uploadFile) => {
 // 提交修改
 const submit = async () => {
   // 如果修改了头像 先提交头像
-  if (imgFile.value instanceof FormData) {
+  if (imgFile.value) {
     const file = new FormData()
     file.append('file', imgFile.value)
     const img = await uploadImageService(file)

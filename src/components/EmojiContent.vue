@@ -29,13 +29,13 @@ const loadImageAsBase64 = async (filePath) => {
     console.error('转换失败：', error)
   }
 }
-loadImageAsBase64('/src/assets/emoji/0.gif') //所以让它先自己转一次
+loadImageAsBase64('/public/emoji/0.gif') //所以让它先自己转一次
 
 const clickHandler = async (emoText) => {
   // 直接返回url地址 ，可以直接渲染在富文本框里
   // 第一个转的就会有问题，不知道为什么
   let idx = emoTextList.indexOf(emoText)
-  let url = `/src/assets/emoji/${idx}.gif`
+  let url = `/public/emoji/${idx}.gif`
   await loadImageAsBase64(url)
   url = base64String.value
   emit('getEmoji', url)

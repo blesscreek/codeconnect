@@ -3,6 +3,7 @@
 // <code-editor :language="language"></code-editor>
 
 import { reactive, shallowRef, onMounted, computed } from 'vue'
+import { useTopicStore } from '@/stores'
 import { javascript } from '@codemirror/lang-javascript'
 import { java } from '@codemirror/lang-java'
 import { cpp } from '@codemirror/lang-cpp'
@@ -10,10 +11,12 @@ import { python } from '@codemirror/lang-python'
 // src 里的那一堆ts
 import { Codemirror } from '@/codets'
 
+const topicStore = useTopicStore()
 const languages = {
   javascript: javascript(),
   java: java(),
   cpp: cpp(),
+  c: cpp(),
   python: python()
 }
 
@@ -41,7 +44,6 @@ console.log(config)
 console.log(languageData)
 const extensions = computed(() => {
   const result = []
-  console.log(result)
   result.push(languages[config.language])
   return result
 })
@@ -53,6 +55,10 @@ const handleReady = (payload) => {
 onMounted(() => {
   console.log('mounted view:', view)
 })
+
+const getContent = (e) => {
+  topicStore.setContent(e)
+}
 </script>
 
 <template>
@@ -81,7 +87,7 @@ onMounted(() => {
         :extensions="extensions"
         v-model="code"
         @ready="handleReady"
-        @change="console.log('change', $event)"
+        @change="getContent"
       />
     </div>
   </div>

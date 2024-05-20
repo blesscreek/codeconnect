@@ -109,7 +109,7 @@ const emoTextList = [
 let textToImg = (emoText) => {
   let word = emoText.replace(/\#|\;/gi, '')
   let idx = emoTextList.indexOf(word)
-  let url = `/src/assets/emoji/${idx}.gif`
+  let url = `/public/emoji/${idx}.gif`
 
   return `<img src="${url}" style="vertical-align:bottom;"/>`
 }

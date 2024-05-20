@@ -17,7 +17,9 @@ const userStore = useUserStore()
           <div class="span">
             <div class="name">{{ userStore.userInfo.nickname }}</div>
             <div class="autograph">
-              {{ userStore.userInfo.signature }}
+              {{
+                userStore.userInfo.signature || '这个人很神秘哦，神秘都没有写~'
+              }}
             </div>
           </div>
         </div>

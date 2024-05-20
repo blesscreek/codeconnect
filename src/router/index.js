@@ -72,7 +72,8 @@ const router = createRouter({
       path: '/topic/detail',
       component: () => import('@/views/topic/TopicDetail.vue')
     }
-  ]
+  ],
+  base: '/'
 })
 // 路由前置守卫
 // router.beforeEach((to) => {

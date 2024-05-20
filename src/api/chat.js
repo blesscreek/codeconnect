@@ -42,3 +42,7 @@ export const pullPrivateUnreadServe = () => {
 export const pullGroupUnreadServe = () => {
   return request.post('/message/group/pullUnreadMessage')
 }
+// 加入万人聊天室
+export const joinChatroomServe = () => {
+  return request.post('/group/chatroom')
+}

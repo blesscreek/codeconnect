@@ -34,15 +34,19 @@ const onDrag = (e) => {
     // 计算水平拖动的距离
     const delta = e.clientX - startX
     // 更新左右区域的宽度
-    leftWidth.value = startLeftWidth + delta
-    rightWidth.value = startRightWidth - delta
+    if (startLeftWidth + delta > 500 && startRightWidth - delta > 500) {
+      leftWidth.value = startLeftWidth + delta
+      rightWidth.value = startRightWidth - delta
+    }
   }
   if (draggingV.value) {
     // 计算垂直拖动的距离
     const delta = e.clientY - startY
     // 更新上下区域的高度
-    topHeight.value = startTopHeight + delta
-    bottomHeight.value = startBottomHeight - delta
+    if (startTopHeight + delta > 200 && startBottomHeight - delta > 200) {
+      topHeight.value = startTopHeight + delta
+      bottomHeight.value = startBottomHeight - delta
+    }
   }
 }
 
@@ -132,24 +136,7 @@ getTopic()
   <div class="topic-detail">
     <!-- 头部导航 -->
     <el-header>
-      <!-- 左边 -->
-      <div class="head-left">
-        <img src="@/assets/logo.png" alt="" />
-      </div>
-      <div class="head-middle">
-        <div class="li">上一道</div>
-        <div class="li">返回首页</div>
-        <div class="li">下一道</div>
-      </div>
-      <div class="head-right">
-        <div class="head_sculpture">
-          <head-sculpture></head-sculpture>
-        </div>
-        <div class="login">
-          <!-- 登录 | 注册 -->
-          ( •̀ ω •́ )y
-        </div>
-      </div>
+      <head-nav></head-nav>
     </el-header>
     <div class="container">
       <div class="left" :style="{ width: leftWidth + 'px' }">
@@ -180,52 +167,9 @@ getTopic()
   background-color: rgb(245, 245, 245);
 }
 .el-header {
-  width: 100%;
-  height: 6%;
-  margin: 0;
   padding: 0;
-  display: flex;
+  height: 6%;
   background-color: #fff;
-  .head-left {
-    width: 11%;
-    display: flex;
-    align-items: center;
-    img {
-      height: 100%;
-      margin-left: 30px;
-    }
-  }
-  .head-middle {
-    width: 78%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .li {
-      display: table-cell;
-      vertical-align: middle;
-      padding: 7px 10px;
-      margin-left: 1px;
-      color: #5f5f5f;
-    }
-    .li:hover {
-      cursor: pointer;
-      color: #000000;
-      background-color: #f2f2f2;
-    }
-  }
-  .head-right {
-    width: 11%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    .head_sculpture {
-      width: 40px;
-      height: 40px;
-    }
-    .login {
-      margin-left: 20px;
-    }
-  }
 }
 .container {
   width: 100%;
@@ -234,66 +178,66 @@ getTopic()
   padding-top: 0;
   box-sizing: border-box;
   display: flex;
-}
 
-.left {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  height: 100%;
-  width: 50%;
-  border-radius: 20px;
-}
-
-.right {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 50%;
-}
-
-.top {
-  background-color: #fff;
-  border-radius: 20px;
-  box-sizing: border-box;
-  // border: 1px solid #dbdbdb;
-}
-
-.bottom {
-  background-color: #fff;
-  border-radius: 20px;
-}
-
-.divider-h {
-  width: 10px;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: e-resize;
-  span {
-    display: block;
-    height: 50px;
-    width: 4px;
-    border-radius: 2px;
-    background-color: #bdbdbd;
+  .left {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    height: 100%;
+    width: 50%;
+    border-radius: 20px;
   }
-}
 
-.divider-v {
-  height: 10px;
-  width: 100%;
-  cursor: row-resize;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: n-resize;
-  span {
-    display: block;
-    width: 50px;
-    height: 4px;
-    border-radius: 2px;
-    background-color: #bdbdbd;
+  .right {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 50%;
+  }
+
+  .top {
+    background-color: #fff;
+    border-radius: 20px;
+    box-sizing: border-box;
+    // border: 1px solid #dbdbdb;
+  }
+
+  .bottom {
+    background-color: #fff;
+    border-radius: 20px;
+  }
+
+  .divider-h {
+    width: 10px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: e-resize;
+    span {
+      display: block;
+      height: 50px;
+      width: 4px;
+      border-radius: 2px;
+      background-color: #bdbdbd;
+    }
+  }
+
+  .divider-v {
+    height: 10px;
+    width: 100%;
+    cursor: row-resize;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: n-resize;
+    span {
+      display: block;
+      width: 50px;
+      height: 4px;
+      border-radius: 2px;
+      background-color: #bdbdbd;
+    }
   }
 }
 </style>

@@ -1,7 +1,11 @@
 <script setup>
-import { ref } from 'vue'
-
+import { ref, watch } from 'vue'
+import { useTopicStore } from '@/stores'
+const topicStore = useTopicStore()
 const language = ref('javascript')
+watch(language, () => {
+  topicStore.setLanguage(language.value)
+})
 </script>
 <template>
   <div class="toolbar">

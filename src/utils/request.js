@@ -4,7 +4,7 @@ import router from '@/router'
 import { ElMessage } from 'element-plus'
 import { refreshTokenService } from '@/api/user'
 
-// const baseURL = 'http://192.168.0.190:8080'
+// const baseURL = 'http://123.60.15.140:8080'
 const baseURL = 'http://139.9.136.188:8080'
 
 const request = axios.create({

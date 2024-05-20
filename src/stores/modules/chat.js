@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
-// import { userInfoService } from '@/api/chat.js'
 // 用户模块 token相关
 export const useChatStore = defineStore(
   'oj-chat',

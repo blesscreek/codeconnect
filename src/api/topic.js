@@ -13,5 +13,10 @@ export const getQuestionListService = ({ pageNo, pageSize }, data) => {
   )
 }
 export const getQuestionService = (params) => {
-  return request.get(`question/getQuestion?qid=${params}`)
+  return request.get(`/question/getQuestion?qid=${params}`)
+}
+
+// 上传题目
+export const submitJudgeQuestion = (data) => {
+  return request.post('/judge/submitJudgeQuestion', data)
 }

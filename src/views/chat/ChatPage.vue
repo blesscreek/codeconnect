@@ -3,7 +3,11 @@ import MessageBox from './MessageBox.vue'
 import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChatStore } from '@/stores'
-import { findGroupServe, getGroupMemberServe } from '@/api/chat.js'
+import {
+  findGroupServe,
+  getGroupMemberServe,
+  joinChatroomServe
+} from '@/api/chat.js'
 
 const chatRoom = ref(false)
 const friend = ref(false)
@@ -31,13 +35,15 @@ const getChatRoomMember = async () => {
 }
 
 // 侧边栏高亮
-const highlightChange = () => {
+const highlightChange = async () => {
   let path = route.path.split('/')[2]
   if (path === 'chatroom') {
     chatRoom.value = true
     friend.value = false
     getChatRoomInfo()
     getChatRoomMember()
+    const res = await joinChatroomServe()
+    console.log(res)
   }
   if (path === 'friend') {
     friend.value = true

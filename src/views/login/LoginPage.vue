@@ -25,7 +25,7 @@ const formModel = ref({
 const rules = {
   account: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 1, max: 7, message: '用户名是1-7位的字符', trigger: 'blur' }
+    { min: 1, max: 10, message: '用户名是1-10位的字符', trigger: 'blur' }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },

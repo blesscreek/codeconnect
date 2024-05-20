@@ -1,5 +1,15 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useChatStore } from '@/stores'
+import { useRouter } from 'vue-router'
+import {
+  addFriendService,
+  deleteFriendService,
+  getUserInfoService
+} from '@/api/user'
+
+const chatStore = useChatStore()
+const router = useRouter()
 
 // 好友名片
 const props = defineProps({
@@ -9,6 +19,57 @@ const userInfo = computed(() => {
   if (!props.data.data) return {}
   return props.data.data
 })
+
+// 发消息
+const handleSendMessage = () => {
+  const user = userInfo
+  const chat = {
+    type: 'PRIVATE',
+    targetId: user.value.id,
+    showName: user.value.nickname,
+    headImage: user.value.headImage
+  }
+  chatStore.openChat(chat)
+  chatStore.activeChat(0)
+  router.replace('/chat/friend')
+}
+
+// 加关注
+const show = ref('')
+const setShow = (user) => {
+  if (user.isConcern) {
+    console.log(user.isConcern, user.isFans)
+    if (user.isFans) {
+      show.value = '已互关'
+    } else {
+      show.value = '已关注'
+    }
+  } else {
+    show.value = '加关注'
+  }
+}
+watch(
+  userInfo,
+  () => {
+    setShow(userInfo.value)
+  },
+  { deep: true }
+)
+const changeState = async () => {
+  if (show.value == '加关注') {
+    // 关注
+    await addFriendService(userInfo.value.id)
+    ElMessage.success('关注成功！')
+  } else {
+    // 删除
+    await deleteFriendService(userInfo.value.id)
+    ElMessage.success('取关成功！')
+  }
+  // 改变按钮状态
+  const res = await getUserInfoService(userInfo.value.id)
+  console.log(res.data)
+  setShow(res.data)
+}
 </script>
 <template>
   <div
@@ -31,8 +92,8 @@ const userInfo = computed(() => {
       </div>
     </div>
     <div class="button">
-      <el-button type="primary">发消息</el-button>
-      <el-button type="primary">加好友</el-button>
+      <el-button type="primary" @click="handleSendMessage">发消息</el-button>
+      <el-button type="primary" @click="changeState">{{ show }}</el-button>
     </div>
   </div>
 </template>

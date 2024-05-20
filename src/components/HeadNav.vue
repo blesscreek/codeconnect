@@ -130,25 +130,23 @@ const logout = () => {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  // border-top: 1px solid #e1e1e1;
 }
 .head_class div {
   height: 100%;
 }
 .left {
   display: flex;
+  width: 800px;
   height: 100%;
-}
-.logo {
-  height: 100%;
-  margin-left: 30px;
-  margin-right: 20px;
-  img {
-    width: 100%;
+  .logo {
     height: 100%;
+    margin-left: 30px;
+    margin-right: 20px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
-}
-.left {
   .li {
     width: 110px;
     margin-left: 10px;
@@ -187,6 +185,7 @@ const logout = () => {
   background-image: linear-gradient(to right, #ffffff, #eef7ff);
 }
 .right {
+  width: 200px;
   position: relative;
   display: flex;
   align-items: center;

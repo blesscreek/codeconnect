@@ -1,7 +1,23 @@
 <script setup>
 import { ref } from 'vue'
+import { submitJudgeQuestion } from '@/api/topic.js'
+import { useTopicStore } from '@/stores'
+const topicStore = useTopicStore()
 // 测试用例相关
 const textarea = ref('3 3 5\n1 2 3\n4 5 6\n7 8 9')
+
+const submit = async () => {
+  const obj = {
+    qid: 1,
+    language: topicStore.language,
+    code: topicStore.content,
+    cid: 0,
+    gid: 0,
+    tid: 0
+  }
+  console.log(obj)
+  await submitJudgeQuestion(obj)
+}
 </script>
 <template>
   <div class="content">
@@ -16,7 +32,7 @@ const textarea = ref('3 3 5\n1 2 3\n4 5 6\n7 8 9')
           <img src="@/assets/play.svg" alt="" />
           <div style="padding-left: 5px">运行</div>
         </el-button>
-        <el-button class="submit" type="info" text bg>
+        <el-button class="submit" type="info" text bg @click="submit">
           <img src="@/assets/submit.svg" alt="" />
           <div style="padding-left: 5px">提交</div>
         </el-button>
@@ -29,6 +45,7 @@ const textarea = ref('3 3 5\n1 2 3\n4 5 6\n7 8 9')
         autosize
         type="textarea"
         placeholder="Please input"
+        disabled="true"
       />
     </div>
   </div>
