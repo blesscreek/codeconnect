@@ -15,24 +15,26 @@
 // 要运行的命令没有找到
 #define COMMAND_NOT_FOUND 1
 
-// 判题中
+// 待判
 #define PENDING -1
 // 答案正确
-#define COMPLETED 0
+#define ACCEPTED 0
+// 换行问题
+#define PRESENTATION_ERROR 1
 // 超时
-#define TIME_LIMIT_EXCEEDED 1
+#define TIME_LIMIT_EXCEEDED 2
 // 超内存限制
-#define MEMORY_LIMIT_EXCEEDED 2
+#define MEMORY_LIMIT_EXCEEDED 3
+// 答案错误
+#define WRONG_ANSWER 4
 // 用户的程序运行时发生错误
-#define RUNTIME_ERROR 3
+#define RUNTIME_ERROR 5
 // 编译错误
-#define COMPILE_ERROR 4
+#define COMPILE_ERROR 6
 // 判题系统发生错误
-#define SYSTEM_ERROR 5
-// 待判
-#define PENDING 6
+#define SYSTEM_ERROR 7
 //判题中
-#define JUDGING 7
+#define JUDGING 8
 
 // 资源相关
 #define RESOURCE_UNLIMITED 0

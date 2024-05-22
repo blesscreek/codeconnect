@@ -13,10 +13,10 @@ else
 CFLAGS += -O3
 endif
 
-_HEADERS = constants.h sandbox.h argv.h utils.h log.h
+_HEADERS = constants.h sandbox.h argv.h diff.h utils.h log.h
 HEADERS = $(patsubst %,$(SRC_DIR)/%,$(_HEADERS))
 
-_OBJ = main.o constants.o sandbox.o argv.o utils.o log.o
+_OBJ = main.o constants.o sandbox.o argv.o diff.o utils.o log.o
 OBJ = $(patsubst %,$(OUT_DIR)/%,$(_OBJ))
 
 RELEASE := $(shell cat /etc/os-release | grep NAME | awk 'NR==1' | cut -d '=' -f 2 | sed 's/\"//g')

@@ -1,10 +1,13 @@
 package com.co.judger.judge;
 
 import com.co.common.constants.LanguageConstants;
+import com.co.common.model.JudgeInfo;
+import com.co.judger.model.Question;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
 
 /**
  * @Author co
@@ -13,8 +16,9 @@ import java.io.IOException;
  * @Date 2024-05-16 22:35
  */
 @Component
+@Slf4j
 public class SandBoxRun {
-    public void compile(String filepath, String judgeId, String language) {
+    public String compile(String filepath, String judgeId, String language) {
         // 构建命令序列
         try {
             ProcessBuilder builder = new ProcessBuilder();
@@ -29,15 +33,35 @@ public class SandBoxRun {
                             "-o", judgeId);
                     break;
                 case "Java":
-                    builder.command("javac",judgeId + LanguageConstants.Language.getExtensionFromLanguage(language));
+                    builder.command("javac",LanguageConstants.SpecialRule.JAVA.getName() + LanguageConstants.Language.getExtensionFromLanguage(language));
                     break;
             }
+            builder.redirectErrorStream(true); // 将错误流合并到标准输出流
             Process compileProcess = builder.start();
-            compileProcess.waitFor(); // 等待编译完成
+
+            // 读取编译输出
+            BufferedReader reader = new BufferedReader(new InputStreamReader(compileProcess.getInputStream()));
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+            int exitCode = compileProcess.waitFor(); // 等待编译完成
+
+            if (exitCode != 0) {
+                return output.toString();
+            } else {
+                return null;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void judge(Question question, JudgeInfo judgeInfo, String inPath, String outPath, String compiledPath) {
+
+
     }
 }

@@ -23,7 +23,7 @@ public class JudgeContext {
         if (!LanguageConstants.Language.C.getLanguage().equals(judgeInfo.getLanguage())
                 && !LanguageConstants.Language.CPP.getLanguage().equals(judgeInfo.getLanguage())) {
             question.setTimeLimit(question.getTimeLimit() * 2);
-            question.setTimeLimit(question.getTimeLimit() * 2);
+            question.setMemoryLimit(question.getTimeLimit() * 2);
         }
 
         judgeStrategy.judge(question, judgeInfo);

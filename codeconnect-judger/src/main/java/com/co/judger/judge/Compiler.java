@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author co
@@ -17,9 +19,15 @@ import java.io.IOException;
 public class Compiler {
     @Autowired
     private SandBoxRun sandBoxRun;
-    public String compile(Long judgeId,String code, String language) {
+    public Map<String, String> compile(Long judgeId,String code, String language) {
+        Map<String,String> map = new HashMap<>();
         String filePath = "/codeconnect-sandbox/files" ;
-        String fileName = judgeId + LanguageConstants.Language.getExtensionFromLanguage(language);
+        String fileName;
+        if (LanguageConstants.Language.JAVA.getLanguage().equals(language)) {
+            fileName = LanguageConstants.SpecialRule.JAVA.getName() + LanguageConstants.Language.getExtensionFromLanguage(language);
+        } else {
+            fileName = judgeId + LanguageConstants.Language.getExtensionFromLanguage(language);
+        }
         String objectName = filePath +"/" + fileName;
         try {
             FileWriter fileWriter = new FileWriter(objectName);
@@ -29,8 +37,16 @@ public class Compiler {
             throw new RuntimeException(e);
         }
         String filepath = "/codeconnect-sandbox/files";
-        String filename = judgeId + ".cpp";
-        sandBoxRun.compile(filepath, String.valueOf(judgeId),language);
-        return null;
+        String compileInfo = sandBoxRun.compile(filepath, String.valueOf(judgeId), language);
+        if (compileInfo != null) {
+            map.put("err",compileInfo);
+        } else {
+            if (LanguageConstants.Language.JAVA.getLanguage().equals(language)){
+                map.put("success",filepath + "/" + LanguageConstants.SpecialRule.JAVA.getCompiledName());
+            } else {
+                map.put("success",filepath + "/" + judgeId);
+            }
+        }
+        return map;
     }
 }

@@ -20,6 +20,7 @@
 
 #include "constants.h"
 #include "utils.h"
+#include "diff.h"
 
 extern struct Config runner_config;
 extern struct Result runner_result;
@@ -193,11 +194,9 @@ void monitor(pid_t child_pid) {
 	}
 	int status;
 	struct rusage ru;
-
 	if (wait4(child_pid, &status, 0, &ru) == -1) {
 		INTERNAL_ERROR_EXIT("wait4 error");
 	}
-
 	gettimeofday(&end_time, NULL);
 	log_rusage(&ru);
 	const struct timeval real_time_tv = {
@@ -260,21 +259,25 @@ void monitor(pid_t child_pid) {
 	}else {
 		runner_result.exit_code = WEXITSTATUS(status);
 	    log_debug("child process exit_code %d", runner_result.exit_code);
-
 	    if (runner_result.exit_code != 0)
 	    {
 	      runner_result.status = RUNTIME_ERROR;
 	    }
 	    else
 	    {
-	      if (runner_config.cpu_time_limit != RESOURCE_UNLIMITED && runner_result.cpu_time_used > runner_config.cpu_time_limit)
+          if (runner_config.cpu_time_limit != RESOURCE_UNLIMITED && runner_result.cpu_time_used_us > runner_config.cpu_time_limit)
+	        {
 	        runner_result.status = TIME_LIMIT_EXCEEDED;
-	      else if (runner_config.real_time_limit != RESOURCE_UNLIMITED && runner_result.real_time_used > runner_config.real_time_limit)
+	        }
+	      else if (runner_config.real_time_limit != RESOURCE_UNLIMITED && runner_result.real_time_used_us > runner_config.real_time_limit)
+	        {
 	        runner_result.status = TIME_LIMIT_EXCEEDED;
+	        }
+
 	      else if (runner_config.memory_limit != RESOURCE_UNLIMITED && runner_result.memory_used > runner_config.memory_limit)
+	        {
 	        runner_result.status = MEMORY_LIMIT_EXCEEDED;
-	      else
-	        runner_result.status = COMPLETED;
+	        }
 	    }
 	}
 
@@ -305,8 +308,18 @@ static int sandbox_proxy(void *_arg)
 	if (write(msg_pipes[1], &inside_pid, sizeof(inside_pid)) != sizeof(inside_pid))
 		INTERNAL_ERROR_EXIT("Proxy write to pipe failed");
 	monitor(inside_pid);
+	// 子程序运行失败的话，直接输出结果。不需要进行后面的 diff 了
+      if (runner_result.exit_code || runner_result.signal_code)
+      {
+        return do_write_result_to_fd();
+      }
 
-	return do_write_result_to_fd();
+      if (runner_result.status <= ACCEPTED)
+      {
+        diff();
+      }
+
+      return do_write_result_to_fd();
 }
 static void find_box_pid(void)
 {
