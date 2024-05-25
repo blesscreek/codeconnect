@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 @SpringBootApplication(scanBasePackages = {"com.co.backend","com.co.common"})
-@EnableSwagger2Doc
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 
 public class CodeconnectBackendApplication {

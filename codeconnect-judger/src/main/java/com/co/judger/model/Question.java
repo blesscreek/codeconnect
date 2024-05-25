@@ -81,13 +81,13 @@ public class Question implements Serializable {
     private Long acceptNum;
 
     @ApiModelProperty(value = "时间限制（单位ms）")
-    private Integer timeLimit;
+    private Long timeLimit;
 
     @ApiModelProperty(value = "空间限制（单位kb）")
-    private Integer memoryLimit;
+    private Long memoryLimit;
 
     @ApiModelProperty(value = "堆栈限制（单位mb）")
-    private Integer stackLimit;
+    private Long stackLimit;
 
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;

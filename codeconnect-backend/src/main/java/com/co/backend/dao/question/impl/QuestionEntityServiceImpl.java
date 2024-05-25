@@ -56,7 +56,6 @@ public class QuestionEntityServiceImpl extends ServiceImpl<QuestionMapper, Quest
         question.setCreateTime(currentTime);
         question.setUpdateTime(currentTime);
         question.setIsDelete(false);
-        question.setGroup(false);
         question.setAcceptNum(0L);
         question.setSubmitNum(0L);
         boolean saveQuestion = this.save(question);

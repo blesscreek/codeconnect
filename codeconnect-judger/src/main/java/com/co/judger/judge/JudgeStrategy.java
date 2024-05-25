@@ -1,18 +1,22 @@
 package com.co.judger.judge;
 
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.co.common.constants.JudgeConsants;
 import com.co.common.constants.LanguageConstants;
 import com.co.common.model.JudgeInfo;
+import com.co.judger.dao.JudgeCaseEntityService;
 import com.co.judger.dao.JudgeEntityService;
 import com.co.judger.model.Judge;
+import com.co.judger.model.JudgeCase;
 import com.co.judger.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author co
@@ -25,6 +29,8 @@ public class JudgeStrategy {
     @Autowired
     private JudgeEntityService judgeEntityService;
     @Autowired
+    private JudgeCaseEntityService judgeCaseEntityService;
+    @Autowired
     private Compiler compiler;
     @Autowired
     private JudgeRun judgeRun;
@@ -35,9 +41,9 @@ public class JudgeStrategy {
         if (!(LanguageConstants.Language.JAVASCRIPT.getLanguage().equals(judgeInfo.getLanguage()) ||
             LanguageConstants.Language.PYTHON.getLanguage().equals(judgeInfo.getLanguage())) ) {
             compileRes = compiler.compile(judgeInfo.getId(), judgeInfo.getCode(), judgeInfo.getLanguage());
-            if (compileRes.get("err") != null) {
+            if (compileRes.get("errMsg") != null) {
                 result.put("code", JudgeConsants.Judge.STATUS_COMPILE_ERROR.getStatus());
-                result.put("errMsg",compileRes.get("err"));
+                result.put("errMsg",compileRes.get("errMsg"));
                 result.put("time", 0);
                 result.put("memory", 0);
                 return result;
@@ -50,7 +56,49 @@ public class JudgeStrategy {
                 .eq("id", judgeInfo.getId());
         judgeEntityService.update(judgeUpdateWrapper);
 
-        judgeRun.judgeAllCase(question, judgeInfo,compiledPath);
-        return null;
+        try {
+            List<JSONObject> allCaseResultList = judgeRun.judgeAllCase(question, judgeInfo, compiledPath);
+            if (allCaseResultList == null) {
+                result.put("code", JudgeConsants.Judge.STATUS_SYSTEM_ERROR.getStatus());
+                result.put("errMsg","status system error");
+                result.put("time", 0);
+                result.put("memory", 0);
+            }
+            return getJudgeInfo(allCaseResultList, judgeInfo, question);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private HashMap<String, Object> getJudgeInfo(List<JSONObject> allCaseResultList, JudgeInfo judgeInfo, Question question) {
+        HashMap<String, Object> res = new HashMap<>();
+        List<JudgeCase> judgeCases = new LinkedList<>();
+        AtomicInteger casePassNum = new AtomicInteger();
+        AtomicInteger sumScore = new AtomicInteger();
+        allCaseResultList.forEach(jsonObject -> {
+            JudgeCase judgeCase = new JudgeCase();
+            judgeCase.setJudgeId(Long.valueOf(jsonObject.getInt("judgeId")));
+            judgeCase.setUid(Long.valueOf(judgeInfo.getUid()));
+            judgeCase.setQid(question.getId());
+            judgeCase.setCaseId(Long.valueOf(jsonObject.getInt("caseId")));
+            judgeCase.setStatus(jsonObject.getInt("status"));
+            judgeCase.setTime(Long.valueOf(jsonObject.getInt("real_time_used_us")));
+            judgeCase.setMemory(Long.valueOf(jsonObject.getInt("memory_used")));
+            judgeCase.setScore(jsonObject.getInt("score"));
+            judgeCases.add(judgeCase);
+            if (jsonObject.getInt("status") == 0 || jsonObject.getInt("status") == 1) {
+                casePassNum.getAndIncrement();
+                sumScore.addAndGet(jsonObject.getInt("score"));
+            }
+        });
+        judgeCaseEntityService.saveBatch(judgeCases);
+        res.put("judgeCaseInfoList", judgeCases);
+        if (casePassNum.get() == allCaseResultList.size()) {
+            res.put("code",JudgeConsants.Judge.STATUS_ACCEPTED.getStatus());
+            res.put("score", 100);
+        } else {
+            res.put("code",JudgeConsants.Judge.STATUS_PARTIAL_ACCEPTED.getStatus());
+            res.put("score", sumScore.get());
+        }
+        return res;
     }
 }

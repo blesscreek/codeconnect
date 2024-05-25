@@ -6,6 +6,7 @@ import com.co.backend.common.result.ResponseResult;
 import com.co.backend.model.dto.GetQuestionListDTO;
 import com.co.backend.model.dto.QuestionDTO;
 import com.co.backend.service.admin.AdminQuestionService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/question")
+@Api(tags = "题目管理接口")
 public class AdminQuestionController {
     @Autowired
     private AdminQuestionService adminQuestionService;

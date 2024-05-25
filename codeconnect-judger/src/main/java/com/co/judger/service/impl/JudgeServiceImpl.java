@@ -35,11 +35,15 @@ public class JudgeServiceImpl implements JudgeService {
         judgeUpdateWrapper.set("status", JudgeConsants.Judge.STATUS_COMPILING.getStatus())
                 .eq("id",judgeInfo.getId())
                 .ne("status",JudgeConsants.Judge.STATUS_CANCELLED.getStatus());
-        boolean isUpdatedOk = judgeEntityService.update(judgeUpdateWrapper);
+        judgeEntityService.update(judgeUpdateWrapper);
+        //获取题目信息,并进入判题
         QueryWrapper<Question> questionQueryWrapper = new QueryWrapper<>();
         questionQueryWrapper.select("id","judge_mode","time_limit","memory_limit").eq("id",judgeInfo.getQid());
         Question question = questionEntityService.getOne(questionQueryWrapper);
-        judgeContext.judge(question, judgeInfo);
+        Judge finalJudgeRes = judgeContext.judge(question, judgeInfo);
+
+        judgeEntityService.updateById(finalJudgeRes);
+
 
     }
 }

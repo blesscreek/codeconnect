@@ -1,11 +1,14 @@
 package com.co.judger.judge;
 
+import com.co.common.constants.JudgeConsants;
 import com.co.common.constants.LanguageConstants;
 import com.co.common.model.JudgeInfo;
 import com.co.judger.model.Judge;
 import com.co.judger.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 
 /**
  * @Author co
@@ -23,10 +26,18 @@ public class JudgeContext {
         if (!LanguageConstants.Language.C.getLanguage().equals(judgeInfo.getLanguage())
                 && !LanguageConstants.Language.CPP.getLanguage().equals(judgeInfo.getLanguage())) {
             question.setTimeLimit(question.getTimeLimit() * 2);
-            question.setMemoryLimit(question.getTimeLimit() * 2);
+            question.setMemoryLimit(question.getMemoryLimit() * 2);
         }
+        //进入判题
+        HashMap<String, Object> judgeResult = judgeStrategy.judge(question, judgeInfo);
 
-        judgeStrategy.judge(question, judgeInfo);
-        return null;
+        Judge finalJudgeRes = new Judge();
+        finalJudgeRes.setId(judgeInfo.getId());
+        if (judgeResult.get("code") == JudgeConsants.Judge.STATUS_COMPILE_ERROR.getStatus()) {
+            finalJudgeRes.setErrorMessage((String) judgeResult.get("errMsg"));
+        }
+        finalJudgeRes.setStatus((Integer) judgeResult.get("code"));
+        finalJudgeRes.setScore((Integer) judgeResult.getOrDefault("score", null));
+        return finalJudgeRes;
     }
 }

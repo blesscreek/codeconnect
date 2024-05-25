@@ -135,11 +135,6 @@
             <artifactId>minio</artifactId>
             <version>8.4.3</version>
         </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.8.1</version>
-        </dependency>
 
         <!--根据扩展名取mimetype-->
         <dependency>
@@ -159,6 +154,16 @@
             <version>0.1.55</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.5.22</version>
+        </dependency>
 
     </dependencies>
 

@@ -33,7 +33,6 @@ public class JudgeDispatcher {
             JudgeInfo judgeInfo = new JudgeInfo();
             BeanUtils.copyProperties(judge, judgeInfo);
             byte[] bytesFromObject = rabbitMQUtil.getBytesFromObject(judgeInfo);
-            System.out.println("judgeInfo: " + judgeInfo.toString());
             if (judge.getCid() == 0) {
                 rabbitTemplate.convertAndSend(RabbitmqConfig.EXCHANGE_TOPIC_JUDGE, RabbitmqConfig.ROUTINGKEY_JUDGE_COMMON, bytesFromObject);
             }

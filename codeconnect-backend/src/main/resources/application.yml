@@ -30,6 +30,9 @@ spring:
     publisher-confirm-type: correlated
     # 确认消息已发送到队列(Queue)
     publisher-returns: true
+  # 允许覆盖
+  main:
+    allow-bean-definition-overriding: true
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
 minio:
@@ -42,4 +45,5 @@ minio:
 sa-token:
   # token前缀
   token-prefix: Bearer
+
 

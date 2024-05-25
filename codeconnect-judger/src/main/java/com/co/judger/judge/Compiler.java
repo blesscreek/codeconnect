@@ -1,5 +1,6 @@
 package com.co.judger.judge;
 
+import com.co.common.constants.JudgeConsants;
 import com.co.common.constants.LanguageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,14 +22,19 @@ public class Compiler {
     private SandBoxRun sandBoxRun;
     public Map<String, String> compile(Long judgeId,String code, String language) {
         Map<String,String> map = new HashMap<>();
-        String filePath = "/codeconnect-sandbox/files" ;
+        String directoryPath = "/codeconnect-sandbox/" + judgeId;
+        Boolean isDirectory = sandBoxRun.createDirectory(directoryPath);
+        if (isDirectory == false) {
+            map.put("errMsg","mkdir err");
+            return map;
+        }
         String fileName;
         if (LanguageConstants.Language.JAVA.getLanguage().equals(language)) {
             fileName = LanguageConstants.SpecialRule.JAVA.getName() + LanguageConstants.Language.getExtensionFromLanguage(language);
         } else {
             fileName = judgeId + LanguageConstants.Language.getExtensionFromLanguage(language);
         }
-        String objectName = filePath +"/" + fileName;
+        String objectName = directoryPath +"/" + fileName;
         try {
             FileWriter fileWriter = new FileWriter(objectName);
             fileWriter.write(code);
@@ -36,15 +42,17 @@ public class Compiler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String filepath = "/codeconnect-sandbox/files";
-        String compileInfo = sandBoxRun.compile(filepath, String.valueOf(judgeId), language);
+        String compileInfo = null;
+
+        compileInfo = sandBoxRun.compile(directoryPath, String.valueOf(judgeId), language);
+
         if (compileInfo != null) {
-            map.put("err",compileInfo);
+            map.put("errMsg",compileInfo);
         } else {
             if (LanguageConstants.Language.JAVA.getLanguage().equals(language)){
-                map.put("success",filepath + "/" + LanguageConstants.SpecialRule.JAVA.getCompiledName());
+                map.put("success",directoryPath + "/" + LanguageConstants.SpecialRule.JAVA.getCompiledName());
             } else {
-                map.put("success",filepath + "/" + judgeId);
+                map.put("success",directoryPath + "/" + judgeId);
             }
         }
         return map;

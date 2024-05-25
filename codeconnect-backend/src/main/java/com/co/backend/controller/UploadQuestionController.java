@@ -24,7 +24,7 @@ public class UploadQuestionController {
     @Autowired
     private UploadQuestionService uploadQuestionService;
     @ApiOperation("上传图片")
-    @RequestMapping("/uploadImage")
+    @PostMapping("/uploadImage")
     @PreAuthorize("hasAuthority('sys:question:add')")
     public ResponseResult uploadImage(@RequestPart("imagedata")MultipartFile image) {
         ResponseResult responseResult = uploadQuestionService.uploadImage(image);
@@ -32,7 +32,7 @@ public class UploadQuestionController {
     }
 
     @ApiOperation("上传测试用例文件")
-    @RequestMapping("/uploadQuestionCase")
+    @PostMapping("/uploadQuestionCase")
     @PreAuthorize("hasAuthority('sys:question:add')")
     public ResponseResult uploadQuestionCase(@RequestParam("questionName") String questionName, @RequestPart("zipFileData")MultipartFile zipFile) {
         ResponseResult responseResult = uploadQuestionService.uploadQuestionCase(questionName, zipFile);

@@ -1,5 +1,6 @@
 package com.co.judger.judge;
 
+import cn.hutool.json.JSONObject;
 import com.co.common.constants.LanguageConstants;
 import com.co.common.model.JudgeInfo;
 import com.co.judger.model.Question;
@@ -7,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.nio.file.Path;
 
 /**
  * @Author co
@@ -23,18 +23,24 @@ public class SandBoxRun {
         try {
             ProcessBuilder builder = new ProcessBuilder();
             builder.directory(new File(filepath)); // 设置工作目录
+            String fileName = null;
             switch (language) {
-                case "C":
-                    builder.command("gcc",judgeId + LanguageConstants.Language.getExtensionFromLanguage(language),
-                            "-o", judgeId);
+                case "C": {
+                    fileName = judgeId + LanguageConstants.Language.getExtensionFromLanguage(language);
+                    builder.command("gcc", fileName, "-o", judgeId);
                     break;
-                case "C++":
-                    builder.command("g++",judgeId + LanguageConstants.Language.getExtensionFromLanguage(language),
-                            "-o", judgeId);
+                }
+                case "Cpp": {
+                    fileName = judgeId + LanguageConstants.Language.getExtensionFromLanguage(language);
+                    builder.command("g++", fileName, "-o", judgeId);
                     break;
-                case "Java":
-                    builder.command("javac",LanguageConstants.SpecialRule.JAVA.getName() + LanguageConstants.Language.getExtensionFromLanguage(language));
+                }
+                case "Java": {
+                    fileName = LanguageConstants.SpecialRule.JAVA.getName() + LanguageConstants.Language.getExtensionFromLanguage(language);
+                    builder.command("javac", fileName);
                     break;
+                }
+
             }
             builder.redirectErrorStream(true); // 将错误流合并到标准输出流
             Process compileProcess = builder.start();
@@ -47,10 +53,10 @@ public class SandBoxRun {
                 output.append(line).append("\n");
             }
             int exitCode = compileProcess.waitFor(); // 等待编译完成
-
             if (exitCode != 0) {
                 return output.toString();
             } else {
+                deleteFile(filepath + "/" + fileName);
                 return null;
             }
         } catch (IOException e) {
@@ -60,8 +66,85 @@ public class SandBoxRun {
         }
     }
 
-    public void judge(Question question, JudgeInfo judgeInfo, String inPath, String outPath, String compiledPath) {
+    public JSONObject judge(Question question, JudgeInfo judgeInfo, String inPath, String outPath, String compiledPath, Long caseId, String directoryPath) {
+        try {
+            ProcessBuilder builder = new ProcessBuilder();
+            String filePath = "/codeconnect-sandbox";
+            String inPartPath = "." + inPath.split(filePath)[1];
+            String outPartPath = "." + outPath.split(filePath)[1];
+            String compiledPartPath = "." + compiledPath.split(filePath)[1];
+            String tmpPartPath = "./"+judgeInfo.getId() + "/" +  caseId + "tmp.out";
+            builder.directory(new File(filePath));
+            switch (judgeInfo.getLanguage()) {
+                case "C":
+                    builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
+                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "--", compiledPartPath);
+            }
+            Process process = builder.start();
 
+            // 读取编译输出和错误信息
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+            // 等待编译完成并获取退出码
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                JSONObject jsonObject = new JSONObject(output);
+                return jsonObject;
+            } else {
+                log.error("judge exitCode err");
+                return null;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
+
+    public Boolean deleteFile(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            boolean delete = file.delete();
+            if (delete) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+    }
+    public boolean deleteFolder(File folder) {
+        if (folder == null || !folder.exists()) {
+            return false;
+        }
+
+        if (folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    deleteFolder(file);
+                }
+            }
+        }
+
+        return folder.delete();
+    }
+
+    public Boolean createDirectory(String filePath) {
+        File directory = new File(filePath);
+        boolean mkdir = directory.mkdir();
+        if (mkdir) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -1,11 +1,11 @@
 package com.co.common.model;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author co
@@ -16,18 +16,17 @@ import java.time.LocalDateTime;
 @Data
 public class JudgeInfo implements Serializable {
     private static final long serialVersionUID = 2345L;
+    private List<JudgeCaseInfo> judgeCaseInfoList;
 
     private Long id;
 
     private Long qid;
 
+    private Long uid;
+
     private Integer status;
 
     private String errorMessage;
-
-    private Integer time;
-
-    private Integer memory;
 
     private Integer score;
 

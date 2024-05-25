@@ -4,9 +4,11 @@ import com.co.backend.dao.user.UserEntityService;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,10 +23,11 @@ import java.io.*;
  */
 @Slf4j
 @RestController
+@Api(tags = "测试接口")
 public class TestController {
     @Autowired
     private UserEntityService userEntityService;
-    @RequestMapping("/hello")
+    @PostMapping("/hello")
 //    @PreAuthorize("@ex.hasAuthority('sys:question:add')")
     public String hello(){
 
@@ -32,7 +35,7 @@ public class TestController {
         return "hello";
     }
 
-    @RequestMapping("/test")
+    @PostMapping("/test")
 //    @PreAuthorize("@ex.hasAuthority('sys:question:add')")
     public String test(){
 
