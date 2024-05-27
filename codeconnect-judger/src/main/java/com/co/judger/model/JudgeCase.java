@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -47,10 +48,10 @@ public class JudgeCase implements Serializable {
     private Integer status;
 
     @ApiModelProperty(value = "测试该样例所用时间ms")
-    private Long time;
+    private Integer time;
 
     @ApiModelProperty(value = "测试该样例所用空间KB")
-    private Long memory;
+    private Integer memory;
 
     @ApiModelProperty(value = "IO得分")
     private Integer score;

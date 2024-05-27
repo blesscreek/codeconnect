@@ -8,6 +8,31 @@ package com.co.common.constants;
  */
 
 public class JudgeConsants {
+    public enum JudgeColor {
+        AC("rgb(82, 196, 26)"),
+        WA("rgb(231, 76, 60)"),
+        EXCEEDLIMIT("rgb(5, 34, 66)"),
+        ;
+        private String color;
+        JudgeColor(String color) {
+            this.color = color;
+        }
+        public String getColor() {
+            return color;
+        }
+    }
+    public enum EnvName {
+        SANDBOXPATH("/codeconnect-sandbox"),
+        OUTPUTPATH("tmp.out")
+        ;
+        private String name;
+        EnvName(String name) {
+            this.name = name;
+        }
+        public String getName() {
+            return name;
+        }
+    }
     public enum LimitNum {
         TIME_LIMIT(10 * 1000L),
         MEMORY_LIMIT(512 * 1024L)
@@ -60,6 +85,15 @@ public class JudgeConsants {
 
         public String getColumnName() {
             return columnName;
+        }
+
+        public static String getColumnNameFromStatus(Integer status) {
+            for (Judge judge : Judge.values()) {
+                if (judge.getStatus().equals(status)) {
+                    return judge.getColumnName();
+                }
+            }
+            return null;
         }
 
     }

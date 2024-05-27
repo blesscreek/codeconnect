@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,8 +44,8 @@ public class JudgeRun {
     @Value("${minio.bucketName2}")
     private String  bucket_questioncases;
 
-    public List<JSONObject> judgeAllCase(Question question, JudgeInfo judgeInfo, String compiledPath) throws ExecutionException, InterruptedException {
-        Long testTime = null, testMemory = null;
+    public List<JSONObject> judgeAllCase(Question question, JudgeInfo judgeInfo, String directoryPath, String compiledPath) throws ExecutionException, InterruptedException {
+        Long testTime = null;
         //设置判题时间、空间，默认给题目限制时间+200ms测评
         if (question.getTimeLimit() != null) {
             testTime = (long) (question.getTimeLimit() + 200);
@@ -56,8 +57,8 @@ public class JudgeRun {
         }
         question.setTimeLimit(testTime);
 
-        ArrayList<FutureTask<JSONObject>> futureTasks = new ArrayList<>();
 
+        //获取题目所有测试用例
         QueryWrapper<QuestionCase> questionCaseQueryWrapper = new QueryWrapper<>();
         questionCaseQueryWrapper.eq("qid", question.getId())
                 .eq("is_show", 0);
@@ -66,10 +67,12 @@ public class JudgeRun {
             log.error("no questionCase");
             return null;
         }
-
-        String directoryPath = "/codeconnect-sandbox/" + judgeInfo.getId();
+        //异步判题
+        ArrayList<FutureTask<JSONObject>> futureTasks = new ArrayList<>();
         int score = 100 / questionCases.size();
+
         for (int i = 0; i < questionCases.size(); i++) {
+
             Long caseId = questionCases.get(i).getId();
             //从minio下载样例，并上传到系统对应文件夹路径
             String inputFileUrl = questionCases.get(i).getInput();
@@ -86,13 +89,14 @@ public class JudgeRun {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            //将判题任务加入任务列表
             int finalI = i;
             futureTasks.add(new FutureTask<>(() -> {
                 JSONObject res = sandBoxRun.judge(question, judgeInfo,
                         directoryPath + "/" + inFileName, directoryPath + "/" + outFileName, compiledPath, caseId, directoryPath);
                 res.set("judgeId", judgeInfo.getId());
                 res.set("caseId",caseId);
+                res.set("time", LocalDateTime.now());
                 if ((int)res.get("status") <= 1) {
                     res.set("score", score);
                 } else {
@@ -126,11 +130,11 @@ public class JudgeRun {
                 }
             }
         }
-//        boolean deletedFolder = sandBoxRun.deleteFolder(new File(directoryPath));
-//        if (deletedFolder == false) {
-//            log.error("delete folder err");
-//            return null;
-//        }
+        boolean deletedFolder = sandBoxRun.deleteFolder(new File(directoryPath));
+        if (deletedFolder == false) {
+            log.error("delete folder err");
+            return null;
+        }
         return result;
     }
 

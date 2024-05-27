@@ -30,12 +30,18 @@ public class JudgeInfo implements Serializable {
 
     private Integer score;
 
+    private Integer time;
+
+    private Integer memory;
+
+    private String showTime;
+
+    private String showMemory;
+
     private Integer length;
 
     private String code;
 
     private String language;
-
-
 
 }

@@ -16,9 +16,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitmqConfig {
     public static final String QUEUE_JUDGE_COMMON = "queue_judge_common";
+    public static final String QUEUE_JUDGE_COMMON_RES = "queue_judge_common_res";
     public static final String QUEUE_JUDGE_CONTEST = "queue_judge_contest";
     public static final String EXCHANGE_TOPIC_JUDGE = "exchange_topic_judge";
     public static final String ROUTINGKEY_JUDGE_COMMON = "judge.common";
+    public static final String ROUTINGKEY_JUDGE_COMMON_RES = "judge.common.res";
     public static final String ROUTINGKEY_JUDGE_CONTEST = "judge.contest";
 
     @Bean(EXCHANGE_TOPIC_JUDGE)
@@ -29,6 +31,10 @@ public class RabbitmqConfig {
     public Queue JudgeCommonQueue() {
         return new Queue(QUEUE_JUDGE_COMMON);
     }
+    @Bean(QUEUE_JUDGE_COMMON_RES)
+    public Queue JudgeCommonResQueue() {
+        return new Queue(QUEUE_JUDGE_COMMON_RES);
+    }
     @Bean(QUEUE_JUDGE_CONTEST)
     public Queue JudgeSpjQueue() {
         return new Queue(QUEUE_JUDGE_CONTEST);
@@ -36,6 +42,10 @@ public class RabbitmqConfig {
     @Bean
     public Binding bindingJudgeCommon(@Qualifier(QUEUE_JUDGE_COMMON) Queue queue,@Qualifier(EXCHANGE_TOPIC_JUDGE) Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(ROUTINGKEY_JUDGE_COMMON).noargs();
+    }
+    @Bean
+    public Binding bindingJudgeCommonRes(@Qualifier(QUEUE_JUDGE_COMMON_RES) Queue queue,@Qualifier(EXCHANGE_TOPIC_JUDGE) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(ROUTINGKEY_JUDGE_COMMON_RES).noargs();
     }
     @Bean
     public Binding bindingJudgeSpj(@Qualifier(QUEUE_JUDGE_CONTEST) Queue queue,@Qualifier(EXCHANGE_TOPIC_JUDGE) Exchange exchange) {

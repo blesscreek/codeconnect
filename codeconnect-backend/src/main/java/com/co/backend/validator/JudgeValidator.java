@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Component
 public class JudgeValidator {
-    private final static List<String> languageList = Arrays.asList("C", "C++", "Java", "Python", "Go", "C#", "JavaScript", "PHP", "Ruby", "Swift", "Kotlin", "Rust", "Objective-C");
+    private final static List<String> languageList = Arrays.asList("C", "Cpp", "Java", "Python", "Go", "C#", "JavaScript", "PHP", "Ruby", "Swift", "Kotlin", "Rust", "Objective-C");
 
     public void validateSubmissionInfo(SubmitJudgeDTO judgeDTO) throws StatusFailException {
         if (!languageList.contains(judgeDTO.getLanguage())) {

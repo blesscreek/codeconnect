@@ -26,7 +26,7 @@ public class LanguageConstants {
     }
     public enum Language {
         C("C", ".c"),
-        CPP("C++", ".cpp"),
+        CPP("Cpp", ".cpp"),
         JAVA("Java", ".java"),
         GO("Go",".go"),
         PYTHON("Python",".py"),

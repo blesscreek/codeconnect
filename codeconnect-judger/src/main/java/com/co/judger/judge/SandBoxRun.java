@@ -1,6 +1,7 @@
 package com.co.judger.judge;
 
 import cn.hutool.json.JSONObject;
+import com.co.common.constants.JudgeConsants;
 import com.co.common.constants.LanguageConstants;
 import com.co.common.model.JudgeInfo;
 import com.co.judger.model.Question;
@@ -19,7 +20,6 @@ import java.io.*;
 @Slf4j
 public class SandBoxRun {
     public String compile(String filepath, String judgeId, String language) {
-        // 构建命令序列
         try {
             ProcessBuilder builder = new ProcessBuilder();
             builder.directory(new File(filepath)); // 设置工作目录
@@ -40,68 +40,105 @@ public class SandBoxRun {
                     builder.command("javac", fileName);
                     break;
                 }
-
             }
             builder.redirectErrorStream(true); // 将错误流合并到标准输出流
             Process compileProcess = builder.start();
 
             // 读取编译输出
-            BufferedReader reader = new BufferedReader(new InputStreamReader(compileProcess.getInputStream()));
-            StringBuilder output = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(compileProcess.getInputStream()))) {
+                StringBuilder output = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append("\n");
+                }
+                int exitCode = compileProcess.waitFor(); // 等待编译完成
+                if (exitCode != 0) {
+                    log.error("compile err");
+                    return output.toString();
+                } else {
+                    return null;
+                }
+            } finally {
+                compileProcess.destroy(); // 确保进程被关闭
             }
-            int exitCode = compileProcess.waitFor(); // 等待编译完成
-            if (exitCode != 0) {
-                return output.toString();
-            } else {
-                deleteFile(filepath + "/" + fileName);
-                return null;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     public JSONObject judge(Question question, JudgeInfo judgeInfo, String inPath, String outPath, String compiledPath, Long caseId, String directoryPath) {
         try {
             ProcessBuilder builder = new ProcessBuilder();
-            String filePath = "/codeconnect-sandbox";
-            String inPartPath = "." + inPath.split(filePath)[1];
-            String outPartPath = "." + outPath.split(filePath)[1];
-            String compiledPartPath = "." + compiledPath.split(filePath)[1];
-            String tmpPartPath = "./"+judgeInfo.getId() + "/" +  caseId + "tmp.out";
-            builder.directory(new File(filePath));
+            String sandboxPath = JudgeConsants.EnvName.SANDBOXPATH.getName();
+            String inPartPath = "." + inPath.split(sandboxPath)[1];
+            String outPartPath = "." + outPath.split(sandboxPath)[1];
+            String compiledPartPath = null;
+            if (compiledPath != null) {
+               compiledPartPath = "." + compiledPath.split(sandboxPath)[1];
+            }
+            String noCompiledPath = "./"+judgeInfo.getId() + "/" +  judgeInfo.getId() + LanguageConstants.Language.getExtensionFromLanguage(judgeInfo.getLanguage());
+            String tmpPartPath = "./"+judgeInfo.getId() + "/" +  caseId + JudgeConsants.EnvName.OUTPUTPATH.getName();
+            builder.directory(new File(sandboxPath));
+            System.out.println("inPartPath : " + inPartPath);
+            System.out.println("outPartPath : " + outPartPath);
+            System.out.println("noCompiledPath : " + noCompiledPath);
+            System.out.println("tmpPartPath : " + tmpPartPath);
             switch (judgeInfo.getLanguage()) {
                 case "C":
+                case "Cpp": {
+                    System.out.println("./runner " + " -t " + question.getTimeLimit().toString() + " -m " + question.getMemoryLimit().toString() +
+                            " --mco " + " -i " + inPartPath + " -o " + outPartPath + " -u " + tmpPartPath + " -- " + compiledPartPath);
                     builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
                             "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "--", compiledPartPath);
+                    break;
+                }
+                case "Java": {
+                    builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
+                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "-- java Main");
+                    break;
+                }
+                case "Python": {
+                    System.out.println("cmmand");
+                    System.out.println("./runner " + " -t " + question.getTimeLimit().toString() + " -m " + question.getMemoryLimit().toString() +
+                            " --mco " + " -i " + inPartPath + " -o " + outPartPath + " -u " + tmpPartPath + " -- python3 " + noCompiledPath);
+                    builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
+                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "-- python3" + noCompiledPath);
+                    break;
+                }
+                case "JavaScript": {
+                    System.out.println("./runner " + " -t " + question.getTimeLimit().toString() + " -m " + question.getMemoryLimit().toString() +
+                        " --mco " + " -i " + inPartPath + " -o " + outPartPath + " -u " + tmpPartPath + " -- node " + noCompiledPath);
+                    builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
+                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "-- node" + noCompiledPath);
+                    break;
+                }
             }
+            builder.redirectErrorStream(true); // 将错误流合并到标准输出流
             Process process = builder.start();
 
             // 读取编译输出和错误信息
-            InputStream inputStream = process.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder output = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                StringBuilder output = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append("\n");
+                }
+                // 等待编译完成并获取退出码
+                int exitCode = process.waitFor();
+                System.out.println("exitCode : " + exitCode);
+                if (exitCode == 0) {
+                    JSONObject jsonObject = new JSONObject(output.toString());
+                    System.out.println(jsonObject.toString());
+                    return jsonObject;
+                } else {
+                    log.error("judge exitCode err");
+                    return null;
+                }
+            } finally {
+                process.destroy();
             }
-            // 等待编译完成并获取退出码
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                JSONObject jsonObject = new JSONObject(output);
-                return jsonObject;
-            } else {
-                log.error("judge exitCode err");
-                return null;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 

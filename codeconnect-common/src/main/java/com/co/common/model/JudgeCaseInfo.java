@@ -20,9 +20,17 @@ public class JudgeCaseInfo implements Serializable {
 
     private Integer status;
 
-    private Long time;
+    private String columnName;
 
-    private Long memory;
+    private Integer time;
+
+    private Integer memory;
+
+    private String showTime;
+
+    private String showMemory;
 
     private Integer score;
+
+    private String color;
 }
