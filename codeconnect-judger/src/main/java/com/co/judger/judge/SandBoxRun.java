@@ -77,40 +77,29 @@ public class SandBoxRun {
             if (compiledPath != null) {
                compiledPartPath = "." + compiledPath.split(sandboxPath)[1];
             }
-            String noCompiledPath = "./"+judgeInfo.getId() + "/" +  judgeInfo.getId() + LanguageConstants.Language.getExtensionFromLanguage(judgeInfo.getLanguage());
+            String noCompiledPath = judgeInfo.getId() + "/" +  judgeInfo.getId() + LanguageConstants.Language.getExtensionFromLanguage(judgeInfo.getLanguage());
             String tmpPartPath = "./"+judgeInfo.getId() + "/" +  caseId + JudgeConsants.EnvName.OUTPUTPATH.getName();
             builder.directory(new File(sandboxPath));
-            System.out.println("inPartPath : " + inPartPath);
-            System.out.println("outPartPath : " + outPartPath);
-            System.out.println("noCompiledPath : " + noCompiledPath);
-            System.out.println("tmpPartPath : " + tmpPartPath);
             switch (judgeInfo.getLanguage()) {
                 case "C":
                 case "Cpp": {
-                    System.out.println("./runner " + " -t " + question.getTimeLimit().toString() + " -m " + question.getMemoryLimit().toString() +
-                            " --mco " + " -i " + inPartPath + " -o " + outPartPath + " -u " + tmpPartPath + " -- " + compiledPartPath);
                     builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
                             "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "--", compiledPartPath);
                     break;
                 }
                 case "Java": {
-                    builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
-                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "-- java Main");
+                   builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
+                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "--" , "java","-cp",judgeInfo.getId().toString() , "Main");
                     break;
                 }
                 case "Python": {
-                    System.out.println("cmmand");
-                    System.out.println("./runner " + " -t " + question.getTimeLimit().toString() + " -m " + question.getMemoryLimit().toString() +
-                            " --mco " + " -i " + inPartPath + " -o " + outPartPath + " -u " + tmpPartPath + " -- python3 " + noCompiledPath);
-                    builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
-                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "-- python3" + noCompiledPath);
+                  builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
+                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "--", "python3" , noCompiledPath);
                     break;
                 }
                 case "JavaScript": {
-                    System.out.println("./runner " + " -t " + question.getTimeLimit().toString() + " -m " + question.getMemoryLimit().toString() +
-                        " --mco " + " -i " + inPartPath + " -o " + outPartPath + " -u " + tmpPartPath + " -- node " + noCompiledPath);
-                    builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
-                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "-- node" + noCompiledPath);
+                  builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
+                            "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "--" ,"node" , noCompiledPath);
                     break;
                 }
             }
