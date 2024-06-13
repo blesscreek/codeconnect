@@ -56,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/question/getQuestionList").permitAll()
                 .antMatchers("/hello").permitAll()
                 .antMatchers("/test").permitAll()
+                .antMatchers("/sse/**").permitAll()
                 .antMatchers("/judge/submitJudgeQuestion").permitAll()
                 // 对于注册接口 允许匿名访问
                 .antMatchers("/user/register").anonymous()

@@ -1,16 +1,19 @@
 package com.co.backend.judge;
 
 import com.co.backend.model.po.Judge;
+import com.co.backend.service.sse.SseService;
 import com.co.common.config.RabbitmqConfig;
 import com.co.common.constants.JudgeConsants;
 import com.co.backend.dao.judge.JudgeEntityService;
 import com.co.common.model.JudgeInfo;
 import com.co.common.utils.RabbitMQUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import reactor.util.concurrent.Queues;
 
 /**
  * @Author co
@@ -28,6 +31,8 @@ public class JudgeDispatcher {
     private RabbitMQUtil rabbitMQUtil;
     @Autowired
     private JudgeEntityService judgeEntityService;
+    @Autowired
+    private SseService sseService;
     public void sendTask(Judge judge) {
         try {
             JudgeInfo judgeInfo = new JudgeInfo();
@@ -43,5 +48,19 @@ public class JudgeDispatcher {
             log.error("调用mq将判题纳入判题等待队列异常--------------->{}", e.getMessage());
         }
     }
+    @RabbitListener(queues = {RabbitmqConfig.QUEUE_JUDGE_COMMON_RES})
+    public void receiveCommonRes(byte[] bytes) throws Exception {
+        JudgeInfo judgeInfo = (JudgeInfo) rabbitMQUtil.getObjectFromBytes(bytes);
+        log.info("QUEUE_JUDGE_COMMON_RES receive judge res : "  + judgeInfo.toString());
+        sseService.sendJudgeRes(judgeInfo);
+    }
+
+
+
+//    @RabbitListener(queues = {RabbitmqConfig.QUEUE_JUDGE_COMMON})
+//    public void receiveCommon(byte[] bytes) throws Exception {
+//        JudgeInfo judgeInfo = (JudgeInfo) rabbitMQUtil.getObjectFromBytes(bytes);
+//        sseService.sendJudgeRes(judgeInfo);
+//    }
 
 }

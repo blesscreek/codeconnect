@@ -1,8 +1,12 @@
 package com.co.backend;
 
 import com.co.backend.model.po.Question;
+import com.co.backend.service.sse.SseService;
 import com.co.common.config.RabbitmqConfig;
+import com.co.common.model.JudgeInfo;
+import com.co.common.utils.RabbitMQUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,26 +24,14 @@ import java.io.Serializable;
 @SpringBootTest
 public class RabbitMQTest {
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Test
-    public void producer () throws Exception {
-        Question question = new Question();
-        question.setTitle("aaa");
-        byte[] bytesFromObject = getBytesFromObject(question);
-        System.out.println(bytesFromObject);
-        String message = "hello world";
-        rabbitTemplate.convertAndSend(RabbitmqConfig.EXCHANGE_TOPIC_JUDGE,"judge.common",bytesFromObject);
-    }
+    private RabbitMQUtil rabbitMQUtil;
+    @Autowired
+    private SseService sseService;
 
-    //对象转化为字节码
-    public  byte[] getBytesFromObject(Serializable obj) throws Exception {
-        if (obj == null) {
-            return null;
-        }
-        ByteArrayOutputStream bo = new ByteArrayOutputStream();
-        ObjectOutputStream oo = new ObjectOutputStream(bo);
-        oo.writeObject(obj);
-        return bo.toByteArray();
+    @RabbitListener(queues = {RabbitmqConfig.QUEUE_JUDGE_COMMON})
+    public void receiveCommon(byte[] bytes) throws Exception {
+        JudgeInfo judgeInfo = (JudgeInfo) rabbitMQUtil.getObjectFromBytes(bytes);
+        sseService.sendJudgeRes(judgeInfo);
     }
 
 }
