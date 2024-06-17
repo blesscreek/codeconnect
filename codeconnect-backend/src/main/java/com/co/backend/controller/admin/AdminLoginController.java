@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @Author bless
  * @Version 1.0
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @Api(tags = "用户登录接口")
-@RequestMapping("/user")
+@RequestMapping
 public class AdminLoginController {
     @Autowired
     private AdminLoginService adminLoginService;
@@ -40,10 +42,10 @@ public class AdminLoginController {
         return adminLoginService.register(registerUser);
     }
 
-    @RequestMapping("/{id}")
-    @ApiImplicitParam(name = "id", value = "ID", required = true)
-    @ApiOperation("获取用户接口")
-    public String getUser(@PathVariable("id") String id) {
-        return "hello";
+    @PutMapping("/refreshToken")
+    @ApiOperation("刷新token")
+    public ResponseResult refreshToken(@NotBlank(message = "refreshToken不能为空") @RequestHeader("refreshToken") String refreshToken) {
+        return adminLoginService.refreshToken(refreshToken);
     }
+
 }

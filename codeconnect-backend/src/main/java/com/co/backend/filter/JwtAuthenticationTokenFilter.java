@@ -1,5 +1,6 @@
 package com.co.backend.filter;
 
+import com.co.backend.constant.JWTConstant;
 import com.co.backend.constant.RedisConstants;
 import com.co.backend.constant.UserConstant;
 import com.co.backend.model.dto.LoginUser;
@@ -34,7 +35,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //获取token
-        String token = request.getHeader(UserConstant.USER_TOKEN);
+        String token = request.getHeader(JWTConstant.Authorization);
         if (!StringUtils.hasText(token)) {
             //放行
             filterChain.doFilter(request, response);
@@ -47,14 +48,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userid = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
-            //TODO:换成自定义异常
             throw new RuntimeException("token非法");
         }
         //从redis中获取用户信息
         String redisKey = RedisConstants.LOGIN_CODE_KEY + userid;
         LoginUser loginUser = redisCache.getCacheObject(redisKey);
         if (Objects.isNull(loginUser)) {
-            //TODO:换成自定义异常
             throw new RuntimeException("用户未登录");
         }
         //存入SecurityContextHolder

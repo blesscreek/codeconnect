@@ -1,7 +1,7 @@
 package com.co.backend.manager.admin;
 
+import com.co.backend.constant.JWTConstant;
 import com.co.backend.constant.RedisConstants;
-import com.co.backend.constant.UserConstant;
 import com.co.backend.dao.user.UserEntityService;
 import com.co.backend.model.po.UserRole;
 import com.co.common.exception.StatusFailException;
@@ -11,6 +11,8 @@ import com.co.backend.model.po.User;
 import com.co.backend.model.dto.RegisterUser;
 import com.co.backend.utils.JwtUtil;
 import com.co.backend.utils.RedisCache;
+import com.co.common.exception.StatusForbiddenException;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +26,9 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Objects;
+
+import static com.co.backend.constant.JWTConstant.Authorization;
+import static com.co.backend.constant.JWTConstant.REFRESH_TOKEN;
 
 /**
  * @Author co
@@ -62,9 +67,11 @@ public class AdminLoginManager {
         //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         String userid = loginUser.getUser().getId().toString();
-        String jwt = JwtUtil.createJWT(userid);
+        String authorization = JwtUtil.createJWT(userid, JWTConstant.AUTHORIZATION_EXPIRE_TIME);
+        String refreshToken = JwtUtil.createJWT(userid, JWTConstant.REFRESH_TOKEN_EXPIRE);
         HashMap<String, String> map = new HashMap<>();
-        map.put(UserConstant.USER_TOKEN,jwt);
+        map.put(Authorization,authorization);
+        map.put(REFRESH_TOKEN,refreshToken);
         //把完整的用户信息存入redis userid作为key
         redisCache.setCacheObject( RedisConstants.LOGIN_CODE_KEY + userid, loginUser);
         return map;
@@ -123,6 +130,21 @@ public class AdminLoginManager {
             userRole.setUserId(userId);
             userRole.setRoleId(roleId);
             userRoleMapper.insert(userRole);
+        }
+    }
+
+    public HashMap<String, String> refreshToken(String refreshToken) throws StatusFailException {
+        try {
+            Claims claims = JwtUtil.parseJWT(refreshToken);
+            String userid = claims.getSubject();
+            String authorization = JwtUtil.createJWT(userid, JWTConstant.AUTHORIZATION_EXPIRE_TIME);
+            String newRefreshToken = JwtUtil.createJWT(userid, JWTConstant.REFRESH_TOKEN_EXPIRE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put(Authorization,authorization);
+            map.put(REFRESH_TOKEN,refreshToken);
+            return map;
+        } catch (Exception e) {
+            throw new StatusFailException("refreshToken已失效");
         }
     }
 }

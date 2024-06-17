@@ -19,4 +19,6 @@ public interface AdminLoginService {
     ResponseResult logout();
 
     ResponseResult register(RegisterUser user);
+
+    ResponseResult refreshToken(String refreshToken);
 }
