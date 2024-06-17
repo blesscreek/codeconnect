@@ -8,16 +8,18 @@ import { javascript } from '@codemirror/lang-javascript'
 import { java } from '@codemirror/lang-java'
 import { cpp } from '@codemirror/lang-cpp'
 import { python } from '@codemirror/lang-python'
+// import { go } from '@codemirror/lang-go'
 // src 里的那一堆ts
 import { Codemirror } from '@/codets'
 
 const topicStore = useTopicStore()
 const languages = {
-  javascript: javascript(),
-  java: java(),
-  cpp: cpp(),
-  c: cpp(),
-  python: python()
+  JavaScript: javascript(),
+  Java: java(),
+  Cpp: cpp(),
+  C: cpp(),
+  Python: python()
+  // Go: go()
 }
 
 const code = shallowRef(``)

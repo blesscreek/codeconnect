@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useTopicStore } from '@/stores'
 const topicStore = useTopicStore()
-const language = ref('javascript')
+const language = ref('C')
 watch(language, () => {
   topicStore.setLanguage(language.value)
 })
@@ -12,7 +12,7 @@ watch(language, () => {
     <div class="config">
       <el-select v-model="language" style="width: 150px">
         <el-option
-          v-for="option in ['javascript', 'java', 'cpp', 'python']"
+          v-for="option in ['JavaScript', 'Java', 'C', 'Cpp', 'Python']"
           :key="option"
           :label="option"
           :value="option"
