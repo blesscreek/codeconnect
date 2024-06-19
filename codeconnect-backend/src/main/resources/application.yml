@@ -4,9 +4,9 @@ spring:
   application:
     name: codeconnectbackend
   datasource:
-    url: jdbc:mysql://123.60.15.140:3306/codeconnect?characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://139.9.136.188:3306/codeconnect?characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
-    password: 123456
+    password: ROOT
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   redis:

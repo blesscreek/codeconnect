@@ -1,13 +1,12 @@
 package com.co.backend.service.admin.impl;
 
+import com.co.backend.model.po.User;
 import com.co.backend.service.admin.AdminLoginService;
 import com.co.backend.common.result.ResponseResult;
 import com.co.common.exception.StatusFailException;
 import com.co.backend.common.result.ResultStatus;
 import com.co.backend.manager.admin.AdminLoginManager;
-import com.co.backend.model.po.User;
 import com.co.backend.model.dto.RegisterUser;
-import com.co.common.exception.StatusForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

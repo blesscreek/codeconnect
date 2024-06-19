@@ -1,5 +1,7 @@
 package com.co.backend.judge;
 
+import com.co.backend.dao.question.QuestionEntityService;
+import com.co.backend.dao.user.UserEntityService;
 import com.co.backend.model.po.Judge;
 import com.co.backend.service.sse.SseService;
 import com.co.common.config.RabbitmqConfig;
@@ -13,7 +15,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import reactor.util.concurrent.Queues;
 
 /**
  * @Author co
@@ -33,10 +34,18 @@ public class JudgeDispatcher {
     private JudgeEntityService judgeEntityService;
     @Autowired
     private SseService sseService;
+    @Autowired
+    private UserEntityService userEntityService;
+    @Autowired
+    private QuestionEntityService questionEntityService;
     public void sendTask(Judge judge) {
         try {
             JudgeInfo judgeInfo = new JudgeInfo();
             BeanUtils.copyProperties(judge, judgeInfo);
+            String nickName = userEntityService.getById(judge.getUid()).getNickname();
+            String title = questionEntityService.getById(judge.getQid()).getTitle();
+            judgeInfo.setUName(nickName);
+            judgeInfo.setQName(title);
             byte[] bytesFromObject = rabbitMQUtil.getBytesFromObject(judgeInfo);
             if (judge.getCid() == 0) {
                 rabbitTemplate.convertAndSend(RabbitmqConfig.EXCHANGE_TOPIC_JUDGE, RabbitmqConfig.ROUTINGKEY_JUDGE_COMMON, bytesFromObject);

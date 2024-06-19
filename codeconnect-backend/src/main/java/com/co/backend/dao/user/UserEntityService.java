@@ -1,15 +1,17 @@
 package com.co.backend.dao.user;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.co.backend.model.po.User;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * @Author bless
- * @Version 1.0
- * @Description TODO
- * @Date 2024-04-02 21:44
+ * <p>
+ * 用户表 服务类
+ * </p>
+ *
+ * @author co
+ * @since 2024-06-18
  */
 public interface UserEntityService extends IService<User> {
-    public Long countUserByAccount(String account);
-    public Long selectUserIdByAccount(String account);
+    public Long countUserByUsername(String username);
+    public Long selectUserIdByUsername(String username);
 }

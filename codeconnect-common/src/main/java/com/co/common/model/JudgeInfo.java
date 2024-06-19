@@ -22,7 +22,11 @@ public class JudgeInfo implements Serializable {
 
     private Long qid;
 
+    private String qName;
+
     private Long uid;
+
+    private String uName;
 
     private Integer status;
 
@@ -43,5 +47,7 @@ public class JudgeInfo implements Serializable {
     private String code;
 
     private String language;
+
+    private LocalDateTime submitTime;
 
 }

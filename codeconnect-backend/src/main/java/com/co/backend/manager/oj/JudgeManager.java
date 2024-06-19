@@ -1,5 +1,6 @@
 package com.co.backend.manager.oj;
 
+import com.co.backend.model.po.User;
 import com.co.common.constants.JudgeConsants;
 import com.co.backend.constant.LimitConstants;
 import com.co.backend.constant.RedisConstants;
@@ -10,7 +11,6 @@ import com.co.common.exception.StatusFailException;
 import com.co.common.exception.StatusForbiddenException;
 import com.co.backend.model.dto.LoginUser;
 import com.co.backend.model.dto.SubmitJudgeDTO;
-import com.co.backend.model.po.User;
 import com.co.backend.utils.IpUtils;
 import com.co.backend.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class JudgeManager {
 
         Judge judge = new Judge();
         judge.setUid(user.getId())
-                .setUsername(user.getNickName())
+                .setNickname(user.getNickname())
                 .setSubmitTime(LocalDateTime.now())
                 .setStatus(JudgeConsants.Judge.STATUS_NOT_SUBMITTED.getStatus())
                 .setShare(false)

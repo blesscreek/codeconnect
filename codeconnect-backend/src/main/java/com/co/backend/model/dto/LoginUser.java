@@ -52,7 +52,7 @@ public class LoginUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getAccount();
+        return user.getUsername();
     }
 
     @Override
@@ -64,6 +64,7 @@ public class LoginUser implements UserDetails {
     public boolean isAccountNonLocked() {
         return true;
     }
+
 
     @Override
     public boolean isCredentialsNonExpired() {

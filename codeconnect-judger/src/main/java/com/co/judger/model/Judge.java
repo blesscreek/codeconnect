@@ -38,7 +38,7 @@ public class Judge implements Serializable {
     private Long uid;
 
     @ApiModelProperty(value = "用户名")
-    private String username;
+    private String nickname;
 
     @ApiModelProperty(value = "提交的时间")
     private LocalDateTime submitTime;

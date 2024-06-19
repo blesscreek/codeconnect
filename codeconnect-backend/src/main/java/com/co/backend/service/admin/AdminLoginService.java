@@ -1,8 +1,8 @@
 package com.co.backend.service.admin;
 
 import com.co.backend.common.result.ResponseResult;
-import com.co.backend.model.po.User;
 import com.co.backend.model.dto.RegisterUser;
+import com.co.backend.model.po.User;
 
 /**
  * <p>

@@ -3,15 +3,14 @@ package com.co.backend.manager.admin;
 import com.co.backend.constant.JWTConstant;
 import com.co.backend.constant.RedisConstants;
 import com.co.backend.dao.user.UserEntityService;
+import com.co.backend.model.po.User;
 import com.co.backend.model.po.UserRole;
 import com.co.common.exception.StatusFailException;
 import com.co.backend.mapper.UserRoleMapper;
 import com.co.backend.model.dto.LoginUser;
-import com.co.backend.model.po.User;
 import com.co.backend.model.dto.RegisterUser;
 import com.co.backend.utils.JwtUtil;
 import com.co.backend.utils.RedisCache;
-import com.co.common.exception.StatusForbiddenException;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,14 +50,14 @@ public class AdminLoginManager {
     private Long roleId = 3L;
 
     public HashMap<String, String> login(User user) throws StatusFailException {
-        if (user.getAccount().length() < 5 || user.getAccount().length() > 10) {
+        if (user.getUsername().length() < 5 || user.getUsername().length() > 10) {
            throw new StatusFailException("账号格式错误");
         }
         if (user.getPassword().length() < 6 || user.getPassword().length() > 15) {
             throw new StatusFailException("密码格式错误");
         }
         //AuthenticationManager authentication进行用户认证
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getAccount(), user.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         //如果认证没通过，给出对应的提示
         if (Objects.isNull(authenticate)) {
@@ -88,10 +87,10 @@ public class AdminLoginManager {
 
     @Transactional(rollbackFor = Exception.class)
     public void register(RegisterUser registerUser) throws StatusFailException {
-        if (StringUtils.isEmpty(registerUser.getAccount())) {
+        if (StringUtils.isEmpty(registerUser.getUsername())) {
             throw new StatusFailException("账号不能为空");
         }
-        if (registerUser.getAccount().length() < 5 || registerUser.getAccount().length() > 10) {
+        if (registerUser.getUsername().length() < 5 || registerUser.getUsername().length() > 10) {
             throw new StatusFailException("账号长度应为5~10位");
         }
         if (StringUtils.isEmpty(registerUser.getPassword())) {
@@ -103,9 +102,9 @@ public class AdminLoginManager {
         if (!registerUser.getPassword().equals(registerUser.getCheckPassword())) {
             throw new StatusFailException("两次输入的密码不一致");
         }
-        synchronized (registerUser.getAccount().intern()) {
+        synchronized (registerUser.getUsername().intern()) {
             //账号不能重复
-            long count = userEntityService.countUserByAccount(registerUser.getAccount());
+            long count = userEntityService.countUserByUsername(registerUser.getUsername());
             if (count > 0) {
                 throw new StatusFailException("账号重复");
             }
@@ -113,7 +112,7 @@ public class AdminLoginManager {
             String encodedPassword = passwordEncoder.encode(registerUser.getPassword());
             //添加数据
             User user = new User();
-            user.setAccount(registerUser.getAccount());
+            user.setUsername(registerUser.getUsername());
             user.setPassword(encodedPassword);
             LocalDateTime currentDateTime = LocalDateTime.now();
             user.setCreateTime(currentDateTime);
@@ -122,7 +121,7 @@ public class AdminLoginManager {
             if (!saveResult) {
                 throw new StatusFailException("注册失败，请重试");
             }
-            Long userId = userEntityService.selectUserIdByAccount(user.getAccount());
+            Long userId = userEntityService.selectUserIdByUsername(user.getUsername());
             if (userId == null) {
                 throw new StatusFailException("注册失败，请重试");
             }

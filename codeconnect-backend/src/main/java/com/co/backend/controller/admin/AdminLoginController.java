@@ -1,11 +1,10 @@
 package com.co.backend.controller.admin;
 
 import com.co.backend.common.result.ResponseResult;
-import com.co.backend.model.po.User;
 import com.co.backend.model.dto.RegisterUser;
+import com.co.backend.model.po.User;
 import com.co.backend.service.admin.AdminLoginService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
