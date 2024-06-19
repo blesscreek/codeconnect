@@ -17,12 +17,12 @@ export const useUserStore = defineStore(
 
     // 记住我相关
     const remember = ref(false)
-    const account = ref({})
+    const username = ref({})
     const setRemember = (val) => {
       remember.value = val
     }
-    const setAccount = (obj) => {
-      account.value = obj
+    const setUsername = (obj) => {
+      username.value = obj
     }
 
     // 用户信息相关
@@ -47,14 +47,14 @@ export const useUserStore = defineStore(
     return {
       token,
       remember,
-      account,
+      username,
       refreshToken,
       userInfo,
       setUserInfo,
       setRefreshToken,
       setToken,
       setRemember,
-      setAccount,
+      setUsername,
       getUserInfoServer,
       removeUser
     }

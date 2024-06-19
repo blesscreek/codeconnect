@@ -176,6 +176,7 @@ export const useChatStore = defineStore(
     })
     const msgUnread = computed(() => {
       let ans = 0
+      // if(Object.keys(chats.value).length === 0) return 0
       for (let x of chats.value) {
         ans += x.unreadCount
       }
@@ -186,6 +187,19 @@ export const useChatStore = defineStore(
       chats.value = chats.value.filter((x) => {
         return x.targetId != id
       })
+    }
+    const removeChat = ()=>{
+      groupMsg.value={
+        targetId: 16,
+        type: 'GROUP',
+        showName: 'learn together',
+        headImage: '',
+        lastContent: '', //？最后一条消息
+        lastSendTime: new Date().getTime(), //？最后发消息的时间
+        unreadCount: 0, //？未读的数量  点击会话，拉取历史记录的时候未读数为0
+        messages: []
+      }
+      chats.value=[]
     }
     return {
       close,
@@ -199,7 +213,8 @@ export const useChatStore = defineStore(
       insertMessage,
       getNewChat,
       insertGroupMessage,
-      deleteChat
+      deleteChat,
+      removeChat
     }
   },
   {

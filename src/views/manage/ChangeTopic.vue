@@ -63,6 +63,7 @@ const tableData = [
 ]
 // import router from '@/router'
 import { ref } from 'vue'
+import { UploadFilled } from '@element-plus/icons-vue'
 //分页相关
 const data = ref(tableData)
 const pageSize2 = ref(10)
@@ -77,9 +78,37 @@ const handleCurrentChange = (val) => {
 const handleEdit = (index, row) => {
   console.log(index, row)
 }
+const handleUpdata = (index, row) => {
+  dialogFormVisible.value = true
+}
 const handleDelete = (index, row) => {
   console.log(index, row)
 }
+
+// 上传测试点相关
+const dialogFormVisible = ref(false)
+const fileList = ref([])
+
+// const beforeUpload = (file) => {
+//   const isZip = file.type === 'application/zip' || file.name.endsWith('.zip')
+//   const isLt500K = file.size / 1024 / 1024 < 0.5
+
+//   if (!isZip) {
+//     this.$message.error('上传文件只能是 ZIP 格式!')
+//   }
+//   if (!isLt500K) {
+//     this.$message.error('上传文件大小不能超过 500KB!')
+//   }
+//   return isZip && isLt500K
+// }
+
+// const handleSuccess = (response, file, fileList) => {
+//   this.$message.success('上传成功')
+// }
+
+// const handleRemove = (file, fileList) => {
+//   this.$message.info('文件已删除')
+// }
 </script>
 
 <template>
@@ -109,9 +138,9 @@ const handleDelete = (index, row) => {
             </el-button>
             <el-button
               type="primary"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleUpdata(scope.$index, scope.row)"
             >
-              增加测试点
+              上传测试点
             </el-button>
             <el-button
               type="danger"
@@ -138,6 +167,35 @@ const handleDelete = (index, row) => {
       </div>
     </div>
   </div>
+  <!-- 上传测试点 -->
+  <el-dialog v-model="dialogFormVisible" title="上传测试点" width="500">
+    <el-upload
+      class="upload-demo"
+      drag
+      :limit="1"
+      action="http://123.60.15.140:8080/uploadQuestion/uploadQuestionCase"
+      multiple
+      :before-upload="beforeUpload"
+      :on-success="handleSuccess"
+      :file-list="fileList"
+      :on-remove="handleRemove"
+      accept=".zip"
+    >
+      <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+      <div class="el-upload__text">将文件拖到此处或 <em>单击上传</em></div>
+      <template #tip>
+        <div class="el-upload__tip">大小小于500kb的zip文件</div>
+      </template>
+    </el-upload>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <style lang="scss" scoped>

@@ -24,15 +24,21 @@ const languages = {
 
 const code = shallowRef(``)
 const view = shallowRef()
-const language = defineProps({
-  language: String
+const props = defineProps({
+  language: String,
+  content: String, //内容
+  ban: Boolean //是否被禁止
 })
 const languageData = computed(() => {
-  const result = language.language
+  const result = props.language
   return result
 })
+const isBan = computed(() => {
+  if (props.ban) return props.ban
+  else return false
+})
 const config = reactive({
-  disabled: false,
+  disabled: isBan,
   indentWithTab: true,
   tabSize: 4,
   placeholder: 'input...',
@@ -41,7 +47,6 @@ const config = reactive({
   theme: 'default',
   phrases: 'en-us'
 })
-console.log(config)
 
 console.log(languageData)
 const extensions = computed(() => {
@@ -56,6 +61,12 @@ const handleReady = (payload) => {
 
 onMounted(() => {
   console.log('mounted view:', view)
+  // 初始化编辑器内容和禁用状态
+  if (props.content) {
+    console.log(props.content)
+    code.value = props.content
+  }
+  console.log(config)
 })
 
 const getContent = (e) => {

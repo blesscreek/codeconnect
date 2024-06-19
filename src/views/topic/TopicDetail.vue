@@ -91,6 +91,7 @@ import { getQuestionService } from '@/api/topic.js'
 
 // 拿到题目id
 const route = useRoute()
+console.log(route.fullPath)
 const qid = route.fullPath.split('qid=')[1]
 const topicData = ref({})
 const examplesData = ref([])
@@ -128,6 +129,7 @@ const getTopic = async () => {
     title: title
   }
   examplesData.value = examples
+  console.log(examplesData.value)
 }
 getTopic()
 </script>

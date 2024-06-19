@@ -1,11 +1,16 @@
 <script setup>
-import { ref } from 'vue'
 import { submitJudgeQuestion } from '@/api/topic.js'
 import { useTopicStore } from '@/stores'
+import { ref, onMounted, onUnmounted } from 'vue'
+
+// 提交结果相关
+import SubmitResults from './SubmitResults.vue'
+
 const topicStore = useTopicStore()
 // 测试用例相关
 const textarea = ref('3 3 5\n1 2 3\n4 5 6\n7 8 9')
-
+// 测试结果
+const result = ref()
 const submit = async () => {
   const obj = {
     qid: 1,
@@ -15,10 +20,68 @@ const submit = async () => {
     gid: 0,
     tid: 0
   }
+  // 拿到子组件方法
+  result.value.setDialogVisible()
   console.log(obj)
   await submitJudgeQuestion(obj)
 }
+
+// // 提交题目的sse
+
+import axios from 'axios' // 使用 axios 发送 POST 请求
+
+// 响应式变量
+const messages = ref([]) // 存储接收到的消息
+const eventSource = ref(null) // 存储 EventSource 实例
+
+// 启动 SSE 连接
+const startSSE = async () => {
+  if (eventSource.value) {
+    return // 如果已连接，则不执行操作
+  }
+
+  try {
+    // 发送 POST 请求初始化 SSE 会话
+    const response = await axios.post('https://your-server-url/sse/start', {
+      // 在这里发送你需要的初始化数据
+      data: 'initial data'
+    })
+
+    // 获取 SSE URL
+    const sseUrl = response.data.sseUrl // 假设服务器返回的 SSE URL 在 sseUrl 字段中
+
+    // 创建新的 EventSource 实例，连接到 SSE 端点
+    eventSource.value = new EventSource(sseUrl)
+
+    // 监听消息事件
+    eventSource.value.onmessage = (event) => {
+      messages.value.push(event.data)
+    }
+
+    // 监听错误事件
+    eventSource.value.onerror = (error) => {
+      console.error('SSE 错误:', error)
+      stopSSE() // 遇到错误时停止 SSE 连接
+    }
+  } catch (error) {
+    console.error('初始化 SSE 失败:', error)
+  }
+}
+
+// 停止 SSE 连接
+const stopSSE = () => {
+  if (eventSource.value) {
+    eventSource.value.close() // 关闭连接
+    eventSource.value = null // 清空 eventSource
+  }
+}
+
+// 组件卸载时停止 SSE 连接
+onUnmounted(() => {
+  stopSSE()
+})
 </script>
+
 <template>
   <div class="content">
     <div class="head">
@@ -45,11 +108,13 @@ const submit = async () => {
         autosize
         type="textarea"
         placeholder="Please input"
-        disabled="true"
+        :disabled="true"
       />
     </div>
   </div>
+  <submit-results ref="result"></submit-results>
 </template>
+
 <style lang="scss" scoped>
 .content {
   width: 100%;
@@ -58,6 +123,7 @@ const submit = async () => {
   border-top-right-radius: 20px;
   overflow: hidden;
 }
+
 .head {
   width: 100%;
   height: 40px;
@@ -67,19 +133,23 @@ const submit = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .test {
     margin-left: 20px;
     display: flex;
+
     span {
       color: #4a4a4a;
       margin: 0 10px;
       cursor: pointer;
     }
+
     span:hover {
       color: #000;
     }
   }
 }
+
 // 提交和运行按钮
 .run-submit {
   height: 100%;
@@ -88,6 +158,7 @@ const submit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+
   .el-button {
     border: none;
     width: 100px;
@@ -95,18 +166,22 @@ const submit = async () => {
     margin: 0 1px;
     font-size: 17px;
   }
+
   .run {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     color: #323232;
+
     img {
       width: 25px;
     }
   }
+
   .submit {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     color: rgb(0, 179, 39);
+
     img {
       width: 25px;
     }
@@ -118,11 +193,13 @@ const submit = async () => {
   height: 85%;
   padding-left: 30px;
   box-sizing: border-box;
+
   .case {
     width: 100%;
     height: 40px;
     line-height: 40px;
   }
+
   textarea {
     // 设置没有边框和不可拖拽改变大小，现在没有效果
     outline: none;

@@ -42,6 +42,7 @@ watch(route, () => {
 const menu = ref(false)
 const logout = () => {
   userStore.removeUser()
+  chatStore.removeChat()
 }
 
 // 聊天室未读消息

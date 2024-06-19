@@ -30,14 +30,14 @@ const obj = {
   id,
   nickname,
   online,
-  sex,
+  sex: `${sex}`,
   signature,
   username
 }
+console.log(sex)
 const ruleForm = reactive(obj)
 // 性别处理成字符串
-ruleForm.sex = '' + ruleForm.sex
-
+// ruleForm.sex = '' + ruleForm.sex
 const rules = reactive({
   nickname: [
     { required: true, message: '请输入昵称', trigger: 'blur' },
@@ -93,6 +93,7 @@ const submit = async () => {
   // 再提交全部的修改
   ruleForm.sex = parseInt(ruleForm.sex)
   const res = await userUpdateService(ruleForm)
+  ruleForm.sex = `${ruleForm.sex}`
   console.log(res)
   ElMessage.success('修改成功')
   userStore.getUserInfoServer()

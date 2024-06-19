@@ -16,14 +16,14 @@ const freeCheck = ref(false)
 const router = useRouter()
 // 登录注册的表单内容
 const formModel = ref({
-  account: '',
+  username: '',
   password: '',
   checkPassword: ''
 })
 
 // 表单的验证规则
 const rules = {
-  account: [
+  username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 1, max: 10, message: '用户名是1-10位的字符', trigger: 'blur' }
   ],
@@ -66,12 +66,12 @@ const rules = {
 if (isRegister.value === false) {
   if (userStore.remember) {
     rememberCheck.value = userStore.remember
-    formModel.value = userStore.account
+    formModel.value = userStore.username
   }
 }
 // 登录注册切换
 watch(isRegister, () => {
-  formModel.value = { account: '', password: '', checkPassword: '' }
+  formModel.value = { username: '', password: '', checkPassword: '' }
 })
 
 // 注册
@@ -89,7 +89,7 @@ const login = async () => {
   console.log(formModel.value)
   const res = await userLoginService(formModel.value)
   // console.log(res)
-  userStore.setToken(res.data.authorization)
+  userStore.setToken(res.data.Authorization)
   userStore.setRefreshToken(res.data.refreshToken)
   ElMessage({
     message: '登录成功',
@@ -102,10 +102,10 @@ const login = async () => {
   // 是否记得账号密码
   if (rememberCheck.value) {
     userStore.setRemember(true)
-    userStore.setAccount(formModel.value)
+    userStore.setUsername(formModel.value)
   } else {
     userStore.setRemember(false)
-    userStore.setAccount({})
+    userStore.setUsername({})
   }
   router.push('/')
 }
@@ -126,10 +126,10 @@ const login = async () => {
         <el-form-item>
           <h1>注册</h1>
         </el-form-item>
-        <el-form-item prop="account">
+        <el-form-item prop="username">
           <el-input
             :prefix-icon="User"
-            v-model="formModel.account"
+            v-model="formModel.username"
             placeholder="请输入用户名"
           ></el-input>
         </el-form-item>
@@ -177,10 +177,10 @@ const login = async () => {
         <el-form-item>
           <h1>登录</h1>
         </el-form-item>
-        <el-form-item prop="account">
+        <el-form-item prop="username">
           <el-input
             :prefix-icon="User"
-            v-model="formModel.account"
+            v-model="formModel.username"
             placeholder="请输入用户名"
           >
             <img src="" alt="" />

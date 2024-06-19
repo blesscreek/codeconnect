@@ -5,11 +5,11 @@ import { ElMessage } from 'element-plus'
 import { refreshTokenService } from '@/api/user'
 
 // const baseURL = 'http://123.60.15.140:8080'
-const baseURL = 'http://139.9.136.188:8080'
+// const baseURL = 'http://139.9.136.188:8080'
 
 const request = axios.create({
   // TODO 1. 基础地址，超时时间
-  baseURL,
+  // baseURL,
   timeout: 100000
 })
 
@@ -75,4 +75,4 @@ request.interceptors.response.use(
 )
 
 export default request
-export { baseURL }
+// export { baseURL }
