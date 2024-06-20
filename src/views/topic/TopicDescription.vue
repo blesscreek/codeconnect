@@ -4,8 +4,14 @@ import { computed } from 'vue'
 const props = defineProps({
   topicData: Object
 })
-console.log(props)
+console.log(props.topicData)
 const data = computed(() => {
+  for (let x of props.topicData.examples) {
+    // 测试样例的回车要转义一下
+    x[0] = x[0].replace(/\\n/g, '\n')
+    x[1] = x[1].replace(/\\n/g, '\n')
+  }
+  console.log(props.topicData.examples)
   return props.topicData
 })
 console.log(data)
@@ -60,7 +66,7 @@ console.log(data)
               :key="i"
               v-model="x[0]"
               type="textarea"
-              disabled="true"
+              :disabled="true"
             />
           </div>
           <span>输出样例</span>
@@ -70,7 +76,7 @@ console.log(data)
               :key="i"
               v-model="x[1]"
               type="textarea"
-              disabled="true"
+              :disabled="true"
             />
           </div>
         </div>
@@ -173,7 +179,8 @@ console.log(data)
   }
   .difficulty {
     width: 60px;
-    color: #f21313;
+    // color: #f21313;
+    color: #000;
   }
   .algorithm {
     width: 150px;

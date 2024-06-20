@@ -98,6 +98,7 @@ const examplesData = ref([])
 // 解构相关数据
 const getTopic = async () => {
   const res = await getQuestionService(qid)
+  console.log(res.data)
   // console.log(res.data)
   // 数据分成两份，一份给左边的题目详情，一份给右下的测试样例
   let {
@@ -129,7 +130,7 @@ const getTopic = async () => {
     title: title
   }
   examplesData.value = examples
-  console.log(examplesData.value)
+  // console.log(topicData.value)
 }
 getTopic()
 </script>
@@ -155,7 +156,10 @@ getTopic()
           <span></span>
         </div>
         <div class="bottom" :style="{ height: bottomHeight + 'px' }">
-          <test-case :examplesData="examplesData"></test-case>
+          <test-case
+            :examplesData="examplesData"
+            :id="topicData.id"
+          ></test-case>
         </div>
       </div>
     </div>

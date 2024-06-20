@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useTopicStore } from '@/stores'
 const topicStore = useTopicStore()
-const language = ref('C')
+const language = ref(topicStore.language)
 watch(language, () => {
   topicStore.setLanguage(language.value)
 })

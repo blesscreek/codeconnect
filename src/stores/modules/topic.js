@@ -3,7 +3,7 @@ import { ref } from 'vue'
 // 用户模块 token相关
 export const useTopicStore = defineStore('oj-Topic', () => {
   const content = ref('')
-  const language = ref('')
+  const language = ref('C')
   const setLanguage = (val) => {
     language.value = val
   }

@@ -11,6 +11,7 @@ import { python } from '@codemirror/lang-python'
 // import { go } from '@codemirror/lang-go'
 // src 里的那一堆ts
 import { Codemirror } from '@/codets'
+import { watch } from 'vue'
 
 const topicStore = useTopicStore()
 const languages = {
@@ -63,12 +64,17 @@ onMounted(() => {
   console.log('mounted view:', view)
   // 初始化编辑器内容和禁用状态
   if (props.content) {
-    console.log(props.content)
     code.value = props.content
   }
-  console.log(config)
 })
-
+// 拿到代码内容属性并监听
+const content = computed(() => {
+  return props.content
+})
+watch(content, () => {
+  code.value = props.content
+  console.log(code.value)
+})
 const getContent = (e) => {
   topicStore.setContent(e)
 }

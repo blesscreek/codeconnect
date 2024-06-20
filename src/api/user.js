@@ -12,7 +12,7 @@ export const userLoginService = ({ username, password }) => {
   return request.post(baseURL1 + '/login', { username, password })
 }
 export const userRegisterService = ({ username, password, checkPassword }) => {
-  return request.post(baseURL2 + '/register', {
+  return request.post(baseURL1 + '/register', {
     username,
     password,
     checkPassword
@@ -21,7 +21,7 @@ export const userRegisterService = ({ username, password, checkPassword }) => {
 
 // 更新token
 export const refreshTokenService = () => {
-  return request.put(baseURL1 + '/refreshToken')
+  return request.put(baseURL2 + '/refreshToken')
 }
 
 // 查询自己的信息

@@ -1,6 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import CodeEditor from '@/components/CodeEditor.vue'
+// 获取消息
+const props = defineProps({
+  messages: Object
+})
+
+// 打开关闭
 const dialogVisible = ref(false)
 const setDialogVisible = () => {
   dialogVisible.value = true
@@ -47,6 +53,12 @@ const tableData = ref([
   { caseId: 1, memory: 5, time: 10, columnName: 'ac', score: 10 },
   { caseId: 1, memory: 5, time: 10, columnName: 'ac', score: 10 }
 ])
+
+watch(props, () => {
+  // if()
+  resultInformation.value = props.messages[props.messages.length - 1]
+  tableData.value = props.messages[props.messages.length - 1].judgeCaseInfoList
+})
 </script>
 
 <template>
@@ -95,7 +107,7 @@ const tableData = ref([
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = true">
+        <el-button type="primary" @click="dialogVisible = false">
           确认
         </el-button>
       </div>

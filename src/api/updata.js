@@ -10,6 +10,6 @@ export const uploadFileService = (file) => {
   return request.post(baseURL2 + '/upload/file', file)
 }
 // 上传测试样例
-export const uploadTestPoints = (file) => {
+export const uploadTestPointsService = (file) => {
   return request.post(baseURL1 + '/uploadQuestion/uploadQuestionCase', file)
 }

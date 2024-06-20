@@ -30,6 +30,7 @@ const getTopicList = async () => {
   for (let i of data.value) {
     i.passingRate = parseInt(i.passingRate)
   }
+  console.log(data.value)
   total.value = res.data.questionCnt
 }
 getTopicList()
