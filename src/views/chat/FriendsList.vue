@@ -1,3 +1,4 @@
+<!-- 最近消息小组件 -->
 <script setup>
 import { ref } from 'vue'
 import { CloseBold } from '@element-plus/icons-vue'

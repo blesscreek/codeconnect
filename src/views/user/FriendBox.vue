@@ -1,3 +1,4 @@
+<!-- 好友盒子，渲染好友列表的 -->
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'

@@ -1,3 +1,4 @@
+<!-- 右键消息的菜单 -->
 <script setup>
 const props = defineProps({
   data: Object

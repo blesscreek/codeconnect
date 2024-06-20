@@ -1,3 +1,4 @@
+<!-- 聊天室总界面，有侧边导航和最近消息群成员 -->
 <script setup>
 import MessageBox from './MessageBox.vue'
 import { ref, watch, computed } from 'vue'

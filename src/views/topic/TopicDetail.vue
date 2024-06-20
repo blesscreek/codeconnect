@@ -1,3 +1,4 @@
+<!-- 题目详情总界面，可以拖动 -->
 <script setup>
 // 页面区域调节相关
 import { ref, onMounted, onBeforeUnmount } from 'vue'

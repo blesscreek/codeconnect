@@ -1,3 +1,4 @@
+<!-- 个人中心的大框架，有头部 -->
 <script setup>
 // import { reactive, ref } from 'vue'
 import { useUserStore } from '@/stores'

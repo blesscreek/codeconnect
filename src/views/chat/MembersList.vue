@@ -1,3 +1,4 @@
+<!-- 聊天室成员小组件 -->
 <script setup>
 const props = defineProps({
   info: Object

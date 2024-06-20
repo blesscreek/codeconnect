@@ -1,3 +1,4 @@
+<!-- 富文本编辑器-发消息的输入框 -->
 <script setup>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'

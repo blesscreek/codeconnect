@@ -1,3 +1,4 @@
+<!-- 管理中心大框架 -->
 <script setup>
 import AsideNav from './AsideNav.vue'
 </script>

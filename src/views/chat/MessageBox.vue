@@ -1,3 +1,4 @@
+<!-- 聊天界面显示聊天记录和发消息 -->
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
 import {

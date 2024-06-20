@@ -1,3 +1,4 @@
+<!-- 富文本编辑器-编辑题目 -->
 <script setup>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'

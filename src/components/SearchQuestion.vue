@@ -1,6 +1,14 @@
+<!-- 查询题目的查询组件 -->
 <script setup>
-import { reactive, ref } from 'vue'
-const formInline = reactive({
+import { ref, computed, watch } from 'vue'
+const props = defineProps({
+  total: Number
+})
+const total = computed(() => {
+  console.log(props.total)
+  return props.total
+})
+const formInline = ref({
   difficulty: '',
   algorithm: '',
   date: ''
@@ -9,8 +17,19 @@ const emit = defineEmits(['onSearch'])
 const num = ref(100)
 
 const onSubmit = () => {
-  emit('onSearch', formInline)
+  emit('onSearch', formInline.value)
 }
+const clearAll = () => {
+  formInline.value = {
+    difficulty: '',
+    algorithm: '',
+    date: ''
+  }
+}
+watch(total, () => {
+  console.log(total)
+  num.value = total.value
+})
 </script>
 
 <template>
@@ -49,7 +68,7 @@ const onSubmit = () => {
         <div>
           共计<span style="color: #000">{{ ' ' + num + ' ' }} </span>条结果
         </div>
-        <div class="clear">清空所有筛选条件</div>
+        <div class="clear" @click="clearAll">清空所有筛选条件</div>
       </div>
     </div>
   </div>

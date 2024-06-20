@@ -1,5 +1,5 @@
+<!-- 处理时间的 -->
 <template>
-  <!-- 处理时间的 -->
   <span>{{ formatDate }}</span>
 </template>
 

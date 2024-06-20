@@ -1,3 +1,4 @@
+<!-- 题目详情左边的题目信息 -->
 <script setup>
 import { Tickets, Key, Timer } from '@element-plus/icons-vue'
 import { computed } from 'vue'

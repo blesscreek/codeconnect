@@ -1,3 +1,4 @@
+<!-- 聊天室中点击头像出来的好友名片 -->
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useChatStore } from '@/stores'

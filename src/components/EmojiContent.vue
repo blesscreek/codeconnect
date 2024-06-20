@@ -1,3 +1,4 @@
+<!-- emoji列表组件 -->
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 import { emoTextList, textToImg } from '@/utils/emoji'

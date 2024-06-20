@@ -1,3 +1,4 @@
+<!-- 中间放最近消息和群成员的 -->
 <script setup>
 import MembersList from './MembersList.vue'
 import FriendsList from './FriendsList.vue'

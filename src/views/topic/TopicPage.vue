@@ -1,3 +1,4 @@
+<!-- 题库界面，分页展示全部题目 -->
 <script setup>
 import { ref } from 'vue'
 import { getQuestionListService } from '@/api/topic.js'

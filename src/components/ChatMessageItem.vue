@@ -1,3 +1,4 @@
+<!-- 聊天的消息组件 -->
 <script setup>
 import { ref, computed } from 'vue'
 import { Document } from '@element-plus/icons-vue'
