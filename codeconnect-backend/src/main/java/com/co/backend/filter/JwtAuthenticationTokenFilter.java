@@ -19,6 +19,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -41,6 +44,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        //允许携带过期token访问
+        String requestURI = request.getRequestURI();
+        List<String> permitPaths = Arrays.asList(
+                "/login",
+                "/register",
+                "/refreshToken",
+                "/judge/submitJudgeQuestion",
+                "/question/getQuestionList",
+                "/question/getQuestion/**"
+        );
+        if (permitPaths.contains(requestURI)) {
+            filterChain.doFilter(request,response);
+            return;
+        }
         //解析token
         String userid;
         try {
@@ -48,13 +65,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userid = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("token非法");
+            throw new RuntimeException("token is err");
         }
         //从redis中获取用户信息
         String redisKey = RedisConstants.LOGIN_CODE_KEY + userid;
         LoginUser loginUser = redisCache.getCacheObject(redisKey);
         if (Objects.isNull(loginUser)) {
-            throw new RuntimeException("用户未登录");
+            throw new RuntimeException("user unlogin");
         }
         //存入SecurityContextHolder
         UsernamePasswordAuthenticationToken authenticationToken =

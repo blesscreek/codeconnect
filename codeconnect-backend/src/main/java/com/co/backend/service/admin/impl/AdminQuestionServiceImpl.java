@@ -8,6 +8,7 @@ import com.co.backend.manager.admin.AdminQuestionManager;
 import com.co.backend.model.dto.GetQuestionListDTO;
 import com.co.backend.model.dto.QuestionDTO;
 import com.co.backend.service.admin.AdminQuestionService;
+import com.co.common.exception.StatusForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,17 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
             return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目查找成功",adminQuestionManager.getQuestionList(pageParams, getQuestionListDTO));
         } catch (StatusFailException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseResult getQuestion(Long qid) {
+        try {
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "获取题目成功",adminQuestionManager.getQuestion(qid));
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(), e.getMessage());
         }
     }
 }

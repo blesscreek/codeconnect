@@ -1,5 +1,8 @@
 package com.co.backend.manager.oj;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.co.backend.dao.question.QuestionEntityService;
+import com.co.backend.model.po.Question;
 import com.co.backend.model.po.User;
 import com.co.common.constants.JudgeConsants;
 import com.co.backend.constant.LimitConstants;
@@ -39,6 +42,8 @@ public class JudgeManager {
     private BeforeDispatchInitManager beforeDispatchInitManager;
     @Autowired
     private JudgeDispatcher judgeDispatcher;
+    @Autowired
+    private QuestionEntityService questionEntityService;
     public Judge submitJudgeQuestion(SubmitJudgeDTO judgeDTO) throws StatusForbiddenException, StatusFailException {
         judgeValidator.validateSubmissionInfo(judgeDTO);
 
@@ -63,11 +68,11 @@ public class JudgeManager {
                 throw new StatusForbiddenException("对不起，您的提交频率过快，请稍后再尝试！");
             }
         }
-
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
 
         Judge judge = new Judge();
-        judge.setUid(user.getId())
+        judge.setQid(judgeDTO.getQid())
+                .setUid(user.getId())
                 .setNickname(user.getNickname())
                 .setSubmitTime(LocalDateTime.now())
                 .setStatus(JudgeConsants.Judge.STATUS_NOT_SUBMITTED.getStatus())

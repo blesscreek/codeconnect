@@ -11,6 +11,7 @@ import com.co.backend.model.po.PageParams;
 import com.co.backend.model.po.Question;
 import com.co.common.exception.StatusFailException;
 import com.co.backend.model.dto.*;
+import com.co.common.exception.StatusForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -115,6 +116,28 @@ public class AdminQuestionManager {
         getQuestionListReturnDTO.setQuestionCnt(questions.size());
         getQuestionListReturnDTO.setQuestionResturn(questionListReturnDTOS);
         return getQuestionListReturnDTO;
+
+    }
+
+    public Question getQuestion(Long qid) throws StatusFailException, StatusForbiddenException {
+        Question question = questionEntityService.getById(qid);
+        if ((question == null) || (question.getIsDelete() == true)) {
+            throw new StatusFailException("题目不存在，查询失败");
+        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean logined = false;
+        if (authentication.getPrincipal() != "anonymousUser") {
+            logined = true;
+        }
+        Long uid = -1L;
+        if (logined == true) {
+            LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+            uid = loginUser.getUser().getId();
+        }
+        if (question.getAuth() == 1 && uid != question.getUid()) {
+            throw new StatusForbiddenException("该题为私有题目，您无权查看");
+        }
+        return question;
 
     }
 }
