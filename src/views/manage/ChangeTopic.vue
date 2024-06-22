@@ -150,32 +150,9 @@ const onSelectFile = async (uploadFile) => {
             max-width="80"
           >
             <template #default="{ row }">
-              <div class="gap">
-                <el-check-tag
-                  v-if="row.difficulty == '简单'"
-                  :checked="true"
-                  type="success"
-                  @change="onChangeTag(row.difficulty)"
-                >
-                  简单
-                </el-check-tag>
-                <el-check-tag
-                  :checked="true"
-                  @change="onChangeTag(row.difficulty)"
-                  type="warning"
-                  v-if="row.difficulty == '中等'"
-                >
-                  中等
-                </el-check-tag>
-                <el-check-tag
-                  :checked="true"
-                  @change="onChangeTag(row.difficulty)"
-                  type="danger"
-                  v-if="row.difficulty == '困难'"
-                >
-                  困难
-                </el-check-tag>
-              </div>
+              <question-difficulty
+                :difficulty="row.difficulty"
+              ></question-difficulty>
             </template>
           </el-table-column>
           <el-table-column

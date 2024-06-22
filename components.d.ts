@@ -52,6 +52,8 @@ declare module 'vue' {
     HeadSculpture: typeof import('./src/components/HeadSculpture.vue')['default']
     InputEditor: typeof import('./src/components/InputEditor.vue')['default']
     MyEditor: typeof import('./src/components/MyEditor.vue')['default']
+    QuestionDifficulty: typeof import('./src/components/QuestionDifficulty.vue')['default']
+    QuestionStatus: typeof import('./src/components/QuestionStatus.vue')['default']
     RightMenu: typeof import('./src/components/RightMenu.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

@@ -111,7 +111,8 @@ const getTopic = async () => {
     id,
     input,
     output,
-    title
+    title,
+    score
   } = res.data
   if (difficulty == 0) difficulty = '简单'
   if (difficulty == 1) difficulty = '中等'
@@ -128,7 +129,8 @@ const getTopic = async () => {
     id: id,
     input: input,
     output: output,
-    title: title
+    title: title,
+    score: score
   }
   examplesData.value = examples
   // console.log(topicData.value)

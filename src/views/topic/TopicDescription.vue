@@ -5,17 +5,15 @@ import { computed } from 'vue'
 const props = defineProps({
   topicData: Object
 })
-console.log(props.topicData)
 const data = computed(() => {
   for (let x of props.topicData.examples) {
     // 测试样例的回车要转义一下
     x[0] = x[0].replace(/\\n/g, '\n')
     x[1] = x[1].replace(/\\n/g, '\n')
   }
-  console.log(props.topicData.examples)
   return props.topicData
 })
-console.log(data)
+console.log(data.value)
 </script>
 
 <template>
@@ -37,10 +35,15 @@ console.log(data)
         <span>{{ data.title }}</span>
       </div>
       <div class="topic-label">
-        <div class="difficulty">{{ data.difficulty }}</div>
+        <question-difficulty
+          :difficulty="data.difficulty"
+        ></question-difficulty>
+        <!-- <div class="difficulty">{{ data.difficulty }}</div> -->
         <div class="algorithm">相关算法标签</div>
         <!-- 历史分数 -->
-        <div class="score">无</div>
+        <div class="score">
+          <question-status :status="data.score"></question-status>
+        </div>
       </div>
       <!-- 题目背景等 -->
       <!-- 多用一个div包了一下，防止影响题目和标签 -->

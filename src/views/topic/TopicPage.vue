@@ -2,7 +2,6 @@
 <script setup>
 import { ref } from 'vue'
 import { getQuestionListService } from '@/api/topic.js'
-import { SemiSelect, Select } from '@element-plus/icons-vue'
 const data = ref([
   {
     passingRate: '70',
@@ -91,22 +90,7 @@ const onChangeTag = (val) => {
           max-width="100"
         >
           <template #default="{ row }">
-            <span v-if="row.status == 100">
-              <el-icon color="#00bc03"><Select /></el-icon>
-            </span>
-            <span v-if="row.status < 100 && row.status >= 80">
-              <el-text type="success" size="large">{{ row.status }}</el-text>
-            </span>
-            <span v-if="row.status < 80 && row.status >= 60">
-              <el-text type="warning" size="large">{{ row.status }}</el-text>
-            </span>
-            <span v-if="row.status < 60 && row.status >= 0">
-              <el-text type="danger" size="large">{{ row.status }}</el-text>
-            </span>
-
-            <span v-if="row.status < 0">
-              <el-icon><SemiSelect /></el-icon>
-            </span>
+            <question-status :status="row.status"></question-status>
           </template>
         </el-table-column>
         <el-table-column prop="questionNum" label="题号" max-width="150" />
@@ -127,32 +111,9 @@ const onChangeTag = (val) => {
           max-width="80"
         >
           <template #default="{ row }">
-            <div class="gap">
-              <el-check-tag
-                v-if="row.difficulty == '简单'"
-                :checked="true"
-                type="success"
-                @change="onChangeTag(row.difficulty)"
-              >
-                简单
-              </el-check-tag>
-              <el-check-tag
-                :checked="true"
-                @change="onChangeTag(row.difficulty)"
-                type="warning"
-                v-if="row.difficulty == '中等'"
-              >
-                中等
-              </el-check-tag>
-              <el-check-tag
-                :checked="true"
-                @change="onChangeTag(row.difficulty)"
-                type="danger"
-                v-if="row.difficulty == '困难'"
-              >
-                困难
-              </el-check-tag>
-            </div>
+            <question-difficulty
+              :difficulty="row.difficulty"
+            ></question-difficulty>
           </template>
         </el-table-column>
         <el-table-column align="left" prop="tags" label="算法" min-width="240">

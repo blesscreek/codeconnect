@@ -191,8 +191,9 @@ watch(isClose, () => {
   width: 340px;
   .aside_nav {
     width: 100%;
-    height: 100%;
+    height: 95vh;
     display: flex;
+    overflow: hidden;
     .first_nav {
       width: 95px;
       height: 100%;
@@ -230,7 +231,7 @@ watch(isClose, () => {
     }
     .second_nav {
       width: 215px;
-      height: 100%;
+      height: 95vh;
       // 聊天室的两个样式
       margin: 0 15px;
       box-sizing: border-box;

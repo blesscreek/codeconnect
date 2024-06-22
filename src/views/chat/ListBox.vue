@@ -87,7 +87,9 @@ const handleSendMessage = (user, index) => {
     }
   }
   .list {
+    height: calc(95vh - 60px);
     overflow-y: auto;
+    overflow-x: hidden;
   }
   .active {
     background-color: #eee;

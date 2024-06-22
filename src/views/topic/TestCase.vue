@@ -1,7 +1,7 @@
 <!-- 题目详情右下的测试用例，提交题目和显示提交结果也在这里 -->
 <script setup>
 import { submitJudgeQuestion } from '@/api/topic.js'
-import { useTopicStore } from '@/stores'
+import { useTopicStore, useUserStore } from '@/stores'
 import { ref, onUnmounted } from 'vue'
 import SubmitResults from './SubmitResults.vue'
 
@@ -28,6 +28,7 @@ const submit = async () => {
   // 拿到子组件方法
   result.value.setDialogVisible()
   console.log(obj)
+  if (!useUserStore().token) return
   await startSSE()
   await submitJudgeQuestion(obj)
 }
@@ -49,6 +50,7 @@ const startSSE = async () => {
     eventSource.value.onmessage = (event) => {
       // 判断一下只有当前题目的才能加进去？
       messages.value.push(JSON.parse(event.data))
+      console.log(messages.value[messages.value.length - 1])
     }
     // 监听错误事件
     eventSource.value.onerror = (error) => {
