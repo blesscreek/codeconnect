@@ -1,14 +1,12 @@
 package com.co.backend.controller;
 
 import com.co.backend.service.sse.SseService;
+import com.co.common.model.JudgeInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -26,19 +24,25 @@ import java.util.UUID;
 public class SSEController {
     @Autowired
     private SseService sseService;
-    /**
-     * 创建SSE连接
-     *
-     * @return
-     */
-    @GetMapping(path = "/connect/{qid}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter sse(@PathVariable("qid") String qid) {
-        return sseService.connect(qid);
-    }
 
-    @GetMapping(value = "/close/{userId}")
-    public void close(@PathVariable("userId") String userId){
-        sseService.close(userId);
+    @GetMapping(value = "/createSseConn")
+    public SseEmitter createSseConnect(@RequestParam String qid, @RequestParam String uid) {
+        return sseService.createSseConnect(qid, uid);
+    }
+    @GetMapping(value = "/ssePushMsg")
+    public void ssePushMsg() {
+        String qid = String.valueOf(3);
+        JudgeInfo judgeInfo = new JudgeInfo();
+        judgeInfo.setId(10L);
+        judgeInfo.setUid(2L);
+        judgeInfo.setQid(10L);
+        judgeInfo.setCode("#include <aa>");
+        judgeInfo.setUName("张三");
+        sseService.ssePushMsg( judgeInfo);
+    }
+    @GetMapping(value = "/close")
+    public void close(@RequestParam String qid, @RequestParam String uid){
+        sseService.close(qid, uid);
     }
 
 

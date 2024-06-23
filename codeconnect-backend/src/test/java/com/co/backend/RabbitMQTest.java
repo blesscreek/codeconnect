@@ -31,7 +31,7 @@ public class RabbitMQTest {
     @RabbitListener(queues = {RabbitmqConfig.QUEUE_JUDGE_COMMON})
     public void receiveCommon(byte[] bytes) throws Exception {
         JudgeInfo judgeInfo = (JudgeInfo) rabbitMQUtil.getObjectFromBytes(bytes);
-        sseService.sendJudgeRes(judgeInfo);
+//        sseService.sendJudgeRes(judgeInfo);
     }
 
 }

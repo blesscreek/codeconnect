@@ -95,6 +95,14 @@ public class JudgeConsants {
             }
             return null;
         }
+        public static String getNameFromStatus(Integer status) {
+            for (Judge judge : Judge.values()) {
+                if (judge.getStatus().equals(status)) {
+                    return judge.getName();
+                }
+            }
+            return null;
+        }
 
     }
 

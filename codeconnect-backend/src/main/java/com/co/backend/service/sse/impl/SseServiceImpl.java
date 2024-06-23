@@ -1,15 +1,19 @@
 package com.co.backend.service.sse.impl;
 
+
 import com.co.common.model.JudgeInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import com.co.backend.service.sse.SseService;
+
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event;
 
 /**
  * @Author co
@@ -21,59 +25,58 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @Slf4j
 public class SseServiceImpl implements SseService{
-    //messageId的SseEmitter对象映射集
-    private static Map<String, SseEmitter> sseEmitterMap = new ConcurrentHashMap<>();
 
-    @Override
-    public SseEmitter connect(String userId) {
-        SseEmitter sseEmitter = new SseEmitter();
-        // 连接成功需要返回数据，否则会出现待处理状态
-        try {
-            sseEmitter.send(SseEmitter.event().comment("welcome"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // 连接断开
+    private static Map<String, SseEmitter> sseCache = new ConcurrentHashMap<>();
+    public SseEmitter createSseConnect(String qid, String uid) {
+        // 设置超时时间，0表示不过期。默认30秒，超过时间未完成会抛出异常：AsyncRequestTimeoutException
+        SseEmitter sseEmitter = new SseEmitter(0L);
+        String clientId = qid + ":" + uid;
+        sseCache.put(clientId, sseEmitter);
+        // 连接断开回调
         sseEmitter.onCompletion(() -> {
-            sseEmitterMap.remove(userId);
+            sseCache.get(clientId).complete();
+            sseCache.remove(clientId);
         });
-
         // 连接超时
-        sseEmitter.onTimeout(() -> {
-            sseEmitterMap.remove(userId);
+        sseEmitter.onTimeout(()-> {
+            sseCache.get(clientId).complete();
+            sseCache.remove(clientId);
         });
-
         // 连接报错
-        sseEmitter.onError((throwable) -> {
-            sseEmitterMap.remove(userId);
+        sseEmitter.onError((throwable) ->  {
+            sseCache.get(clientId).complete();
+            sseCache.remove(clientId);
         });
-
-        sseEmitterMap.put(userId, sseEmitter);
 
         return sseEmitter;
     }
 
-    @Override
-    public void sendJudgeRes(JudgeInfo judgeInfo) {
-        Long uid = judgeInfo.getUid();
-        SseEmitter sseEmitter = sseEmitterMap.get(uid.toString());
-        if (sseEmitter != null) {
-            try {
-                sseEmitter.send(judgeInfo, MediaType.APPLICATION_JSON);
-                Thread.sleep(100); // 100 毫秒的间隔
-            } catch (IOException | InterruptedException e) {
-                log.error("SseEmitter send message error", e);
-                sseEmitter.completeWithError(e);
-            }
-        } else {
-            log.error("User Id " + uid + " not Found");
+    public void ssePushMsg(JudgeInfo judgeInfo) {
+        String clientId = judgeInfo.getQid() + ":" + judgeInfo.getUid();
+        if (CollectionUtils.isEmpty(sseCache)) {
+            return;
         }
+        SseEmitter.SseEventBuilder event = event();
+        event.id(judgeInfo.getId().toString());
+        event.name("message");
+        event.data(judgeInfo);
+        SseEmitter sseEmitter = sseCache.get(clientId);
+        if (sseEmitter == null) {
+            log.error("没有id为{}的连接",clientId);
+        }
+        try {
+            sseEmitter.send(event);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+    }
+    @Override
+    public void close(String qid, String uid) {
+        String clientId = qid + ":" + uid;
+        log.info("type: SseSession Close, session Id : {}", clientId);
+        sseCache.remove(qid);
     }
 
-    @Override
-    public void close(String userId) {
-        log.info("type: SseSession Close, session Id : {}", userId);
-        sseEmitterMap.remove(userId);
-    }
 }

@@ -64,6 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/login").permitAll()
                 .antMatchers("/refreshToken").permitAll()
+                .antMatchers("/createSseCon/**").permitAll()
+                .antMatchers("/ssePushMsg").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs", "/webjars/**")
                 .permitAll()
                 // 除上面外的所有请求全部需要鉴权认证

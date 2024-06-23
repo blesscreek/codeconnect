@@ -65,6 +65,7 @@ public class JudgeContext {
     private JudgeInfo setResInfo(JudgeInfo judgeInfo, List<JudgeCase> judgeCases) {
         Judge judge = judgeEntityService.getById(judgeInfo.getId());
         judgeInfo.setStatus(judge.getStatus());
+        judgeInfo.setStatusName(JudgeConsants.Judge.getNameFromStatus(judge.getStatus()));
         judgeInfo.setErrorMessage(judge.getErrorMessage());
         judgeInfo.setScore(judge.getScore());
         judgeInfo.setTime(judge.getTime());

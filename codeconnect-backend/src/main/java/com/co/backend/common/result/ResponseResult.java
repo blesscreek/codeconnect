@@ -11,14 +11,14 @@ public class ResponseResult<T> {
     /**
      * 提示信息，如果有错误时，前端可以获取该字段进行提示
      */
-    private String msg;
+    private String message;
     /**
      * 查询到的结果数据，
      */
     private T data;
-    public ResponseResult(Integer code, String msg) {
+    public ResponseResult(Integer code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
     public ResponseResult(Integer code, T data) {
         this.code = code;
@@ -31,10 +31,10 @@ public class ResponseResult<T> {
         this.code = code;
     }
     public String getMsg() {
-        return msg;
+        return message;
     }
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMsg(String message) {
+        this.message = message;
     }
     public T getData() {
         return data;
@@ -42,9 +42,9 @@ public class ResponseResult<T> {
     public void setData(T data) {
         this.data = data;
     }
-    public ResponseResult(Integer code, String msg, T data) {
+    public ResponseResult(Integer code, String message, T data) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
         this.data = data;
     }
 }

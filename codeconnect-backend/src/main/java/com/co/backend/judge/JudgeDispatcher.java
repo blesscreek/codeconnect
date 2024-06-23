@@ -72,7 +72,7 @@ public class JudgeDispatcher {
         }
         questionEntityService.update(questionUpdateWrapper);
         log.info("QUEUE_JUDGE_COMMON_RES receive judge res : "  + judgeInfo.toString());
-        sseService.sendJudgeRes(judgeInfo);
+        sseService.ssePushMsg(judgeInfo);
     }
 
 

@@ -11,9 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  */
 
 public interface SseService {
-    SseEmitter connect(String userId);
-
-    void sendJudgeRes(JudgeInfo judgeInfo);
-
-    void close(String userId);
+        SseEmitter createSseConnect(String qid, String uid);
+        void ssePushMsg( JudgeInfo judgeInfo);
+        void close(String qid, String uid);
 }

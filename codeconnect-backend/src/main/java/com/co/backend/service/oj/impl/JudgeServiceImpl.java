@@ -26,7 +26,7 @@ public class JudgeServiceImpl implements JudgeService {
         try {
             return new ResponseResult(ResultStatus.SUCCESS.getStatus(),"判题提交成功",judgeManager.submitJudgeQuestion(submitJudgeDTO));
         } catch (StatusForbiddenException e) {
-            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(),e.getMessage());
         } catch (StatusFailException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
         }

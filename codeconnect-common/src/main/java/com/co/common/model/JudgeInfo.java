@@ -16,7 +16,6 @@ import java.util.List;
 @Data
 public class JudgeInfo implements Serializable {
     private static final long serialVersionUID = 2345L;
-    private List<JudgeCaseInfo> judgeCaseInfoList;
 
     private Long id;
 
@@ -29,6 +28,8 @@ public class JudgeInfo implements Serializable {
     private String uName;
 
     private Integer status;
+
+    private String statusName;
 
     private String errorMessage;
 
@@ -49,5 +50,7 @@ public class JudgeInfo implements Serializable {
     private String language;
 
     private LocalDateTime submitTime;
+
+    private List<JudgeCaseInfo> judgeCaseInfoList;
 
 }
