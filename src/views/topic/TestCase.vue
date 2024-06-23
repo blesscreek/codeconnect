@@ -12,6 +12,7 @@ const props = defineProps({
 })
 // 提交结果相关
 const topicStore = useTopicStore()
+const userStore = useUserStore()
 // 测试用例相关
 const textarea = ref('3 3 5\n1 2 3\n4 5 6\n7 8 9')
 // 测试结果
@@ -27,8 +28,8 @@ const submit = async () => {
   }
   // 拿到子组件方法
   result.value.setDialogVisible()
-  console.log(obj)
-  if (!useUserStore().token) return
+  // console.log(obj)
+  if (!userStore.token) return
   await startSSE()
   await submitJudgeQuestion(obj)
 }
@@ -43,14 +44,14 @@ const startSSE = async () => {
   }
   try {
     // 获取 SSE URL
-    const sseUrl = 'http://123.60.15.140:8080/sse/connect/3' // 假设服务器返回的 SSE URL 在 sseUrl 字段中
+    const sseUrl = `http://123.60.15.140:8080/sse/createSseConn/?qid=${props.id}&uid=${userStore.userInfo.id}` // 假设服务器返回的 SSE URL 在 sseUrl 字段中
     // 创建新的 EventSource 实例，连接到 SSE 端点
     eventSource.value = new EventSource(sseUrl)
     // 监听消息事件
     eventSource.value.onmessage = (event) => {
       // 判断一下只有当前题目的才能加进去？
       messages.value.push(JSON.parse(event.data))
-      console.log(messages.value[messages.value.length - 1])
+      console.log(JSON.parse(event.data))
     }
     // 监听错误事件
     eventSource.value.onerror = (error) => {

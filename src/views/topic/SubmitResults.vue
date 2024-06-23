@@ -73,33 +73,38 @@ watch(props, () => {
     <div class="content">
       <!-- <div class="span span1">提交结果信息</div> -->
       <div class="box">
-        <div class="span">题目：{{ resultInformation.qid }}</div>
-        <div class="span">用户：{{ resultInformation.uid }}</div>
+        <div class="span">题目：{{ resultInformation.qname }}</div>
+        <div class="span">用户：{{ resultInformation.uname }}</div>
         <div class="span">语言：{{ resultInformation.language }}</div>
-        <div class="span">内存：{{ resultInformation.memory }}</div>
+        <div class="span">内存：{{ resultInformation.showMemory }}</div>
         <div class="span">时间：{{ resultInformation.showTime }}</div>
-        <div class="span">状态：{{ resultInformation.status }}</div>
-        <div class="span">分数：{{ resultInformation.score }}</div>
+        <div class="span">状态：{{ resultInformation.statusName }}</div>
+        <div class="span">分数：{{ resultInformation.score || 0 }}</div>
         <div class="span">提交时间：{{ resultInformation.time }}</div>
       </div>
     </div>
-    <el-table v-show="true" :data="tableData" border style="width: 100%">
+    <el-table
+      v-show="resultInformation.status != 6"
+      :data="tableData"
+      border
+      style="width: 100%"
+    >
       <el-table-column prop="caseId" label="测试点" />
       <el-table-column prop="memory" label="内存" />
       <el-table-column prop="time" label="用时" />
       <el-table-column prop="columnName" label="结果" />
       <el-table-column prop="score" label="得分" />
     </el-table>
-    <div class="code">
-      <div class="span1">源代码</div>
+    <div class="out" v-show="resultInformation.status == 6">
+      <div class="span1">编译器输出</div>
       <code-editor
         :language="resultInformation.language"
-        :content="resultInformation.code"
+        :content="resultInformation.errorMessage"
         :ban="true"
       ></code-editor>
     </div>
-    <div class="out" v-show="false">
-      <div class="span1">编译器输出</div>
+    <div class="code">
+      <div class="span1">源代码</div>
       <code-editor
         :language="resultInformation.language"
         :content="resultInformation.code"
