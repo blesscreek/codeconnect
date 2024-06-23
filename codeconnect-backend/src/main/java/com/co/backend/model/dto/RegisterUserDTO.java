@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 
 @Data
-public class RegisterUser implements Serializable {
+public class RegisterUserDTO implements Serializable {
     private static final long serialVersionUID = 3191241716373120793L;
 
     private String username;

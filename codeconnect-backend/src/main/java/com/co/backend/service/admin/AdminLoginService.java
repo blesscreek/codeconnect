@@ -1,7 +1,7 @@
 package com.co.backend.service.admin;
 
 import com.co.backend.common.result.ResponseResult;
-import com.co.backend.model.dto.RegisterUser;
+import com.co.backend.model.dto.RegisterUserDTO;
 import com.co.backend.model.po.User;
 
 /**
@@ -18,7 +18,7 @@ public interface AdminLoginService {
 
     ResponseResult logout();
 
-    ResponseResult register(RegisterUser user);
+    ResponseResult register(RegisterUserDTO user);
 
     ResponseResult refreshToken(String refreshToken);
 }

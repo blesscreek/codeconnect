@@ -6,7 +6,7 @@ import com.co.backend.common.result.ResponseResult;
 import com.co.common.exception.StatusFailException;
 import com.co.backend.common.result.ResultStatus;
 import com.co.backend.manager.admin.AdminLoginManager;
-import com.co.backend.model.dto.RegisterUser;
+import com.co.backend.model.dto.RegisterUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +41,9 @@ public class AdminLoginServiceImpl implements AdminLoginService {
     }
 
     @Override
-    public ResponseResult register(RegisterUser registerUser)  {
+    public ResponseResult register(RegisterUserDTO registerUserDTO)  {
         try {
-            adminLoginManager.register(registerUser);
+            adminLoginManager.register(registerUserDTO);
             return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "注册成功");
         } catch (StatusFailException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());

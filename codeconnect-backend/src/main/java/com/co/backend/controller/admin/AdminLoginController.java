@@ -1,7 +1,7 @@
 package com.co.backend.controller.admin;
 
 import com.co.backend.common.result.ResponseResult;
-import com.co.backend.model.dto.RegisterUser;
+import com.co.backend.model.dto.RegisterUserDTO;
 import com.co.backend.model.po.User;
 import com.co.backend.service.admin.AdminLoginService;
 import io.swagger.annotations.Api;
@@ -37,8 +37,8 @@ public class AdminLoginController {
     }
 
     @RequestMapping("/register")
-    public ResponseResult register(@RequestBody RegisterUser registerUser) {
-        return adminLoginService.register(registerUser);
+    public ResponseResult register(@RequestBody RegisterUserDTO registerUserDTO) {
+        return adminLoginService.register(registerUserDTO);
     }
 
     @PutMapping("/refreshToken")

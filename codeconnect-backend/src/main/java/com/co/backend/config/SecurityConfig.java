@@ -60,10 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sse/**").permitAll()
                 .antMatchers("/judge/submitJudgeQuestion").permitAll()
                 // 对于注册接口 允许匿名访问
-                .antMatchers("/register").anonymous()
+                .antMatchers("/register").permitAll()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/login").anonymous()
-                .antMatchers("/refreshToken").anonymous()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/refreshToken").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs", "/webjars/**")
                 .permitAll()
                 // 除上面外的所有请求全部需要鉴权认证

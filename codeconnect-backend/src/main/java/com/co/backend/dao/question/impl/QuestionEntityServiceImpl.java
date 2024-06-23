@@ -6,7 +6,7 @@ import com.co.common.exception.StatusFailException;
 import com.co.backend.dao.question.QuestionTagEntityService;
 import com.co.backend.dao.question.TagEntityService;
 import com.co.backend.mapper.QuestionMapper;
-import com.co.backend.model.dto.LoginUser;
+import com.co.backend.model.entity.LoginUser;
 import com.co.backend.model.dto.QuestionDTO;
 import com.co.backend.dao.question.QuestionEntityService;
 import com.co.backend.validator.QuestionValidator;

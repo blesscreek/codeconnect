@@ -65,11 +65,10 @@ public class UploadQuestionServiceImpl implements UploadQuestionService {
     }
 
     @Override
-    public ResponseResult uploadQuestionCase(String questionName, MultipartFile zipFile) {
+    public ResponseResult uploadQuestionCase(Long qid, MultipartFile zipFile) {
         try(ZipInputStream zipIn = new ZipInputStream(zipFile.getInputStream(),Charset.forName("UTF-8"))) {
-            QueryWrapper<Question> questionQueryWrapper = new QueryWrapper<>();
-            questionQueryWrapper.eq("title", questionName);
-            Question question = questionEntityService.getOne(questionQueryWrapper);
+
+            Question question = questionEntityService.getById(qid);
 
             QueryWrapper<QuestionCase> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("qid", question.getId()).eq("is_show", 0);

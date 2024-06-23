@@ -1,4 +1,4 @@
-package com.co.backend.model.dto;
+package com.co.backend.model.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.co.backend.model.po.User;

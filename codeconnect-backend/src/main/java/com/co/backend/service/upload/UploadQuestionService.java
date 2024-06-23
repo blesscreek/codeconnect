@@ -12,5 +12,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UploadQuestionService {
     ResponseResult uploadImage(MultipartFile image);
 
-    ResponseResult uploadQuestionCase(String questionName, MultipartFile zipFile);
+    ResponseResult uploadQuestionCase(Long qid, MultipartFile zipFile);
 }

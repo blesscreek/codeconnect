@@ -61,8 +61,10 @@ public class SseServiceImpl implements SseService{
         if (sseEmitter != null) {
             try {
                 sseEmitter.send(judgeInfo, MediaType.APPLICATION_JSON);
-            } catch (IOException e) {
-                log.error("seeEmitter send message err");
+                Thread.sleep(100); // 100 毫秒的间隔
+            } catch (IOException | InterruptedException e) {
+                log.error("SseEmitter send message error", e);
+                sseEmitter.completeWithError(e);
             }
         } else {
             log.error("User Id " + uid + " not Found");

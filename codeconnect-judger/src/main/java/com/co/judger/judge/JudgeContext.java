@@ -43,10 +43,10 @@ public class JudgeContext {
         HashMap<String, Object> judgeResult = judgeStrategy.judge(question, judgeInfo);
         saveJudge(judgeResult, judgeInfo.getId());
         List<JudgeCase> judgeCases = (List<JudgeCase>) judgeResult.get("judgeCases");
-        if (judgeCases == null) {
-            log.error("judgeCases is null");
-            return null;
-        }
+//        if (judgeCases == null) {
+//            log.error("judgeCases is null");
+//            return null;
+//        }
         JudgeInfo judgeInfoRes = setResInfo(judgeInfo, judgeCases);
         return judgeInfoRes;
     }
@@ -79,7 +79,7 @@ public class JudgeContext {
         } else {
             judgeInfo.setShowMemory(judgeInfo.getMemory() + "KB");
         }
-
+        if (judgeCases == null) return judgeInfo;
         List<JudgeCaseInfo> judgeCaseInfoList = new LinkedList<>();
         for (JudgeCase judgeCase : judgeCases) {
             JudgeCaseInfo judgeCaseInfo = new JudgeCaseInfo();

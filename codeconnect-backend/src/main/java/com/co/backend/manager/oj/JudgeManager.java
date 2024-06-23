@@ -1,8 +1,6 @@
 package com.co.backend.manager.oj;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.co.backend.dao.question.QuestionEntityService;
-import com.co.backend.model.po.Question;
 import com.co.backend.model.po.User;
 import com.co.common.constants.JudgeConsants;
 import com.co.backend.constant.LimitConstants;
@@ -12,7 +10,7 @@ import com.co.backend.model.po.Judge;
 import com.co.backend.validator.JudgeValidator;
 import com.co.common.exception.StatusFailException;
 import com.co.common.exception.StatusForbiddenException;
-import com.co.backend.model.dto.LoginUser;
+import com.co.backend.model.entity.LoginUser;
 import com.co.backend.model.dto.SubmitJudgeDTO;
 import com.co.backend.utils.IpUtils;
 import com.co.backend.utils.RedisCache;
@@ -50,7 +48,7 @@ public class JudgeManager {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = null;
-        if (authentication.getPrincipal() != "anonymousUser") {
+        if (!authentication.getPrincipal() .equals("anonymousUser") || authentication.getPrincipal() != null) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
             user = loginUser.getUser();
         }

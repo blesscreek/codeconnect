@@ -3,7 +3,7 @@ package com.co.backend.service.overwrite;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.co.backend.mapper.MenuMapper;
 import com.co.backend.mapper.UserMapper;
-import com.co.backend.model.dto.LoginUser;
+import com.co.backend.model.entity.LoginUser;
 import com.co.backend.model.po.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

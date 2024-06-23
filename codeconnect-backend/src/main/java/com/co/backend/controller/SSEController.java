@@ -31,9 +31,9 @@ public class SSEController {
      *
      * @return
      */
-    @GetMapping(path = "/connect/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter sse(@PathVariable("userId") String userId) {
-        return sseService.connect(userId);
+    @GetMapping(path = "/connect/{qid}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter sse(@PathVariable("qid") String qid) {
+        return sseService.connect(qid);
     }
 
     @GetMapping(value = "/close/{userId}")

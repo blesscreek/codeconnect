@@ -6,18 +6,20 @@ import com.co.backend.constant.QuestionConstants;
 import com.co.backend.dao.judge.JudgeEntityService;
 import com.co.backend.dao.question.QuestionEntityService;
 import com.co.backend.dao.question.QuestionTagEntityService;
+import com.co.backend.dao.user.UserEntityService;
+import com.co.backend.model.entity.LoginUser;
 import com.co.backend.model.po.Judge;
 import com.co.backend.model.po.PageParams;
 import com.co.backend.model.po.Question;
 import com.co.common.exception.StatusFailException;
 import com.co.backend.model.dto.*;
 import com.co.common.exception.StatusForbiddenException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,8 @@ public class AdminQuestionManager {
     private JudgeEntityService judgeEntityService;
     @Autowired
     private QuestionTagEntityService questionTagEntityService;
+    @Autowired
+    private UserEntityService userEntityService;
     public void addQuestion(QuestionDTO questionDTO) throws StatusFailException {
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("title",questionDTO.getQuestion().getTitle());
@@ -69,10 +73,8 @@ public class AdminQuestionManager {
         }
         //获取用户
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean logined = false;
-        if (authentication.getPrincipal() != "anonymousUser") {
-            logined = true;
-        }
+        boolean logined = !(authentication == null || authentication.getName().equals("anonymousUser"));
+
         Long uid = -1L;
         if (logined == true) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
@@ -87,25 +89,31 @@ public class AdminQuestionManager {
             } else {
                 LambdaQueryWrapper<Judge> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper.eq(Judge::getQid, question.getId())
-                        .eq(Judge::getUid, uid);
+                        .eq(Judge::getUid, uid)
+                        .select(Judge::getScore)
+                        .orderByDesc(Judge::getScore)
+                        .last("LIMIT 1");
+
                 Judge judge = judgeEntityService.getOne(queryWrapper);
-                if (judge == null)
+                if (judge == null || judge.getScore() == null)
                     //未作答
                     listReturn.setStatus(-1);
-                else
+                else{
                     listReturn.setStatus(judge.getScore());
+                }
+
             }
+            listReturn.setQid(question.getId());
             listReturn.setQuestionNum("Q" + question.getId());
             listReturn.setTitle(question.getTitle());
             listReturn.setTags(questionTagEntityService.getTagNamesByQuestionId(question.getId()));
             listReturn.setSubmitNum(question.getSubmitNum());
             listReturn.setAcceptNum(question.getAcceptNum());
             if (question.getSubmitNum() == 0)
-                listReturn.setPassingRate("0");
+                listReturn.setPassingRate(0);
             else {
-                DecimalFormat df = new DecimalFormat("#.##");
-                double passingRate = question.getAcceptNum() * (1.0) / question.getSubmitNum();
-                listReturn.setPassingRate(df.format(passingRate));
+                Integer passingRate = (int)((question.getAcceptNum() * (1.0) / question.getSubmitNum()) * 100) ;
+                listReturn.setPassingRate(passingRate);
             }
             String difficultyName = QuestionConstants.QuestionDifficulty.
                     getQuestionDifficulty(question.getDifficulty()).name();
@@ -119,25 +127,46 @@ public class AdminQuestionManager {
 
     }
 
-    public Question getQuestion(Long qid) throws StatusFailException, StatusForbiddenException {
+    public QuestionReturnDTO getQuestion(Long qid) throws StatusFailException, StatusForbiddenException {
         Question question = questionEntityService.getById(qid);
         if ((question == null) || (question.getIsDelete() == true)) {
             throw new StatusFailException("题目不存在，查询失败");
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean logined = false;
-        if (authentication.getPrincipal() != "anonymousUser") {
-            logined = true;
-        }
+        boolean logined = !(authentication == null || authentication.getName().equals("anonymousUser"));
         Long uid = -1L;
         if (logined == true) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
             uid = loginUser.getUser().getId();
         }
+        //将question中的属性放入questionResturnDTO
+        QuestionReturnDTO questionReturnDTO = new QuestionReturnDTO();
+        BeanUtils.copyProperties(question, questionReturnDTO);
+        if (question.getUid() != null) {
+            String nickname = userEntityService.getById(question.getUid()).getNickname();
+            if (nickname != null) {
+                questionReturnDTO.setAuthor(nickname);
+            }
+        }
+        if (logined == true) {
+            LambdaQueryWrapper<Judge> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(Judge::getQid, question.getId())
+                    .eq(Judge::getUid, uid)
+                    .select(Judge::getScore)
+                    .orderByDesc(Judge::getScore)
+                    .last("LIMIT 1");
+            Judge judge = judgeEntityService.getOne(queryWrapper);
+            if (judge != null) {
+                Integer score = judge.getScore();
+                if (score != null) questionReturnDTO.setScore(score);
+            }
+        }
+        if (questionReturnDTO.getScore() == null) questionReturnDTO.setScore(-1);
+
         if (question.getAuth() == 1 && uid != question.getUid()) {
             throw new StatusForbiddenException("该题为私有题目，您无权查看");
         }
-        return question;
+        return questionReturnDTO;
 
     }
 }

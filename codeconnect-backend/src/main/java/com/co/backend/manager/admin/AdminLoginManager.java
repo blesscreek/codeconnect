@@ -7,8 +7,8 @@ import com.co.backend.model.po.User;
 import com.co.backend.model.po.UserRole;
 import com.co.common.exception.StatusFailException;
 import com.co.backend.mapper.UserRoleMapper;
-import com.co.backend.model.dto.LoginUser;
-import com.co.backend.model.dto.RegisterUser;
+import com.co.backend.model.entity.LoginUser;
+import com.co.backend.model.dto.RegisterUserDTO;
 import com.co.backend.utils.JwtUtil;
 import com.co.backend.utils.RedisCache;
 import io.jsonwebtoken.Claims;
@@ -86,33 +86,33 @@ public class AdminLoginManager {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public void register(RegisterUser registerUser) throws StatusFailException {
-        if (StringUtils.isEmpty(registerUser.getUsername())) {
+    public void register(RegisterUserDTO registerUserDTO) throws StatusFailException {
+        if (StringUtils.isEmpty(registerUserDTO.getUsername())) {
             throw new StatusFailException("账号不能为空");
         }
-        if (registerUser.getUsername().length() < 5 || registerUser.getUsername().length() > 10) {
+        if (registerUserDTO.getUsername().length() < 5 || registerUserDTO.getUsername().length() > 10) {
             throw new StatusFailException("账号长度应为5~10位");
         }
-        if (StringUtils.isEmpty(registerUser.getPassword())) {
+        if (StringUtils.isEmpty(registerUserDTO.getPassword())) {
             throw new StatusFailException("密码不能为空");
         }
-        if (registerUser.getPassword().length() < 6 || registerUser.getPassword().length() > 15) {
+        if (registerUserDTO.getPassword().length() < 6 || registerUserDTO.getPassword().length() > 15) {
             throw new StatusFailException("密码长度为6~15位");
         }
-        if (!registerUser.getPassword().equals(registerUser.getCheckPassword())) {
+        if (!registerUserDTO.getPassword().equals(registerUserDTO.getCheckPassword())) {
             throw new StatusFailException("两次输入的密码不一致");
         }
-        synchronized (registerUser.getUsername().intern()) {
+        synchronized (registerUserDTO.getUsername().intern()) {
             //账号不能重复
-            long count = userEntityService.countUserByUsername(registerUser.getUsername());
+            long count = userEntityService.countUserByUsername(registerUserDTO.getUsername());
             if (count > 0) {
                 throw new StatusFailException("账号重复");
             }
             //密码加密
-            String encodedPassword = passwordEncoder.encode(registerUser.getPassword());
+            String encodedPassword = passwordEncoder.encode(registerUserDTO.getPassword());
             //添加数据
             User user = new User();
-            user.setUsername(registerUser.getUsername());
+            user.setUsername(registerUserDTO.getUsername());
             user.setPassword(encodedPassword);
             LocalDateTime currentDateTime = LocalDateTime.now();
             user.setCreateTime(currentDateTime);

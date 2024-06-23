@@ -34,8 +34,8 @@ public class UploadQuestionController {
     @ApiOperation("上传测试用例文件")
     @PostMapping("/uploadQuestionCase")
     @PreAuthorize("hasAuthority('sys:question:add')")
-    public ResponseResult uploadQuestionCase(@RequestParam("questionName") String questionName, @RequestPart("zipFileData")MultipartFile zipFile) {
-        ResponseResult responseResult = uploadQuestionService.uploadQuestionCase(questionName, zipFile);
+    public ResponseResult uploadQuestionCase(@RequestParam("qid") Long qid, @RequestPart("zipFileData")MultipartFile zipFile) {
+        ResponseResult responseResult = uploadQuestionService.uploadQuestionCase(qid, zipFile);
         return responseResult;
     }
 }

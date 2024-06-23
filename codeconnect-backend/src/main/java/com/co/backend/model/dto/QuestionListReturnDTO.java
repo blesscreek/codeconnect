@@ -1,6 +1,7 @@
 package com.co.backend.model.dto;
 
 import lombok.Data;
+import org.apache.catalina.util.Introspection;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
 public class QuestionListReturnDTO {
     //提交状态
     private Integer status;
+    //题目id
+    private Long qid;
     //题号
     private String questionNum;
     //题目名称
@@ -25,7 +28,7 @@ public class QuestionListReturnDTO {
 
     private Long acceptNum;
     //通过率
-    private String passingRate;
+    private Integer passingRate;
     //难度
     private String difficulty;
 }

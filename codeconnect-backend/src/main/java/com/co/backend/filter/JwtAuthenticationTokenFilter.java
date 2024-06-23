@@ -2,8 +2,7 @@ package com.co.backend.filter;
 
 import com.co.backend.constant.JWTConstant;
 import com.co.backend.constant.RedisConstants;
-import com.co.backend.constant.UserConstant;
-import com.co.backend.model.dto.LoginUser;
+import com.co.backend.model.entity.LoginUser;
 import com.co.backend.utils.JwtUtil;
 import com.co.backend.utils.RedisCache;
 import io.jsonwebtoken.Claims;
@@ -13,13 +12,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.UrlPathHelper;
+import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -44,26 +44,29 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        //允许携带过期token访问
+        //可携带过期token访问路径
+        AntPathMatcher pathMatcher = new AntPathMatcher();
         String requestURI = request.getRequestURI();
         List<String> permitPaths = Arrays.asList(
                 "/login",
                 "/register",
                 "/refreshToken",
-                "/judge/submitJudgeQuestion",
                 "/question/getQuestionList",
                 "/question/getQuestion/**"
         );
-        if (permitPaths.contains(requestURI)) {
-            filterChain.doFilter(request,response);
-            return;
-        }
+
         //解析token
         String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);
             userid = claims.getSubject();
         } catch (Exception e) {
+            //是可携带过期token的路径，则将用户认证信息置空
+            if (permitPaths.stream().anyMatch(permitPath -> pathMatcher.match(permitPath, requestURI))) {
+                SecurityContextHolder.clearContext();
+                filterChain.doFilter(request,response);
+                return;
+            }
             e.printStackTrace();
             throw new RuntimeException("token is err");
         }
