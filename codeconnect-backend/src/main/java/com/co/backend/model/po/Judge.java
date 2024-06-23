@@ -92,5 +92,8 @@ public class Judge implements Serializable {
 
     private LocalDateTime updateTime;
 
+    @ApiModelProperty(value = "是否删除（0否，1删）")
+    private Boolean isDelete;
+
 
 }

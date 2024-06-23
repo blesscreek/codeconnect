@@ -25,6 +25,27 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
 
     @Autowired
     private AdminQuestionManager adminQuestionManager;
+
+    @Override
+    public ResponseResult getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) {
+        try {
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目查找成功",adminQuestionManager.getQuestionList(pageParams, getQuestionListDTO));
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseResult showQuestion(Long qid) {
+        try {
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目展示成功",adminQuestionManager.showQuestion(qid));
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(), e.getMessage());
+        }
+    }
+
     @Override
     public ResponseResult addQuestion(QuestionDTO questionDTO) {
         try {
@@ -37,9 +58,10 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
     }
 
     @Override
-    public ResponseResult getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) {
+    public ResponseResult deleteQuestion(Long qid) {
         try {
-            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目查找成功",adminQuestionManager.getQuestionList(pageParams, getQuestionListDTO));
+            adminQuestionManager.deleteQuestion(qid);
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目删除成功");
         } catch (StatusFailException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
         }
@@ -48,11 +70,20 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
     @Override
     public ResponseResult getQuestion(Long qid) {
         try {
-            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "获取题目成功",adminQuestionManager.getQuestion(qid));
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目详情获取成功", adminQuestionManager.getQuestion(qid));
         } catch (StatusFailException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
-        } catch (StatusForbiddenException e) {
-            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(), e.getMessage());
         }
     }
+
+    @Override
+    public ResponseResult updateQuestion(QuestionDTO questionDTO) {
+        try {
+            adminQuestionManager.updateQuestion(questionDTO);
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目更改成功");
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }
+    }
+
 }

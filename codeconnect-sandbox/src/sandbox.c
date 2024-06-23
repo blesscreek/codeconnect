@@ -265,11 +265,11 @@ void monitor(pid_t child_pid) {
 	    }
 	    else
 	    {
-          if (runner_config.cpu_time_limit != RESOURCE_UNLIMITED && runner_result.cpu_time_used_us > runner_config.cpu_time_limit)
+          if (runner_config.cpu_time_limit != RESOURCE_UNLIMITED && runner_result.cpu_time_used > runner_config.cpu_time_limit)
 	        {
 	        runner_result.status = TIME_LIMIT_EXCEEDED;
 	        }
-	      else if (runner_config.real_time_limit != RESOURCE_UNLIMITED && runner_result.real_time_used_us > runner_config.real_time_limit)
+	      else if (runner_config.real_time_limit != RESOURCE_UNLIMITED && runner_result.real_time_used > runner_config.real_time_limit)
 	        {
 	        runner_result.status = TIME_LIMIT_EXCEEDED;
 	        }

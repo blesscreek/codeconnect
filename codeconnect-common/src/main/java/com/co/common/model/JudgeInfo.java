@@ -49,7 +49,7 @@ public class JudgeInfo implements Serializable {
 
     private String language;
 
-    private LocalDateTime submitTime;
+    private LocalDateTime createTime;
 
     private List<JudgeCaseInfo> judgeCaseInfoList;
 

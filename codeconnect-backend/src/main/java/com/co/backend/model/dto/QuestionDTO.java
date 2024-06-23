@@ -18,6 +18,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)//对应字段的 setter 方法调用后，会返回当前对象
 public class QuestionDTO {
+    private Long id;
 
     private Question question;
 

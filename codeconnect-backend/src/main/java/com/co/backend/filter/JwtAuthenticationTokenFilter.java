@@ -52,7 +52,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 "/register",
                 "/refreshToken",
                 "/question/getQuestionList",
-                "/question/getQuestion/**"
+                "/question/showQuestion/**"
         );
 
         //解析token

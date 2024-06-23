@@ -33,7 +33,7 @@
     <!-- 在mapper XML 文件中定义查询 -->
     <select id="selectQuestions" resultType="com.co.backend.model.po.Question">
         SELECT * FROM question
-        WHERE 1=1
+        WHERE is_delete = 0
         <if test="tagNames != null and tagNames.length > 0">
             and id IN (
             SELECT qid

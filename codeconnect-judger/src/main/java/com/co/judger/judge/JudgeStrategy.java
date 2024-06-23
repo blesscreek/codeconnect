@@ -100,6 +100,7 @@ public class JudgeStrategy {
             judgeCase.setScore(jsonObject.getInt("score"));
             judgeCase.setCreateTime((LocalDateTime) jsonObject.get("time"));
             judgeCase.setUpdateTime((LocalDateTime) jsonObject.get("time"));
+            judgeCase.setIsDelete(false);
             judgeTime.addAndGet(jsonObject.getInt("real_time_used"));
             judgeMemory.set(Math.max(judgeMemory.get(), jsonObject.getInt("memory_used")));
             judgeCases.add(judgeCase);

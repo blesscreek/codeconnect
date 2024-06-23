@@ -17,10 +17,15 @@ import com.co.common.exception.StatusForbiddenException;
  */
 public interface AdminQuestionService  {
 
+    ResponseResult getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO);
+
+    ResponseResult showQuestion(Long qid);
+
     ResponseResult addQuestion(QuestionDTO questionDTO);
 
-    ResponseResult getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO);
+    ResponseResult deleteQuestion(Long qid);
 
     ResponseResult getQuestion(Long qid);
 
+    ResponseResult updateQuestion(QuestionDTO questionDTO);
 }

@@ -1,4 +1,4 @@
-package com.co.judger.model;
+package com.co.backend.model.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -18,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author co
- * @since 2024-05-23
+ * @since 2024-06-23
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -69,8 +68,8 @@ public class JudgeCase implements Serializable {
 
     private LocalDateTime updateTime;
 
-    @ApiModelProperty(value = "是否删除（0否，1删）")
-    private Boolean isDelete;
+    @ApiModelProperty(value = "是否删除(0否，1删)")
+    private Integer isDelete;
 
 
 }

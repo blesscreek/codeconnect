@@ -2,13 +2,16 @@ package com.co.backend.manager.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.co.backend.constant.QuestionConstants;
+import com.co.backend.dao.judge.JudgeCaseEntityService;
 import com.co.backend.dao.judge.JudgeEntityService;
 import com.co.backend.dao.question.QuestionEntityService;
 import com.co.backend.dao.question.QuestionTagEntityService;
 import com.co.backend.dao.user.UserEntityService;
 import com.co.backend.model.entity.LoginUser;
 import com.co.backend.model.po.Judge;
+import com.co.backend.model.po.JudgeCase;
 import com.co.backend.model.po.PageParams;
 import com.co.backend.model.po.Question;
 import com.co.common.exception.StatusFailException;
@@ -40,6 +43,8 @@ public class AdminQuestionManager {
     private QuestionTagEntityService questionTagEntityService;
     @Autowired
     private UserEntityService userEntityService;
+    @Autowired
+    private JudgeCaseEntityService judgeCaseEntityService;
     public void addQuestion(QuestionDTO questionDTO) throws StatusFailException {
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("title",questionDTO.getQuestion().getTitle());
@@ -127,7 +132,7 @@ public class AdminQuestionManager {
 
     }
 
-    public QuestionReturnDTO getQuestion(Long qid) throws StatusFailException, StatusForbiddenException {
+    public QuestionReturnDTO showQuestion(Long qid) throws StatusFailException, StatusForbiddenException {
         Question question = questionEntityService.getById(qid);
         if ((question == null) || (question.getIsDelete() == true)) {
             throw new StatusFailException("题目不存在，查询失败");
@@ -168,5 +173,71 @@ public class AdminQuestionManager {
         }
         return questionReturnDTO;
 
+    }
+
+    public void deleteQuestion(Long qid) throws StatusFailException {
+        QueryWrapper<Question> questionQueryWrapper = new QueryWrapper<>();
+        questionQueryWrapper.eq("id", qid);
+        if (questionEntityService.count(questionQueryWrapper) == 0) {
+            throw new StatusFailException("该题目不存在，删除失败");
+        }
+        UpdateWrapper<Question> questionUpdateWrapper = new UpdateWrapper<>();
+        questionUpdateWrapper.eq("id", qid)
+                .set("is_delete", 1);
+        boolean updateQuestion = questionEntityService.update(questionUpdateWrapper);
+        if (updateQuestion == false) {
+            throw new StatusFailException("删除题目失败");
+        }
+        //删除该题的判题记录
+        QueryWrapper<Judge> judgeQueryWrapper = new QueryWrapper<>();
+        judgeQueryWrapper.eq("qid",qid);
+        int count = judgeEntityService.count(judgeQueryWrapper);
+        if (count != 0) {
+            UpdateWrapper<Judge> judgeUpdateWrapper = new UpdateWrapper<>();
+            judgeUpdateWrapper.eq("qid", qid).set("is_delete", 1);
+            boolean updateJudge = judgeEntityService.update(judgeUpdateWrapper);
+            if (updateJudge == false) {
+                throw new StatusFailException("删除题目相关判题信息失败");
+            }
+        }
+        //删除该题的判题样例记录
+        QueryWrapper<JudgeCase> judgeCaseQueryWrapper = new QueryWrapper<>();
+        judgeCaseQueryWrapper.eq("qid",qid);
+        int count1 = judgeCaseEntityService.count(judgeCaseQueryWrapper);
+        if (count1 != 0) {
+            UpdateWrapper<JudgeCase> judgeCaseUpdateWrapper = new UpdateWrapper<>();
+            judgeCaseUpdateWrapper.eq("qid",qid).set("is_delete",1);
+            boolean updateJudgeCase = judgeCaseEntityService.update(judgeCaseUpdateWrapper);
+            if (updateJudgeCase == false) {
+                throw new StatusFailException("删除题目相关判题样例信息失败");
+            }
+        }
+
+    }
+
+    public Question getQuestion(Long qid) throws StatusFailException {
+        Question question = questionEntityService.getById(qid);
+        if ((question == null) || (question.getIsDelete() == true)) {
+            throw new StatusFailException("题目不存在，查询失败");
+        }
+        return question;
+
+    }
+
+    public void updateQuestion(QuestionDTO questionDTO) throws StatusFailException {
+        Question question = questionEntityService.getById(questionDTO.getId());
+        if (question == null) {
+            throw new StatusFailException("题目不存在，更改失败");
+        }
+        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("title",questionDTO.getQuestion().getTitle());
+        question = questionEntityService.getOne(queryWrapper);
+        if (question != null) {
+            throw new StatusFailException("题目标题重复，请更换");
+        }
+        boolean updateRes = questionEntityService.updateQuestion(questionDTO);
+        if (updateRes == false) {
+            throw new StatusFailException("题目更改失败");
+        }
     }
 }

@@ -88,4 +88,39 @@ public class QuestionEntityServiceImpl extends ServiceImpl<QuestionMapper, Quest
         List<Question> questions = questionMapper.selectQuestions(tagNames, titleKeyword, difficulty, pageSize, offset);
         return questions;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateQuestion(QuestionDTO questionDTO) throws StatusFailException {
+        Question question = questionDTO.getQuestion();
+        questionValidator.validateQuestion(question);
+        question.setUpdateTime(LocalDateTime.now());
+        question.setId(questionDTO.getId());
+        boolean update = this.updateById(question);
+        if (update == false) {
+            return false;
+        }
+        //更新算法标签
+        QueryWrapper<QuestionTag> questionTagQueryWrapper = new QueryWrapper<>();
+        questionTagQueryWrapper.eq("qid",questionDTO.getId());
+        questionTagEntityService.remove(questionTagQueryWrapper);
+        List<Tag> tags = questionDTO.getTags();
+        for (Tag tag : tags) {
+            QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("name",tag.getName());
+            Tag tag1 = tagEntityService.getOne(queryWrapper);
+            Long tag1Id = tag1.getId();
+            QuestionTag questionTag = new QuestionTag();
+            questionTag.setQid(question.getId());
+            questionTag.setTid(tag1Id);
+            questionTag.setCreateTime(LocalDateTime.now());
+            questionTag.setUpdateTime(LocalDateTime.now());
+            boolean saveQuestionTag = questionTagEntityService.save(questionTag);
+            if (saveQuestionTag == false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

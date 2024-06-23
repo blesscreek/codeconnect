@@ -80,7 +80,8 @@ public class JudgeManager {
                 .setLanguage(judgeDTO.getLanguage())
                 .setCid(judgeDTO.getCid())
                 .setGid(judgeDTO.getGid())
-                .setIp(IpUtils.getUserIpAddr(request));
+                .setIp(IpUtils.getUserIpAddr(request))
+                .setIsDelete(false);
         //TODO:比赛和训练提交的初始化
         beforeDispatchInitManager.initCommonSubmission(judgeDTO.getQid(), judgeDTO.getGid(), judge);
 

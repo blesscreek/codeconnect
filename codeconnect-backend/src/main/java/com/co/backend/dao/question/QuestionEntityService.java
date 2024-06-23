@@ -18,4 +18,6 @@ public interface QuestionEntityService extends IService<Question> {
     boolean addQuestion(QuestionDTO questionDTO) throws StatusFailException;
 
     List<Question> selectQuestions(String[] tagNames, String titleKeyword, Integer difficulty, Long pageSize, Long offset);
+
+    boolean updateQuestion(QuestionDTO questionDTO) throws StatusFailException;
 }
