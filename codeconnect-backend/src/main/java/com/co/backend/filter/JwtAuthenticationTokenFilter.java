@@ -54,19 +54,23 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 "/question/getQuestionList",
                 "/question/showQuestion/**"
         );
-
+        if (permitPaths.stream().anyMatch(permitPath -> pathMatcher.match(permitPath, requestURI))) {
+            SecurityContextHolder.clearContext();
+            filterChain.doFilter(request,response);
+            return;
+        }
         //解析token
         String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);
             userid = claims.getSubject();
         } catch (Exception e) {
-            //是可携带过期token的路径，则将用户认证信息置空
-            if (permitPaths.stream().anyMatch(permitPath -> pathMatcher.match(permitPath, requestURI))) {
-                SecurityContextHolder.clearContext();
-                filterChain.doFilter(request,response);
-                return;
-            }
+//            //是可携带过期token的路径，则将用户认证信息置空
+//            if (permitPaths.stream().anyMatch(permitPath -> pathMatcher.match(permitPath, requestURI))) {
+//                SecurityContextHolder.clearContext();
+//                filterChain.doFilter(request,response);
+//                return;
+//            }
             throw new RuntimeException("token is err");
         }
         //从redis中获取用户信息

@@ -29,7 +29,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
         if ("用户名或密码错误".equals(e.getMessage())) {
             result = new ResponseResult(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         } else {
-            result = new ResponseResult(HttpStatus.FORBIDDEN.value(), "用户认证失败请重新登录");
+            result = new ResponseResult(HttpStatus.UNAUTHORIZED.value(), "用户认证失败请重新登录");
         }
         String json = JSON.toJSONString(result);
         //处理异常
