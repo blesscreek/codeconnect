@@ -33,4 +33,26 @@ public class JudgeServiceImpl implements JudgeService {
 
 
     }
+
+    @Override
+    public ResponseResult getJudgeList(Long qid) {
+        try {
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(),"获取判题列表成功",judgeManager.getJudgeList(qid));
+        }catch (StatusForbiddenException e) {
+            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(),e.getMessage());
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseResult getJudge(Long jid) {
+        try {
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(),"获取判题列表成功",judgeManager.getJudge(jid));
+        }catch (StatusForbiddenException e) {
+            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(),e.getMessage());
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }
+    }
 }

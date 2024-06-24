@@ -8,7 +8,7 @@ package com.co.backend.constant;
  */
 
 public class JWTConstant {
-    public static final Long AUTHORIZATION_EXPIRE_TIME = 60 * 60 * 1000L;
+    public static final Long AUTHORIZATION_EXPIRE = 60 * 60 * 1000L;
     public static final Long REFRESH_TOKEN_EXPIRE =60 * 60 * 24 * 7 * 1000L;
     public static final String JWT_KEY = "lyx";
     public static final String Authorization = "Authorization";

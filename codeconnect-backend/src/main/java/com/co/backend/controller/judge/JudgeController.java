@@ -31,5 +31,18 @@ public class JudgeController {
         return judgeService.submitJudgeQuestion(submitJudgeDTO);
 
     }
+    @ApiOperation("获取用户判题提交记录列表")
+    @GetMapping("/getJudgeList")
+    public ResponseResult getJudgeList(@RequestParam("qid") Long qid) {
+        return judgeService.getJudgeList(qid);
+    }
+
+    @ApiOperation("获取指定判题提交记录")
+    @GetMapping("/getJudge")
+    public ResponseResult getJudge(@RequestParam("jid") Long jid) {
+        return judgeService.getJudge(jid);
+    }
+
+
 
 }

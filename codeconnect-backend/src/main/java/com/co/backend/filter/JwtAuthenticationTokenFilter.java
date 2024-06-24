@@ -67,7 +67,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request,response);
                 return;
             }
-            e.printStackTrace();
             throw new RuntimeException("token is err");
         }
         //从redis中获取用户信息

@@ -232,7 +232,7 @@ public class AdminQuestionManager {
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("title",questionDTO.getQuestion().getTitle());
         question = questionEntityService.getOne(queryWrapper);
-        if (question != null) {
+        if (question != null && question.getId() != questionDTO.getId()) {
             throw new StatusFailException("题目标题重复，请更换");
         }
         boolean updateRes = questionEntityService.updateQuestion(questionDTO);

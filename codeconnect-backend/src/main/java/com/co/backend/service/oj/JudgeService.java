@@ -12,4 +12,8 @@ import com.co.backend.model.dto.SubmitJudgeDTO;
 
 public interface JudgeService {
     ResponseResult submitJudgeQuestion(SubmitJudgeDTO submitJudgeDTO);
+
+    ResponseResult getJudgeList(Long qid);
+
+    ResponseResult getJudge(Long jid);
 }

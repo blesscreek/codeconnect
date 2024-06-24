@@ -45,7 +45,7 @@ public class JwtUtil {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         if(ttlMillis==null){
-            ttlMillis= JWTConstant.AUTHORIZATION_EXPIRE_TIME;
+            ttlMillis= JWTConstant.AUTHORIZATION_EXPIRE;
         }
         long expMillis = nowMillis + ttlMillis;
         Date expDate = new Date(expMillis);

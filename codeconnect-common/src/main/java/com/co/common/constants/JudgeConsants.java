@@ -47,32 +47,36 @@ public class JudgeConsants {
     }
 
     public enum Judge {
-        STATUS_NOT_SUBMITTED(-10, "Not Submitted", null),
-        STATUS_SUBMITTED_UNKNOWN_RESULT(-5, "Submitted Unknown Result", null),
-        STATUS_CANCELLED(-4, "Cancelled", "ca"),
-        STATUS_COMPILING(-2, "Compiling", null),
-        STATUS_PENDING(-1, "Pending", null),
-        STATUS_ACCEPTED(0, "Accepted", "ac"),
-        PATTERN_ERROR(1, "Pattern Error", "pe"),
-        STATUS_TIME_LIMIT_EXCEEDED(2, "Time Limit Exceeded", "tle"),
-        STATUS_MEMORY_LIMIT_EXCEEDED(3, "Memory Limit Exceeded", "mle"),
-        STATUS_WRONG_ANSWER(4, "Wrong Answer", "wa"),
-        STATUS_RUNTIME_ERROR(5, "Runtime Error", "re"),
-        STATUS_COMPILE_ERROR(6, "Compile Error", "ce"),
-        STATUS_SYSTEM_ERROR(7, "System Error", "se"),
-        STATUS_JUDGING(8, "Judging", null),
-        STATUS_PARTIAL_ACCEPTED(9, "Partial Accepted", "pa"),
-        STATUS_SUBMITTING(10, "Submitting", null),
-        STATUS_SUBMITTED_FAILED(11, "Submitted Failed", null),
-        STATUS_NULL(15, "No Status", null),
-        JUDGE_SERVER_SUBMIT_PREFIX(-1002, "Judge SubmitId-ServerId:", null);
+        STATUS_NOT_SUBMITTED(-10, "未提交","Not Submitted",null),
+        STATUS_SUBMITTED_UNKNOWN_RESULT(-5, "提交结果未知","Submitted Unknown Result", null),
+        STATUS_CANCELLED(-4, "取消提交","Cancelled", "ca"),
+        STATUS_COMPILING(-2, "编译中","Compiling", null),
+        STATUS_PENDING(-1, "等待评判中","Pending", null),
+        STATUS_ACCEPTED(0, "通过","Accepted", "ac"),
+        PATTERN_ERROR(1, "格式有误","Pattern Error", "pe"),
+        STATUS_TIME_LIMIT_EXCEEDED(2, "时间超限","Time Limit Exceeded", "tle"),
+        STATUS_MEMORY_LIMIT_EXCEEDED(3, "内存超限","Memory Limit Exceeded", "mle"),
+        STATUS_WRONG_ANSWER(4, "答案错误","Wrong Answer", "wa"),
+        STATUS_RUNTIME_ERROR(5, "运行时错误","Runtime Error", "re"),
+        STATUS_COMPILE_ERROR(6, "编译错误","Compile Error", "ce"),
+        STATUS_SYSTEM_ERROR(7, "系统错误","System Error", "se"),
+        STATUS_JUDGING(8, "评判中","Judging", null),
+        STATUS_PARTIAL_ACCEPTED(9, "部分正确","Partial Accepted", "pa"),
+        STATUS_SUBMITTING(10, "提交中","Submitting", null),
+        STATUS_SUBMITTED_FAILED(11, "提交失败","Submitted Failed", null),
+        STATUS_NULL(15, "无状态","No Status", null),
+        JUDGE_SERVER_SUBMIT_PREFIX(-1002, "某种特定错误","Judge SubmitId-ServerId:", null);
         private final Integer status;
         private final String name;
 
+        private final String nameEng;
+
         private final String columnName;
-        private Judge(Integer status, String name, String columnName) {
+
+        private Judge(Integer status, String name,String nameEng, String columnName) {
             this.status = status;
             this.name = name;
+            this.nameEng = nameEng;
             this.columnName = columnName;
         }
         public Integer getStatus() {
@@ -82,6 +86,8 @@ public class JudgeConsants {
         public String getName() {
             return name;
         }
+
+        public String getNameEng(){return nameEng;}
 
         public String getColumnName() {
             return columnName;
@@ -99,6 +105,14 @@ public class JudgeConsants {
             for (Judge judge : Judge.values()) {
                 if (judge.getStatus().equals(status)) {
                     return judge.getName();
+                }
+            }
+            return null;
+        }
+        public static String getNameEngFromStatus(Integer status) {
+            for (Judge judge : Judge.values()) {
+                if (judge.getStatus().equals(status)) {
+                    return judge.getNameEng();
                 }
             }
             return null;

@@ -11,6 +11,7 @@ import com.co.backend.model.entity.LoginUser;
 import com.co.backend.model.dto.RegisterUserDTO;
 import com.co.backend.utils.JwtUtil;
 import com.co.backend.utils.RedisCache;
+import com.co.common.exception.StatusForbiddenException;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -66,7 +67,7 @@ public class AdminLoginManager {
         //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         String userid = loginUser.getUser().getId().toString();
-        String authorization = JwtUtil.createJWT(userid, JWTConstant.AUTHORIZATION_EXPIRE_TIME);
+        String authorization = JwtUtil.createJWT(userid, JWTConstant.AUTHORIZATION_EXPIRE);
         String refreshToken = JwtUtil.createJWT(userid, JWTConstant.REFRESH_TOKEN_EXPIRE);
         HashMap<String, String> map = new HashMap<>();
         map.put(Authorization,authorization);
@@ -132,18 +133,18 @@ public class AdminLoginManager {
         }
     }
 
-    public HashMap<String, String> refreshToken(String refreshToken) throws StatusFailException {
+    public HashMap<String, String> refreshToken(String refreshToken) throws StatusForbiddenException {
         try {
             Claims claims = JwtUtil.parseJWT(refreshToken);
             String userid = claims.getSubject();
-            String authorization = JwtUtil.createJWT(userid, JWTConstant.AUTHORIZATION_EXPIRE_TIME);
+            String authorization = JwtUtil.createJWT(userid, JWTConstant.AUTHORIZATION_EXPIRE);
             String newRefreshToken = JwtUtil.createJWT(userid, JWTConstant.REFRESH_TOKEN_EXPIRE);
             HashMap<String, String> map = new HashMap<>();
             map.put(Authorization,authorization);
-            map.put(REFRESH_TOKEN,refreshToken);
+            map.put(REFRESH_TOKEN,newRefreshToken);
             return map;
         } catch (Exception e) {
-            throw new StatusFailException("refreshToken已失效");
+            throw new StatusForbiddenException("refreshtoken过期");
         }
     }
 }

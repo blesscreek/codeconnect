@@ -7,6 +7,7 @@ import com.co.common.exception.StatusFailException;
 import com.co.backend.common.result.ResultStatus;
 import com.co.backend.manager.admin.AdminLoginManager;
 import com.co.backend.model.dto.RegisterUserDTO;
+import com.co.common.exception.StatusForbiddenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +56,8 @@ public class AdminLoginServiceImpl implements AdminLoginService {
         try {
             adminLoginManager.refreshToken(refreshToken);
             return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "刷新token成功");
-        }catch (StatusFailException e) {
-            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }catch (StatusForbiddenException e) {
+            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(),e.getMessage());
         }
     }
 
