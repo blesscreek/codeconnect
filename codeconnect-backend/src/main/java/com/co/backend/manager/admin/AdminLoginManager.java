@@ -1,7 +1,9 @@
 package com.co.backend.manager.admin;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.co.backend.constant.JWTConstant;
 import com.co.backend.constant.RedisConstants;
+import com.co.backend.dao.question.UserRoleEntityService;
 import com.co.backend.dao.user.UserEntityService;
 import com.co.backend.model.po.User;
 import com.co.backend.model.po.UserRole;
@@ -47,14 +49,14 @@ public class AdminLoginManager {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private UserRoleEntityService userRoleEntityService;
     private Long roleId = 3L;
 
     public HashMap<String, String> login(User user) throws StatusFailException {
-        if (user.getUsername().length() < 5 || user.getUsername().length() > 10) {
+        if (user.getUsername().length() < 1 || user.getUsername().length() > 10) {
            throw new StatusFailException("账号格式错误");
         }
-        if (user.getPassword().length() < 6 || user.getPassword().length() > 15) {
+        if (user.getPassword().length() < 3 || user.getPassword().length() > 15) {
             throw new StatusFailException("密码格式错误");
         }
         //AuthenticationManager authentication进行用户认证
@@ -69,9 +71,23 @@ public class AdminLoginManager {
         String userid = loginUser.getUser().getId().toString();
         String authorization = JwtUtil.createJWT(userid, JWTConstant.AUTHORIZATION_EXPIRE);
         String refreshToken = JwtUtil.createJWT(userid, JWTConstant.REFRESH_TOKEN_EXPIRE);
+
         HashMap<String, String> map = new HashMap<>();
         map.put(Authorization,authorization);
         map.put(REFRESH_TOKEN,refreshToken);
+        //设置角色信息
+        QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
+        userRoleQueryWrapper.eq("user_id",userid);
+        UserRole userRole = userRoleEntityService.getOne(userRoleQueryWrapper);
+        if (userRole == null) {
+            throw new StatusFailException("该账号没有设置权限");
+        }
+        Long roleId = userRole.getRoleId();
+        if (roleId == 3L) {
+            map.put("role","0");
+        } else if (roleId == 4L) {
+            map.put("role","1");
+        }
         //把完整的用户信息存入redis userid作为key
         redisCache.setCacheObject( RedisConstants.LOGIN_CODE_KEY + userid, loginUser);
         return map;
@@ -129,7 +145,7 @@ public class AdminLoginManager {
             UserRole userRole = new UserRole();
             userRole.setUserId(userId);
             userRole.setRoleId(roleId);
-            userRoleMapper.insert(userRole);
+            userRoleEntityService.save(userRole);
         }
     }
 

@@ -54,8 +54,7 @@ public class AdminLoginServiceImpl implements AdminLoginService {
     @Override
     public ResponseResult refreshToken(String refreshToken) {
         try {
-            adminLoginManager.refreshToken(refreshToken);
-            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "刷新token成功");
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "刷新token成功",adminLoginManager.refreshToken(refreshToken));
         }catch (StatusForbiddenException e) {
             return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(),e.getMessage());
         }

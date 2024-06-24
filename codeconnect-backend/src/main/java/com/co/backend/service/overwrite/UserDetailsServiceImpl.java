@@ -1,6 +1,7 @@
 package com.co.backend.service.overwrite;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.co.backend.common.result.ResponseResult;
 import com.co.backend.mapper.MenuMapper;
 import com.co.backend.mapper.UserMapper;
 import com.co.backend.model.entity.LoginUser;
@@ -35,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userMapper.selectOne(queryWrapper);
         //如果没有查询到用户就抛出异常
         if(Objects.isNull(user)) {
-            throw new RuntimeException("用户名或密码错误");
+            throw new UsernameNotFoundException("用户名或密码错误");
         }
         List<String> list =
                 menuMapper.selectPermsByUserId(user.getId());

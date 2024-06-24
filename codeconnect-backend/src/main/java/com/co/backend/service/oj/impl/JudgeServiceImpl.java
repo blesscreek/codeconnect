@@ -7,6 +7,7 @@ import com.co.backend.common.result.ResponseResult;
 import com.co.backend.common.result.ResultStatus;
 import com.co.backend.manager.oj.JudgeManager;
 import com.co.backend.model.dto.SubmitJudgeDTO;
+import com.co.common.exception.StatusNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +26,11 @@ public class JudgeServiceImpl implements JudgeService {
 
         try {
             return new ResponseResult(ResultStatus.SUCCESS.getStatus(),"判题提交成功",judgeManager.submitJudgeQuestion(submitJudgeDTO));
-        } catch (StatusForbiddenException e) {
-            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(),e.getMessage());
-        } catch (StatusFailException e) {
+        }catch (StatusFailException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        } catch (StatusNotFoundException e) {
+            return new ResponseResult(ResultStatus.NOT_FOUND.getStatus(),e.getMessage());
         }
-
 
     }
 
@@ -38,10 +38,10 @@ public class JudgeServiceImpl implements JudgeService {
     public ResponseResult getJudgeList(Long qid) {
         try {
             return new ResponseResult(ResultStatus.SUCCESS.getStatus(),"获取判题列表成功",judgeManager.getJudgeList(qid));
-        }catch (StatusForbiddenException e) {
-            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(),e.getMessage());
-        } catch (StatusFailException e) {
+        }catch (StatusFailException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        } catch (StatusNotFoundException e) {
+            return new ResponseResult(ResultStatus.NOT_FOUND.getStatus(),e.getMessage());
         }
     }
 
@@ -49,10 +49,10 @@ public class JudgeServiceImpl implements JudgeService {
     public ResponseResult getJudge(Long jid) {
         try {
             return new ResponseResult(ResultStatus.SUCCESS.getStatus(),"获取判题列表成功",judgeManager.getJudge(jid));
-        }catch (StatusForbiddenException e) {
-            return new ResponseResult(ResultStatus.FORBIDDEN.getStatus(),e.getMessage());
-        } catch (StatusFailException e) {
+        }catch (StatusFailException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        } catch (StatusNotFoundException e) {
+            return new ResponseResult(ResultStatus.NOT_FOUND.getStatus(),e.getMessage());
         }
     }
 }

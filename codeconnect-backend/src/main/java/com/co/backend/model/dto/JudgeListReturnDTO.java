@@ -19,7 +19,7 @@ public class JudgeListReturnDTO {
     /**
      * 提交时间
      */
-    private LocalDateTime submitTime;
+    private LocalDateTime createTime;
     /**
      * 语言
      */

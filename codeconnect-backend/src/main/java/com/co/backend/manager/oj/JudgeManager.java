@@ -21,6 +21,7 @@ import com.co.backend.model.entity.LoginUser;
 import com.co.backend.model.dto.SubmitJudgeDTO;
 import com.co.backend.utils.IpUtils;
 import com.co.backend.utils.RedisCache;
+import com.co.common.exception.StatusNotFoundException;
 import com.co.common.model.JudgeCaseInfo;
 import com.co.common.model.JudgeInfo;
 import org.springframework.beans.BeanUtils;
@@ -61,7 +62,7 @@ public class JudgeManager {
     private UserEntityService userEntityService;
     @Autowired
     private JudgeCaseEntityService judgeCaseEntityService;
-    public Judge submitJudgeQuestion(SubmitJudgeDTO judgeDTO) throws StatusForbiddenException, StatusFailException {
+    public Judge submitJudgeQuestion(SubmitJudgeDTO judgeDTO) throws StatusFailException, StatusNotFoundException {
         judgeValidator.validateSubmissionInfo(judgeDTO);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -71,7 +72,7 @@ public class JudgeManager {
             user = loginUser.getUser();
         }
         if (user == null) {
-            throw new StatusForbiddenException("对不起，您尚未登录，请登录后重试！");
+            throw new StatusNotFoundException("对不起，您尚未登录，请登录后重试！");
         }
 
         boolean isContestSubmission = judgeDTO.getCid() != null && judgeDTO.getCid() != 0;
@@ -81,7 +82,7 @@ public class JudgeManager {
         if (LimitConstants.defaultSubmitInterval > 0) {
             String lockKey = RedisConstants.SUBMIT_NON_CONTEST_LOCK + user.getId();
             if (!redisCache.isWithinRateLimit(lockKey, LimitConstants.defaultSubmitInterval)) {
-                throw new StatusForbiddenException("对不起，您的提交频率过快，请稍后再尝试！");
+                throw new StatusFailException("对不起，您的提交频率过快，请稍后再尝试！");
             }
         }
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
@@ -108,7 +109,7 @@ public class JudgeManager {
         return judge;
     }
 
-    public List<JudgeListReturnDTO> getJudgeList(Long qid) throws StatusForbiddenException, StatusFailException {
+    public List<JudgeListReturnDTO> getJudgeList(Long qid) throws StatusFailException, StatusNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = null;
         if (!authentication.getPrincipal() .equals("anonymousUser") || authentication.getPrincipal() != null) {
@@ -116,7 +117,7 @@ public class JudgeManager {
             user = loginUser.getUser();
         }
         if (user == null) {
-            throw new StatusForbiddenException("对不起，您尚未登录，无法查看提交历史记录");
+            throw new StatusNotFoundException("对不起，您尚未登录，无法查看提交历史记录");
         }
         Question question = questionEntityService.getById(qid);
         if (question == null || question.getIsDelete() == true) {
@@ -140,7 +141,7 @@ public class JudgeManager {
 
     }
 
-    public Object getJudge(Long jid) throws StatusForbiddenException, StatusFailException {
+    public Object getJudge(Long jid) throws StatusFailException, StatusNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = null;
         if (!authentication.getPrincipal() .equals("anonymousUser") || authentication.getPrincipal() != null) {
@@ -148,7 +149,7 @@ public class JudgeManager {
             user = loginUser.getUser();
         }
         if (user == null) {
-            throw new StatusForbiddenException("对不起，您尚未登录，无法查看提交历史记录");
+            throw new StatusNotFoundException("对不起，您尚未登录，无法查看提交历史记录");
         }
         Judge judge = judgeEntityService.getById(jid);
         if (judge == null || judge.getIsDelete() == true) {

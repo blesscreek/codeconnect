@@ -70,6 +70,7 @@ public class JudgeContext {
         judgeInfo.setScore(judge.getScore());
         judgeInfo.setTime(judge.getTime());
         judgeInfo.setMemory(judge.getMemory());
+        judgeInfo.setCreateTime(judge.getCreateTime());
         if (judgeInfo.getTime() > 1000) {
             judgeInfo.setShowTime(String.format("%.2f", judgeInfo.getTime() / 1000.0) + "s");
         } else {
