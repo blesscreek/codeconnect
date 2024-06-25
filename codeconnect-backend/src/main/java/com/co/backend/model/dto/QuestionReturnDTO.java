@@ -1,7 +1,10 @@
 package com.co.backend.model.dto;
 
+import com.co.backend.model.po.Tag;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * @Author co
@@ -41,6 +44,8 @@ public class QuestionReturnDTO {
     private Long timeLimit;
 
     private Long memoryLimit;
+
+    private List<String> tagNames;
 
 
 

@@ -44,33 +44,36 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        //可携带过期token访问路径
         AntPathMatcher pathMatcher = new AntPathMatcher();
         String requestURI = request.getRequestURI();
-        List<String> permitPaths = Arrays.asList(
+        //忽略token
+        List<String> permitIgnorePaths = Arrays.asList(
                 "/login",
                 "/register",
-                "/refreshToken",
-                "/question/getQuestionList",
-                "/question/showQuestion/**"
+                "/refreshToken"
         );
-        if (permitPaths.stream().anyMatch(permitPath -> pathMatcher.match(permitPath, requestURI))) {
+        if (permitIgnorePaths.stream().anyMatch(permitPath -> pathMatcher.match(permitPath, requestURI))) {
             SecurityContextHolder.clearContext();
             filterChain.doFilter(request,response);
             return;
         }
+        //可携带过期token访问路径
+        List<String> permitPaths = Arrays.asList(
+                "/question/getQuestionList",
+                "/question/showQuestion/**"
+        );
         //解析token
         String userid;
         try {
             Claims claims = JwtUtil.parseJWT(token);
             userid = claims.getSubject();
         } catch (Exception e) {
-//            //是可携带过期token的路径，则将用户认证信息置空
-//            if (permitPaths.stream().anyMatch(permitPath -> pathMatcher.match(permitPath, requestURI))) {
-//                SecurityContextHolder.clearContext();
-//                filterChain.doFilter(request,response);
-//                return;
-//            }
+            //是可携带过期token的路径，则将用户认证信息置空
+            if (permitPaths.stream().anyMatch(permitPath -> pathMatcher.match(permitPath, requestURI))) {
+                SecurityContextHolder.clearContext();
+                filterChain.doFilter(request,response);
+                return;
+            }
             throw new RuntimeException("token is err");
         }
         //从redis中获取用户信息

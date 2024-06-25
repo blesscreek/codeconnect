@@ -43,13 +43,13 @@ public class BeforeDispatchInitManager {
         QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
         userRoleQueryWrapper.eq("user_id",judge.getUid());
         UserRole userRole = userRoleEntityService.getOne(userRoleQueryWrapper);
-        if (question.getIsGroup()) {
-            if (gid == null) {
-                throw new StatusFailException("提交失败，该题目为团队所属，请你前往指定团队内提交！");
-            }
-            //TODO:判断要么是团队成员，要么是管理员才可提交该团队内部题目
-            judge.setGid(question.getGid());
-        }
+//        if (question.getIsGroup()) {
+//            if (gid == null) {
+//                throw new StatusFailException("提交失败，该题目为团队所属，请你前往指定团队内提交！");
+//            }
+//            //TODO:判断要么是团队成员，要么是管理员才可提交该团队内部题目
+//            judge.setGid(question.getGid());
+//        }
         judge.setCpid(0L)
                 .setQid(questionId);
         judgeEntityService.save(judge);

@@ -1,6 +1,7 @@
 package com.co.backend.service.upload.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.co.backend.constant.FileConstans;
 import com.co.backend.dao.question.QuestionCaseEntityService;
 import com.co.backend.dao.question.QuestionEntityService;
@@ -11,6 +12,8 @@ import com.co.backend.common.result.ResponseResult;
 import com.co.backend.common.result.ResultStatus;
 import com.co.backend.manager.upload.UploadQuestionManager;
 import com.co.backend.model.dto.UploadFileParamsDto;
+import com.co.common.exception.StatusFailException;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,7 +68,16 @@ public class UploadQuestionServiceImpl implements UploadQuestionService {
     }
 
     @Override
-    public ResponseResult uploadQuestionCase(Long qid, MultipartFile zipFile) {
+    public ResponseResult uploadQuestionCase(Long qid, MultipartFile zipFile)  {
+        if (zipFile == null || zipFile.isEmpty()) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(), "上传文件不能为空");
+        }
+
+        // Get the file extension
+        String extension = FilenameUtils.getExtension(zipFile.getOriginalFilename());
+        if (!"zip".equalsIgnoreCase(extension)) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(), "测试样例非zip格式");
+        }
         try(ZipInputStream zipIn = new ZipInputStream(zipFile.getInputStream(),Charset.forName("UTF-8"))) {
 
             Question question = questionEntityService.getById(qid);
@@ -144,6 +156,10 @@ public class UploadQuestionServiceImpl implements UploadQuestionService {
         } catch (IOException e) {
             return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
         }
+        //设置question的has_case
+        UpdateWrapper<Question> questionUpdateWrapper = new UpdateWrapper<>();
+        questionUpdateWrapper.eq("id",qid).setSql("has_case = 1");
+        questionEntityService.update(questionUpdateWrapper);
         return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "上传成功");
     }
 

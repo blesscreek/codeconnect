@@ -18,6 +18,7 @@ import com.co.common.exception.StatusForbiddenException;
 public interface AdminQuestionService  {
 
     ResponseResult getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO);
+    ResponseResult getEditQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO);
 
     ResponseResult showQuestion(Long qid);
 
@@ -28,4 +29,6 @@ public interface AdminQuestionService  {
     ResponseResult getQuestion(Long qid);
 
     ResponseResult updateQuestion(QuestionDTO questionDTO);
+
+
 }

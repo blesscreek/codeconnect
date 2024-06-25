@@ -39,6 +39,12 @@ public class AdminQuestionController {
         return adminQuestionService.getQuestionList(pageParams, getQuestionListDTO);
     }
 
+    @ApiOperation("编辑题目列表分页查询")
+    @PostMapping("/getEditQuestionList")
+    public ResponseResult getEditQuestionList(PageParams pageParams, @RequestBody GetQuestionListDTO getQuestionListDTO){
+        return adminQuestionService.getEditQuestionList(pageParams, getQuestionListDTO);
+    }
+
     /**
      * 题目展示
      * @param qid   题目id

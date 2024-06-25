@@ -1,6 +1,7 @@
 package com.co.backend.service.upload;
 
 import com.co.backend.common.result.ResponseResult;
+import com.co.common.exception.StatusFailException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

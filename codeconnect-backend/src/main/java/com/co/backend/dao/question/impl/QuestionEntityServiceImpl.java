@@ -2,8 +2,8 @@ package com.co.backend.dao.question.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.co.common.exception.StatusFailException;
 import com.co.backend.dao.question.QuestionTagEntityService;
+import com.co.common.exception.StatusFailException;
 import com.co.backend.dao.question.TagEntityService;
 import com.co.backend.mapper.QuestionMapper;
 import com.co.backend.model.entity.LoginUser;
@@ -46,15 +46,22 @@ public class QuestionEntityServiceImpl extends ServiceImpl<QuestionMapper, Quest
     public boolean addQuestion(QuestionDTO questionDTO) throws StatusFailException {
         Question question = questionDTO.getQuestion();
         questionValidator.validateQuestion(question);
+        //标签个数
+        List<Tag> tags = questionDTO.getTags();
+        if (tags.size() < 1 || tags.size() > 3) {
+            throw new StatusFailException("标签数量应为1~3个");
+        }
         //获取用户
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Long uid = loginUser.getUser().getId();
+
         //插入question表
         question.setUid(uid);
         LocalDateTime currentTime = LocalDateTime.now();
         question.setCreateTime(currentTime);
         question.setUpdateTime(currentTime);
+        question.setHasCase(false);
         question.setIsDelete(false);
         question.setAcceptNum(0L);
         question.setSubmitNum(0L);
@@ -62,8 +69,6 @@ public class QuestionEntityServiceImpl extends ServiceImpl<QuestionMapper, Quest
         if (saveQuestion == false) {
             return false;
         }
-        //存入question_tag表
-        List<Tag> tags = questionDTO.getTags();
 
         for (Tag tag : tags) {
             QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
@@ -122,5 +127,11 @@ public class QuestionEntityServiceImpl extends ServiceImpl<QuestionMapper, Quest
         }
 
         return true;
+    }
+
+    @Override
+    public List<Question> selectAllQuestions(String[] tagNames, String titleKeyword, Integer difficulty, Long pageSize, Long offset) {
+        List<Question> questions = questionMapper.selectAllQuestions(tagNames, titleKeyword, difficulty, pageSize, offset);
+        return questions;
     }
 }

@@ -34,6 +34,7 @@
     <select id="selectQuestions" resultType="com.co.backend.model.po.Question">
         SELECT * FROM question
         WHERE is_delete = 0
+        AND has_case = 1
         <if test="tagNames != null and tagNames.length > 0">
             and id IN (
             SELECT qid
@@ -62,5 +63,35 @@
         LIMIT #{pageSize} OFFSET #{offset}
     </select>
 
+    <select id="selectAllQuestions" resultType="com.co.backend.model.po.Question">
+        SELECT * FROM question
+        WHERE is_delete = 0
+        <if test="tagNames != null and tagNames.length > 0">
+            and id IN (
+            SELECT qid
+            FROM question_tag
+            WHERE tid IN (
+            SELECT id FROM tag WHERE tag.`name` IN
+            <foreach item="tag" collection="tagNames" separator="," open="(" close=")">
+                #{tag}
+            </foreach>
+            )
+            GROUP BY qid
+            HAVING COUNT(DISTINCT tid) >= (SELECT COUNT(id) FROM tag WHERE tag.`name` IN
+            <foreach item="tag" collection="tagNames" separator="," open="(" close=")">
+                #{tag}
+            </foreach>
+            )
+            )
+        </if>
+        <if test="titleKeyword != null and titleKeyword != ''">
+            AND (title LIKE CONCAT('%', #{titleKeyword}, '%') OR id like CONCAT('%', #{titleKeyword}, '%'))
+        </if>
+        <if test="difficulty != null">
+            AND difficulty = #{difficulty}
+        </if>
+        ORDER BY id
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
 
 </mapper>

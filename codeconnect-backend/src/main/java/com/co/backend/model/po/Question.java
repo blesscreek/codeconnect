@@ -132,6 +132,10 @@ public class Question implements Serializable {
      * 更改时间
      */
     private LocalDateTime updateTime;
+    /**
+     * 是否有测试样例(0无，1有）
+     */
+    private Boolean hasCase;
 
     /**
      * 是否删除(0否，1删)

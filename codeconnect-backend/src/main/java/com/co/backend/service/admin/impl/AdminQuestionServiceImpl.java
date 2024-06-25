@@ -36,6 +36,15 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
     }
 
     @Override
+    public ResponseResult getEditQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) {
+        try {
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "编辑题目查找成功",adminQuestionManager.getEditQuestionList(pageParams, getQuestionListDTO));
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }
+    }
+
+    @Override
     public ResponseResult showQuestion(Long qid) {
         try {
             return new ResponseResult(ResultStatus.SUCCESS.getStatus(), "题目展示成功",adminQuestionManager.showQuestion(qid));

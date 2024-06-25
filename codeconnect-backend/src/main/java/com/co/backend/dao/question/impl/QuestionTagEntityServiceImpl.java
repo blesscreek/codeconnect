@@ -1,8 +1,8 @@
 package com.co.backend.dao.question.impl;
 
+import com.co.backend.dao.question.QuestionTagEntityService;
 import com.co.backend.model.po.QuestionTag;
 import com.co.backend.mapper.QuestionTagMapper;
-import com.co.backend.dao.question.QuestionTagEntityService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

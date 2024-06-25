@@ -17,7 +17,29 @@ import java.util.List;
 public interface QuestionEntityService extends IService<Question> {
     boolean addQuestion(QuestionDTO questionDTO) throws StatusFailException;
 
+    /**
+     * 查看已发布的题目列表
+     * @param tagNames
+     * @param titleKeyword
+     * @param difficulty
+     * @param pageSize
+     * @param offset
+     * @return
+     */
+
     List<Question> selectQuestions(String[] tagNames, String titleKeyword, Integer difficulty, Long pageSize, Long offset);
 
     boolean updateQuestion(QuestionDTO questionDTO) throws StatusFailException;
+
+    /**
+     * 获取所有题目列表
+     * @param tagNames
+     * @param titleKeyword
+     * @param difficulty
+     * @param pageSize
+     * @param offset
+     * @return
+     */
+
+    List<Question> selectAllQuestions(String[] tagNames, String titleKeyword, Integer difficulty, Long pageSize, Long offset);
 }

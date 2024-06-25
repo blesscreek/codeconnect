@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface QuestionMapper extends BaseMapper<Question> {
     /**
-     * 查询题目列表
+     * 查询已发布（有测试样例）题目列表
      * @param tagNames 标签字符串数组
      * @param titleKeyword 关键字
      * @param difficulty 难度
@@ -28,4 +28,18 @@ public interface QuestionMapper extends BaseMapper<Question> {
                                    @Param("difficulty")Integer difficulty,
                                    @Param("pageSize") Long pageSize,
                                    @Param("offset") Long offset);
-}
+
+    /**
+     * 查询所有题目列表
+     * @param tagNames
+     * @param titleKeyword
+     * @param difficulty
+     * @param pageSize
+     * @param offset
+     * @return
+     */
+    List<Question> selectAllQuestions(@Param("tagNames") String[] tagNames,
+                                   @Param("titleKeyword") String titleKeyword,
+                                   @Param("difficulty")Integer difficulty,
+                                   @Param("pageSize") Long pageSize,
+                                   @Param("offset") Long offset);}

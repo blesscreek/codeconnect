@@ -8,12 +8,10 @@ import com.co.backend.dao.judge.JudgeCaseEntityService;
 import com.co.backend.dao.judge.JudgeEntityService;
 import com.co.backend.dao.question.QuestionEntityService;
 import com.co.backend.dao.question.QuestionTagEntityService;
+import com.co.backend.dao.question.UserRoleEntityService;
 import com.co.backend.dao.user.UserEntityService;
 import com.co.backend.model.entity.LoginUser;
-import com.co.backend.model.po.Judge;
-import com.co.backend.model.po.JudgeCase;
-import com.co.backend.model.po.PageParams;
-import com.co.backend.model.po.Question;
+import com.co.backend.model.po.*;
 import com.co.common.exception.StatusFailException;
 import com.co.backend.model.dto.*;
 import com.co.common.exception.StatusForbiddenException;
@@ -45,18 +43,9 @@ public class AdminQuestionManager {
     private UserEntityService userEntityService;
     @Autowired
     private JudgeCaseEntityService judgeCaseEntityService;
-    public void addQuestion(QuestionDTO questionDTO) throws StatusFailException {
-        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("title",questionDTO.getQuestion().getTitle());
-        Question question = questionEntityService.getOne(queryWrapper);
-        if (question != null) {
-            throw new StatusFailException("题目标题重复，请更换");
-        }
-        boolean addRes = questionEntityService.addQuestion(questionDTO);
-        if (addRes == false) {
-            throw new StatusFailException("题目添加失败");
-        }
-    }
+    @Autowired
+    private UserRoleEntityService userRoleEntityService;
+
 
     public GetQuestionListReturnDTO getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) throws StatusFailException {
         Long offset = (pageParams.getPageNo() - 1) * pageParams.getPageSize();
@@ -132,6 +121,61 @@ public class AdminQuestionManager {
 
     }
 
+    public GetEditQuestionListReturnDTO getEditQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) throws StatusFailException {
+        //获取用户
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean logined = !(authentication == null || authentication.getName().equals("anonymousUser"));
+
+        Long uid = -1L;
+        if (logined == true) {
+            LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+            uid = loginUser.getUser().getId();
+        }
+        QueryWrapper<UserRole> userRoleQueryWrapper = new QueryWrapper<>();
+        userRoleQueryWrapper.eq("user_id",uid);
+        UserRole one = userRoleEntityService.getOne(userRoleQueryWrapper);
+        if (one == null) {
+            throw new StatusFailException("该用户不存在");
+        }
+        if (one.getRoleId() != 4) {
+            throw new StatusFailException("该用户非管理员，不能获取全部题目列表");
+        }
+
+        Long offset = (pageParams.getPageNo() - 1) * pageParams.getPageSize();
+        String[] tags;
+        if(getQuestionListDTO.getTags() == null || getQuestionListDTO.getTags().size() == 0)
+            tags = null;
+        else {
+            tags = new String[getQuestionListDTO.getTags().size()];
+            // 将对象数组中的每个元素转换为字符串，并放入新创建的字符串数组中
+            for (int i = 0; i < getQuestionListDTO.getTags().size(); i++) {
+                tags[i] = String.valueOf(getQuestionListDTO.getTags().get(i));
+            }
+        }
+        Integer difficulty = QuestionConstants.QuestionDifficulty.getQuestionDifficultyByString(getQuestionListDTO.getDifficulty());
+        List<Question> questions = questionEntityService.selectAllQuestions(tags, getQuestionListDTO.getKeyword(),
+                difficulty, pageParams.getPageSize(), offset);
+        if (questions == null) {
+            throw new StatusFailException("查询题目列表失败");
+        }
+        List<EditQuestionListReturnDTO> editQuestionListReturnDTOS = new ArrayList<>();
+        for (Question question : questions) {
+            EditQuestionListReturnDTO listReturn = new EditQuestionListReturnDTO();
+            listReturn.setQid(question.getId());
+            listReturn.setQuestionNum("Q" + question.getId());
+            listReturn.setTitle(question.getTitle());
+            listReturn.setTags(questionTagEntityService.getTagNamesByQuestionId(question.getId()));
+            String difficultyName = QuestionConstants.QuestionDifficulty.
+                    getQuestionDifficulty(question.getDifficulty()).name();
+            listReturn.setDifficulty(difficultyName);
+            editQuestionListReturnDTOS.add(listReturn);
+        }
+        GetEditQuestionListReturnDTO getEditQuestionListReturnDTO = new GetEditQuestionListReturnDTO();
+        getEditQuestionListReturnDTO.setQuestionCnt(questions.size());
+        getEditQuestionListReturnDTO.setEditQuestionListReturn(editQuestionListReturnDTOS);
+        return getEditQuestionListReturnDTO;
+    }
+
     public QuestionReturnDTO showQuestion(Long qid) throws StatusFailException, StatusForbiddenException {
         Question question = questionEntityService.getById(qid);
         if ((question == null) || (question.getIsDelete() == true)) {
@@ -171,10 +215,23 @@ public class AdminQuestionManager {
         if (question.getAuth() == 1 && uid != question.getUid()) {
             throw new StatusForbiddenException("该题为私有题目，您无权查看");
         }
+        List<String> tagNames = questionTagEntityService.getTagNamesByQuestionId(question.getId());
+        questionReturnDTO.setTagNames(tagNames);
         return questionReturnDTO;
 
     }
-
+    public void addQuestion(QuestionDTO questionDTO) throws StatusFailException {
+        QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("title",questionDTO.getQuestion().getTitle());
+        Question question = questionEntityService.getOne(queryWrapper);
+        if (question != null) {
+            throw new StatusFailException("题目标题重复，请更换");
+        }
+        boolean addRes = questionEntityService.addQuestion(questionDTO);
+        if (addRes == false) {
+            throw new StatusFailException("题目添加失败");
+        }
+    }
     public void deleteQuestion(Long qid) throws StatusFailException {
         QueryWrapper<Question> questionQueryWrapper = new QueryWrapper<>();
         questionQueryWrapper.eq("id", qid);
@@ -240,4 +297,6 @@ public class AdminQuestionManager {
             throw new StatusFailException("题目更改失败");
         }
     }
+
+
 }
