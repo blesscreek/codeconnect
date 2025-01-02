@@ -26,6 +26,11 @@ import org.springframework.web.bind.annotation.*;
 public class AdminQuestionController {
     @Autowired
     private AdminQuestionService adminQuestionService;
+    @ApiOperation("题目列表分页查询")
+    @GetMapping("/getHotQuestion")
+    public ResponseResult getHotQuestion(){
+        return adminQuestionService.getHotQuestion();
+    }
 
     /**
      * 题目列表分页查询

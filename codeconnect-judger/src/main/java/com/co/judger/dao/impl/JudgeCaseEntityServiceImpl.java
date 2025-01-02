@@ -1,4 +1,4 @@
-package com.co.judger.dao.impl.impl;
+package com.co.judger.dao.impl;
 
 import com.co.judger.model.JudgeCase;
 import com.co.judger.mapper.JudgeCaseMapper;

@@ -1,9 +1,11 @@
 package com.co.backend.manager.admin;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.co.backend.constant.QuestionConstants;
+import com.co.backend.constant.RedisConstants;
 import com.co.backend.dao.judge.JudgeCaseEntityService;
 import com.co.backend.dao.judge.JudgeEntityService;
 import com.co.backend.dao.question.QuestionEntityService;
@@ -12,18 +14,28 @@ import com.co.backend.dao.question.UserRoleEntityService;
 import com.co.backend.dao.user.UserEntityService;
 import com.co.backend.model.entity.LoginUser;
 import com.co.backend.model.po.*;
+import com.co.backend.utils.BloomFilterUtil;
 import com.co.common.exception.StatusFailException;
 import com.co.backend.model.dto.*;
 import com.co.common.exception.StatusForbiddenException;
+import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisZSetCommands;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+import com.co.backend.utils.RedisCache;
 /**
  * @Author co
  * @Version 1.0
@@ -45,7 +57,10 @@ public class AdminQuestionManager {
     private JudgeCaseEntityService judgeCaseEntityService;
     @Autowired
     private UserRoleEntityService userRoleEntityService;
-
+    @Autowired
+    private RedisCache redisCache;
+    @Autowired
+    private BloomFilterUtil bloomFilterUtil;
 
     public GetQuestionListReturnDTO getQuestionList(PageParams pageParams, GetQuestionListDTO getQuestionListDTO) throws StatusFailException {
         Long offset = (pageParams.getPageNo() - 1) * pageParams.getPageSize();
@@ -177,7 +192,18 @@ public class AdminQuestionManager {
     }
 
     public QuestionReturnDTO showQuestion(Long qid) throws StatusFailException, StatusForbiddenException {
-        Question question = questionEntityService.getById(qid);
+        if (!bloomFilterUtil.isExit(qid)) {
+            redisCache.setCacheObject(RedisConstants.QUESTION_PREFIX+qid,
+                    RedisConstants.illegalJson,  new Random().nextInt(200) + 300, TimeUnit.SECONDS);
+            throw new StatusFailException("该题目不存在");
+        }
+        Question question;
+        if (redisCache.getCacheObject(RedisConstants.QUESTION_PREFIX+qid) != null) {
+            question = (Question) redisCache.getCacheObject(RedisConstants.QUESTION_PREFIX + qid);
+
+        } else {
+             question = questionEntityService.getById(qid);
+        }
         if ((question == null) || (question.getIsDelete() == true)) {
             throw new StatusFailException("题目不存在，查询失败");
         }
@@ -221,6 +247,7 @@ public class AdminQuestionManager {
 
     }
     public void addQuestion(QuestionDTO questionDTO) throws StatusFailException {
+        bloomFilterUtil.addQId(questionDTO.getQuestion().getId());
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("title",questionDTO.getQuestion().getTitle());
         Question question = questionEntityService.getOne(queryWrapper);
@@ -296,7 +323,26 @@ public class AdminQuestionManager {
         if (updateRes == false) {
             throw new StatusFailException("题目更改失败");
         }
+        redisCache.deleteObject(RedisConstants.QUESTION_PREFIX + questionDTO.getId());
     }
 
 
+    public List<Question> hotQuestion() throws StatusFailException {
+        Set<ZSetOperations.TypedTuple<Long>> set= redisCache.redisTemplate.opsForZSet().reverseRangeWithScores(
+                RedisConstants.HOT_QUESTION, 0, 49);
+        if (set == null) {
+            throw new StatusFailException("获取热门题目失败");
+        }
+        List<Question> lists = new ArrayList<>();
+        set.forEach(tuple->{
+            Long qId = tuple.getValue();
+            Question question= (Question) redisCache.redisTemplate.opsForValue().get(RedisConstants.QUESTION_PREFIX + qId);
+            if (question == null) {
+                question = questionEntityService.getById(qId);
+                redisCache.redisTemplate.opsForValue().set(RedisConstants.QUESTION_PREFIX + qId, question);
+                lists.add(question);
+            }
+        });
+        return lists;
+    }
 }

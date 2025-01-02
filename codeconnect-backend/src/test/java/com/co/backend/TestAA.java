@@ -1,10 +1,16 @@
 package com.co.backend;
 
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
+import com.alibaba.nacos.api.exception.NacosException;
+import com.alibaba.nacos.api.naming.NamingService;
+import com.alibaba.nacos.api.naming.pojo.Instance;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @Author co
@@ -14,25 +20,24 @@ import java.util.regex.Pattern;
  */
 @SpringBootTest
 public class TestAA {
+    @Autowired
+    private NacosDiscoveryProperties discoveryProperties;
     @Test
     public void test() {
-        String json = "[[\'4 7\\n8\',\'7\\n45\']]";
-
-        // 匹配双引号中的内容的正则表达式
-        String regex = "\"([^\"]*)\"";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(json);
-
-        while (matcher.find()) {
-            // 获取双引号中的内容
-            String content = matcher.group(1);
-
-            // 判断内容是否为空
-            if (!content.trim().isEmpty()) {
-                System.out.println("双引号中的内容为: " + content);
-            } else {
-                System.out.println("双引号中的内容为空");
+        NamingService namingService = discoveryProperties.namingServiceInstance();
+        try {
+            // 获取该微服务的所有健康实例
+            List<Instance> instances =
+                    namingService.selectInstances("codeconnectjudger", true);
+            List<String> keyList = new ArrayList<>();
+            // 获取当前健康实例取出ip和port拼接
+            for (Instance instance : instances) {
+                System.out.println(instance.getIp() + ":" + instance.getPort());
             }
+
+        } catch (NacosException e) {
+            System.out.println(11);
+
         }
     }
 }

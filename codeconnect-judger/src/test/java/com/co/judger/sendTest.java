@@ -1,6 +1,5 @@
 package com.co.judger;
 
-import com.co.common.config.RabbitmqConfig;
 import com.co.common.utils.RabbitMQUtil;
 import com.co.judger.model.Judge;
 import org.junit.jupiter.api.Test;
@@ -22,11 +21,6 @@ public class sendTest {
     private RabbitMQUtil rabbitMQUtil;
     @Test
     public void sendTest() throws Exception {
-        Judge judge = new Judge();
-        judge.setCode("aaaa");
-        byte[] bytesFromObject = rabbitMQUtil.getBytesFromObject(judge);
-        System.out.println(bytesFromObject);
-        rabbitTemplate.convertAndSend(RabbitmqConfig.EXCHANGE_TOPIC_JUDGE,"judge.common",bytesFromObject);
 
     }
 }

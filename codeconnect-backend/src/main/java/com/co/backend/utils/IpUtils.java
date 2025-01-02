@@ -3,6 +3,8 @@ package com.co.backend.utils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -52,13 +54,16 @@ public class IpUtils {
     }
 
     public static String getServiceIp() {
-        InetAddress address = null;
+        String publicIP = null;
         try {
-            address = InetAddress.getLocalHost();
-            return address.getHostAddress(); //返回IP地址
-        } catch (UnknownHostException e) {
-            log.error("本地ip获取异常---------->{}", e.getMessage());
+            // 使用命令行工具获取公网 IP
+            Process process = Runtime.getRuntime().exec("curl -s ifconfig.me");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            publicIP = reader.readLine();
+            reader.close();
+        } catch (Exception e) {
+            System.err.println("获取公网 IP 地址失败: " + e.getMessage());
         }
-        return null;
+        return publicIP;
     }
 }

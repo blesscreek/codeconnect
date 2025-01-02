@@ -45,6 +45,7 @@ public class PreparationJudge {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        log.info("写入文件codeToFile");
         return directoryPath;
     }
     public Map<String, String> compile(String directoryPath, Long judgeId, String language) {
@@ -53,6 +54,7 @@ public class PreparationJudge {
 
         compileInfo = sandBoxRun.compile(directoryPath, String.valueOf(judgeId), language);
 
+        log.info("编译结果compileInfo:{}",compileInfo);
         if (compileInfo != null) {
             map.put("errMsg",compileInfo);
             boolean deletedFolder = sandBoxRun.deleteFolder(new File(directoryPath));

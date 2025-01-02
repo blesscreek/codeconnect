@@ -25,16 +25,16 @@
 #define MAX_CALLBACKS 32
 
 typedef struct {
-  log_LogFn fn;
-  void *udata;
-  int level;
+  log_LogFn fn; //回调函数指针
+  void *udata;  //用户数据
+  int level;    //日志级别
 } Callback;
 
 static struct {
-  void *udata;
-  log_LockFn lock;
-  int level;
-  bool quiet;
+  void *udata;      //用户自定义数据，传递给锁函数的数据
+  log_LockFn lock;  //锁定函数
+  int level;    //日志级别
+  bool quiet;   //是否为静默模式，静默模式不会打印到标准输出
   Callback callbacks[MAX_CALLBACKS];
 } L;
 
@@ -43,13 +43,14 @@ static const char *level_strings[] = {
   "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
 };
 
+//颜色定义
 #ifdef LOG_USE_COLOR
 static const char *level_colors[] = {
   "\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m"
 };
 #endif
 
-
+//向标准输出打印日志
 static void stdout_callback(log_Event *ev) {
   char buf[16];
   buf[strftime(buf, sizeof(buf), "%H:%M:%S", ev->time)] = '\0';
@@ -68,7 +69,7 @@ static void stdout_callback(log_Event *ev) {
   fflush(ev->udata);
 }
 
-
+//将日志写入指定文件
 static void file_callback(log_Event *ev) {
   char buf[64];
   buf[strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ev->time)] = '\0';
@@ -114,12 +115,12 @@ void log_set_quiet(bool enable) {
 
 int log_add_callback(log_LogFn fn, void *udata, int level) {
   for (int i = 0; i < MAX_CALLBACKS; i++) {
-    if (!L.callbacks[i].fn) {
-      L.callbacks[i] = (Callback) { fn, udata, level };
+    if (!L.callbacks[i].fn) {   //找到空位
+      L.callbacks[i] = (Callback) { fn, udata, level }; //注册回调
       return 0;
     }
   }
-  return -1;
+  return -1;//没有空位返回错误
 }
 
 

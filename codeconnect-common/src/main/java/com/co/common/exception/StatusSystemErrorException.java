@@ -1,10 +1,6 @@
 package com.co.common.exception;
 
-/**
- * @Author: Himit_ZH
- * @Date: 2022/3/10 14:33
- * @Description:
- */
+
 public class StatusSystemErrorException extends Exception {
 
     public StatusSystemErrorException() {

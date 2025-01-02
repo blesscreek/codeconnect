@@ -96,7 +96,8 @@ int write_file(const char *filename, const char *content)
 
 void setup_pipe(int *fds, int nonblocking)
 {
-  //创建管道
+  //操作系统在内核分配一个管道缓冲区，创建两个文件描述符，指向内核中的管道对象
+  //在文件描述符表中找到文件描述符a对应的管道对象，并将东西写入内核中的管道缓冲区
   if (pipe(fds) < 0)
   {
     INTERNAL_ERROR_EXIT("pipe");

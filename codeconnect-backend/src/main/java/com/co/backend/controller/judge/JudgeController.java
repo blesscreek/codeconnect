@@ -29,7 +29,6 @@ public class JudgeController {
     @PostMapping(value = "/submitJudgeQuestion")
     public ResponseResult judgeQuestion(@RequestBody SubmitJudgeDTO submitJudgeDTO) {
         return judgeService.submitJudgeQuestion(submitJudgeDTO);
-
     }
     @ApiOperation("获取用户判题提交记录列表")
     @GetMapping("/getJudgeList")

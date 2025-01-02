@@ -24,8 +24,11 @@ import com.co.backend.utils.RedisCache;
 import com.co.common.exception.StatusNotFoundException;
 import com.co.common.model.JudgeCaseInfo;
 import com.co.common.model.JudgeInfo;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,6 +48,7 @@ import java.util.List;
  * @Date 2024-05-08 14:55
  */
 @Component
+@Slf4j
 public class JudgeManager {
     @Autowired
     private JudgeValidator judgeValidator;
@@ -85,7 +89,6 @@ public class JudgeManager {
                 throw new StatusFailException("对不起，您的提交频率过快，请稍后再尝试！");
             }
         }
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
 
         Judge judge = new Judge();
         judge.setQid(judgeDTO.getQid())
@@ -98,11 +101,18 @@ public class JudgeManager {
                 .setLanguage(judgeDTO.getLanguage())
                 .setCid(judgeDTO.getCid())
                 .setGid(judgeDTO.getGid())
-                .setIp(IpUtils.getUserIpAddr(request))
+                .setIp(IpUtils.getServiceIp())
+                .setVersion(0)//重新提交时，version+1
                 .setIsDelete(false);
         //TODO:比赛和训练提交的初始化
-        beforeDispatchInitManager.initCommonSubmission(judgeDTO.getQid(), judgeDTO.getGid(), judge);
+        Long judgeId = beforeDispatchInitManager.initCommonSubmission(judgeDTO.getQid(), judgeDTO.getGid(), judge);
 
+        //插入热门题目统计
+        redisCache.redisTemplate.opsForZSet().incrementScore(RedisConstants.HOT_QUESTION,
+                judgeDTO.getQid(), 1);
+        if (Boolean.FALSE.equals(redisCache.redisTemplate.getExpire(RedisConstants.HOT_QUESTION) > 0)) {
+            redisCache.expire(RedisConstants.HOT_QUESTION, RedisConstants.HOT_QUESTION_EXPIRE); // 设为一周的过期时间
+        }
         //TODO:远程oj
         //非远程oj
         judgeDispatcher.sendTask(judge);

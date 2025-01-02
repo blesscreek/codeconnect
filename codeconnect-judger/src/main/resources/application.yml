@@ -1,17 +1,23 @@
+oj-judge-server:
+  max-task-num: -1
+  name: hoj-judger-1 #判题机名字，唯一不可重复
 server:
   port: 8081
 spring:
+  cloud:
+    nacos:
+      server-addr: 139.9.136.188:8848
   application:
     name: codeconnectjudger
   datasource:
     url: jdbc:mysql://139.9.136.188:3306/codeconnect?characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
-    password: ROOT
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   redis:
-    database: 0
-    host: 123.60.15.140      # Redis服务器地址
+    database: 3
+    host: 139.9.136.188      # Redis服务器地址
     port: 6379              # Redis服务器连接端口
     password: 123456
   servlet:
@@ -20,20 +26,15 @@ spring:
       max-file-size: 500MB
       max-request-size: 500MB
   rabbitmq:
-    host: 123.60.15.140
+    host: 139.9.136.188
     port: 5672
     username: root
     password: 123456
     virtual-host: my_vhost
-    # 消息确认配置项
-    # 确认消息已发送到交换机(Exchange)
-    publisher-confirm-type: correlated
-    # 确认消息已发送到队列(Queue)
-    publisher-returns: true
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
 minio:
-  endpoint: http://123.60.15.140:9001
+  endpoint: http://139.9.136.188:9001
   accessKey: root
   secretKey: Software.
   bucketName1: questionimages

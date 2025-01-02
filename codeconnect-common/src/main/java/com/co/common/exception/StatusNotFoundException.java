@@ -1,10 +1,6 @@
 package com.co.common.exception;
 
-/**
- * @Author: Himit_ZH
- * @Date: 2022/3/9 10:30
- * @Description:
- */
+
 public class StatusNotFoundException extends Exception{
 
     public StatusNotFoundException() {

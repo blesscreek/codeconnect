@@ -1,10 +1,6 @@
 package com.co.common.exception;
 
-/**
- * @Author: Himit_ZH
- * @Date: 2022/3/9 10:29
- * @Description:
- */
+
 public class StatusForbiddenException extends Exception{
 
     public StatusForbiddenException() {

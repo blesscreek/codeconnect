@@ -26,7 +26,7 @@ public class BeforeDispatchInitManager {
     private UserRoleEntityService userRoleEntityService;
     @Autowired
     private JudgeEntityService judgeEntityService;
-    public void initCommonSubmission(Long questionId, Long gid, Judge judge) throws StatusFailException {
+    public Long initCommonSubmission(Long questionId, Long gid, Judge judge) throws StatusFailException {
         QueryWrapper<Question> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id","auth","is_group","gid","is_delete");
         queryWrapper.eq("id",questionId);
@@ -53,6 +53,7 @@ public class BeforeDispatchInitManager {
         judge.setCpid(0L)
                 .setQid(questionId);
         judgeEntityService.save(judge);
+        return judge.getId();
 
     }
 }

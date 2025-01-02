@@ -60,12 +60,13 @@ public class SseServiceImpl implements SseService{
         event.id(judgeInfo.getId().toString());
         event.name("message");
         event.data(judgeInfo);
+
         SseEmitter sseEmitter = sseCache.get(clientId);
         if (sseEmitter == null) {
             log.error("没有id为{}的连接",clientId);
         }
         try {
-            sseEmitter.send(event);
+            sseEmitter.send(event);//发送的数据会被封装为SSE事件流。客户端监听该事件流实时接收
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

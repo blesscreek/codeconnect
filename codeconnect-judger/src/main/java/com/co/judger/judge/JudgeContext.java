@@ -39,6 +39,7 @@ public class JudgeContext {
             question.setTimeLimit(question.getTimeLimit() * 2);
             question.setMemoryLimit(question.getMemoryLimit() * 2);
         }
+        log.info("进入JudgeContext,设置不同语言时间限制");
         //进入判题
         HashMap<String, Object> judgeResult = judgeStrategy.judge(question, judgeInfo);
         saveJudge(judgeResult, judgeInfo.getId());

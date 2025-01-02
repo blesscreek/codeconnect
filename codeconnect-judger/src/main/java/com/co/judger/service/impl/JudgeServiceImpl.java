@@ -12,6 +12,7 @@ import com.co.judger.model.Judge;
 import com.co.judger.model.Question;
 import com.co.judger.service.JudgeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class JudgeServiceImpl implements JudgeService {
     private JudgeContext judgeContext;
     @Autowired
     private MQJudgeSender mqJudgeSender;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
     @Override
     public void judgeProcess(JudgeInfo judgeInfo) {
         //设置编译阶段状态

@@ -2,13 +2,18 @@ package com.co.judger.judge;
 
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.co.common.constants.JudgeConsants;
 import com.co.common.model.JudgeInfo;
+import com.co.common.model.JudgeServer;
 import com.co.common.utils.MinioUtil;
+import com.co.judger.dao.JudgeServerEntityService;
 import com.co.judger.dao.QuestionCaseEntityService;
 import com.co.judger.model.Question;
 import com.co.judger.model.QuestionCase;
+import com.co.judger.utils.IpUtils;
 import com.co.judger.utils.ThreadPoolUtils;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +48,12 @@ public class JudgeRun {
     private SandBoxRun sandBoxRun;
     @Value("${minio.bucketName2}")
     private String  bucket_questioncases;
+    @Autowired
+    private JudgeServerEntityService judgeServerEntityService;
+    private String ip;
+    @Value("${server.port}")
+    private Integer port;
+
 
     public List<JSONObject> judgeAllCase(Question question, JudgeInfo judgeInfo, String directoryPath, String compiledPath) throws ExecutionException, InterruptedException {
         Long testTime = null;
@@ -72,7 +83,7 @@ public class JudgeRun {
         int score = 100 / questionCases.size();
 
         for (int i = 0; i < questionCases.size(); i++) {
-
+            log.info("questionCase " + i);
             Long caseId = questionCases.get(i).getId();
             //从minio下载样例，并上传到系统对应文件夹路径
             String inputFileUrl = questionCases.get(i).getInput();
@@ -102,13 +113,50 @@ public class JudgeRun {
                 } else {
                     res.set("score", 0);
                 }
+                releaseJudgeServer();
                 return res;
             }));
         }
         return submitBatchTask2ThreadPool(futureTasks, directoryPath);
 
     }
-
+    /**
+     * 释放评测机资源
+     *
+     * @param
+     */
+    public void releaseJudgeServer() {
+        ip = IpUtils.getServiceIp();
+        String url = ip + ":" + port;
+        UpdateWrapper<JudgeServer> judgeServerUpdateWrapper = new UpdateWrapper<>();
+        judgeServerUpdateWrapper.setSql("task_number = task_number-1")
+                .eq("url", url);
+        boolean isOk = judgeServerEntityService.update(judgeServerUpdateWrapper);
+        if (!isOk) { // 重试八次
+            tryAgainUpdateJudge(judgeServerUpdateWrapper);
+        }
+    }
+    public void tryAgainUpdateJudge(UpdateWrapper<JudgeServer> updateWrapper) {
+        boolean retryable;
+        int attemptNumber = 0;
+        do {
+            boolean success = judgeServerEntityService.update(updateWrapper);
+            if (success) {
+                return;
+            } else {
+                attemptNumber++;
+                retryable = attemptNumber < 8;
+                if (attemptNumber == 8) {
+                    break;
+                }
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } while (retryable);
+    }
     private List<JSONObject> submitBatchTask2ThreadPool(ArrayList<FutureTask<JSONObject>> futureTasks, String directoryPath) throws ExecutionException, InterruptedException {
         //提交到线程池进行执行
         for (FutureTask<JSONObject> futureTask : futureTasks) {

@@ -83,6 +83,7 @@ public class SandBoxRun {
             switch (judgeInfo.getLanguage()) {
                 case "C":
                 case "Cpp": {
+                    log.info("runner command : ./runner -t " + question.getTimeLimit() + " -m " + question.getMemoryLimit() + " --mco -i " + inPartPath + " -o " + outPartPath + " -u " + tmpPartPath + " -- " + compiledPartPath);
                     builder.command("./runner", "-t", question.getTimeLimit().toString(), "-m", question.getMemoryLimit().toString(), "--mco",
                             "-i", inPartPath, "-o", outPartPath, "-u", tmpPartPath, "--", compiledPartPath);
                     break;

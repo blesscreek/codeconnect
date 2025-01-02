@@ -31,4 +31,6 @@ public interface AdminQuestionService  {
     ResponseResult updateQuestion(QuestionDTO questionDTO);
 
 
+    ResponseResult getHotQuestion();
+
 }

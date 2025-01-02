@@ -95,4 +95,13 @@ public class AdminQuestionServiceImpl implements AdminQuestionService {
         }
     }
 
+    @Override
+    public ResponseResult getHotQuestion() {
+        try {
+            return new ResponseResult(ResultStatus.SUCCESS.getStatus(),"热门题目获取成功", adminQuestionManager.hotQuestion());
+        } catch (StatusFailException e) {
+            return new ResponseResult(ResultStatus.FAIL.getStatus(),e.getMessage());
+        }
+    }
+
 }

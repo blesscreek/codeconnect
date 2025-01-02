@@ -60,7 +60,7 @@ int check_diff(int rightout_fd, int userout_fd)
     log_error("lseek userout_len failure: %s\n", strerror(errno));
     RETURN(SYSTEM_ERROR);
   }
-
+  //回到文件开头
   lseek(userout_fd, 0, SEEK_SET);
   lseek(rightout_fd, 0, SEEK_SET);
 
@@ -73,10 +73,11 @@ int check_diff(int rightout_fd, int userout_fd)
     else
       RETURN(ACCEPTED)
   }
-
+  //内存映射文件
   if ((userout = (char *)mmap(NULL, userout_len, PROT_READ,
                               MAP_PRIVATE, userout_fd, 0)) == MAP_FAILED)
   {
+    //释放内存映射文件
     munmap(userout, userout_len);
     log_error("mmap userout filure\n");
     RETURN(SYSTEM_ERROR);

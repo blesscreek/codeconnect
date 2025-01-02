@@ -1,5 +1,9 @@
 package com.co.backend.controller;
 
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
+import com.alibaba.nacos.api.exception.NacosException;
+import com.alibaba.nacos.api.naming.NamingService;
+import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.co.backend.dao.user.UserEntityService;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author co
@@ -25,11 +31,27 @@ import java.io.*;
 public class TestController {
     @Autowired
     private UserEntityService userEntityService;
+    @Autowired
+    private NacosDiscoveryProperties discoveryProperties;
     @PostMapping("/hello")
 //    @PreAuthorize("@ex.hasAuthority('sys:question:add')")
     public String hello(){
 
-        System.out.println("hello");
+        NamingService namingService = discoveryProperties.namingServiceInstance();
+        try {
+            // 获取该微服务的所有健康实例
+            List<Instance> instances =
+                    namingService.selectInstances("codeconnectjudger", true);
+            List<String> keyList = new ArrayList<>();
+            // 获取当前健康实例取出ip和port拼接
+            for (Instance instance : instances) {
+                System.out.println(instance.getIp() + ":" + instance.getPort());
+            }
+
+        } catch (NacosException e) {
+            System.out.println(11);
+
+        }
         return "hello";
     }
 
